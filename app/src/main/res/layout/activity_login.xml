@@ -48,7 +48,7 @@
             <com.ngra.trafficcontroller.views.customview.MLCurveHeader
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:backcolor="@color/colorPrimary"
+                app:backcolor="@color/colorPrimaryDark"
                 app:PitOpenings="0"
                 />
 

@@ -2,6 +2,7 @@ package com.ngra.trafficcontroller.views.fragments.login;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,8 +85,15 @@ public class FragmentLogin extends Fragment {
             public void onClick(View v) {
 
                 if (CheckEmpty()) {
-                    ActivityObservables.onNext("verify");
-                    //ShowProgressDialog();
+                    ShowProgressDialog();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ActivityObservables.onNext("verify");
+                        }
+                    }, 3000);
+
                 }
             }
         });

@@ -8,7 +8,7 @@
     <color name="ML_White">#FFFFFF</color>
     <color name="ML_Black">#000000</color>
     <color name="ML_Ngra">@color/colorAccent</color>
-    <color name="ML_EditEmpty">#A2AEFA</color>
+    <color name="ML_EditEmpty">#FDAEAE</color>
     <color name="ML_EditEmptyBorder">#CCCCCC</color>
     <color name="ML_Main_Gradiant">#7CFFFF</color>
     <color name="ML_VerifyCodeEmpty">#33062DBB</color>

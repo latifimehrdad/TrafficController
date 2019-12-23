@@ -77,40 +77,43 @@ public class MLCurveFooter extends View {
 
         Point mFirstCurveControlPoint1 = new Point();
         Point mFirstCurveControlPoint2 = new Point();
-        mFirstCurveControlPoint1.set(width - (halfWidth * 60 / 100),halfHeight);
-        mFirstCurveControlPoint2.set(width - (halfWidth / 7) , 0);
+        mFirstCurveControlPoint1.set(width - (halfWidth * 50 / 100),halfHeight);
+        mFirstCurveControlPoint2.set(width - (halfWidth / 3) , 3);
 
         mPath.cubicTo(mFirstCurveControlPoint1.x, mFirstCurveControlPoint1.y,
                 mFirstCurveControlPoint2.x, mFirstCurveControlPoint2.y,
-                halfWidth + (halfWidth / 5), 0);
-
-        mPath.lineTo(halfWidth - (halfWidth / 5), 0);
+                halfWidth, 3);
 
         Point mSecondCurveControlPoint1 = new Point();
         Point mSecondCurveControlPoint2 = new Point();
 
-        mSecondCurveControlPoint1.set((halfWidth / 7),0);
-        mSecondCurveControlPoint2.set((halfWidth * 60 / 100), halfHeight);
+        mSecondCurveControlPoint1.set((halfWidth / 3),3);
+        mSecondCurveControlPoint2.set((halfWidth * 50 / 100), halfHeight);
 
         mPath.cubicTo(mSecondCurveControlPoint1.x, mSecondCurveControlPoint1.y,
                 mSecondCurveControlPoint2.x, mSecondCurveControlPoint2.y,
                 0, halfHeight);
 
-
-//        mPath.lineTo(PitOpenings, halfHeight + (n) - shadow);
+//        Point mFirstCurveControlPoint1 = new Point();
+//        Point mFirstCurveControlPoint2 = new Point();
+//        mFirstCurveControlPoint1.set(width - (halfWidth * 60 / 100),halfHeight);
+//        mFirstCurveControlPoint2.set(width - (halfWidth / 7) , 0);
 //
-
+//        mPath.cubicTo(mFirstCurveControlPoint1.x, mFirstCurveControlPoint1.y,
+//                mFirstCurveControlPoint2.x, mFirstCurveControlPoint2.y,
+//                halfWidth + (halfWidth / 5), 0);
 //
-
-
+//        mPath.lineTo(halfWidth - (halfWidth / 5), 0);
 //
-
+//        Point mSecondCurveControlPoint1 = new Point();
+//        Point mSecondCurveControlPoint2 = new Point();
 //
-
+//        mSecondCurveControlPoint1.set((halfWidth / 7),0);
+//        mSecondCurveControlPoint2.set((halfWidth * 60 / 100), halfHeight);
 //
-
-//
-//        mPath.lineTo(width, halfHeight + (n) - shadow);
+//        mPath.cubicTo(mSecondCurveControlPoint1.x, mSecondCurveControlPoint1.y,
+//                mSecondCurveControlPoint2.x, mSecondCurveControlPoint2.y,
+//                0, halfHeight);
 
         mPath.close();
 

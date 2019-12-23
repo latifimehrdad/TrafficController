@@ -16,13 +16,223 @@
         >
 
 
+        //_______________________________________________ Header
+        <RelativeLayout
+            android:id="@+id/layoutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            android:orientation="vertical"
+            >
 
+            <com.ngra.trafficcontroller.views.customview.MLCurveHeader
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:backcolor="@color/colorPrimaryDark"
+                app:PitOpenings="0"
+                />
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:src="@drawable/icon_header"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/imgLogo"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textColor="@color/ML_White"
+                android:textSize="@dimen/_10sdp"
+                fontPath="font/iransans_web_medium.ttf"
+                android:text="@string/app_name_header"
+                />
+
+        </RelativeLayout>
+        //______________________________________________ Header
+
+
+        //_________________________________________________ Ngra Icon
+        <LinearLayout
+            android:id="@+id/mainHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_85sdp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/login_ngra_icon2"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="N"
+                    fontPath="font/iransans_web_medium.ttf"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/login_ngra_icon1"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_15sdp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="G"
+                    fontPath="font/iransans_web_medium.ttf"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/login_ngra_icon4"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_15sdp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="R"
+                    fontPath="font/iransans_web_medium.ttf"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/login_ngra_icon3"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="A"
+                    fontPath="font/iransans_web_medium.ttf"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        //________________________________________________ Ngra Icon
+
+
+
+        //________________________________________________________ Footer
         <com.ngra.trafficcontroller.views.customview.MLCurveFooter
+            android:id="@+id/mainFooter"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_100sdp"
             android:layout_alignParentBottom="true"
             app:backcolorf="@color/ML_footer"
             />
+        //__________________________________________________________ footer
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/mainHeader"
+            android:layout_above="@id/mainFooter"
+            android:padding="@dimen/_10sdp"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutCenter"
+                android:layout_width="1px"
+                android:layout_height="1px"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
+
+
+            <LinearLayout
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_toLeftOf="@id/layoutCenter"
+                android:layout_above="@id/layoutCenter"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/main_tail_background"
+                ></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_toRightOf="@id/layoutCenter"
+                android:layout_above="@id/layoutCenter"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:layout_marginLeft="@dimen/_4sdp"
+                android:background="@drawable/main_tail_background"
+                ></LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_toLeftOf="@id/layoutCenter"
+                android:layout_below="@id/layoutCenter"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:background="@drawable/main_tail_background"
+                ></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_toRightOf="@id/layoutCenter"
+                android:layout_below="@id/layoutCenter"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginLeft="@dimen/_4sdp"
+                android:background="@drawable/main_tail_background"
+                ></LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_layout"
+                />
+
+
+
+        </RelativeLayout>
+
+
 
 
     </RelativeLayout>

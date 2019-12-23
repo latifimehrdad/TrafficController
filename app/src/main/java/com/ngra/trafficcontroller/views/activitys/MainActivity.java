@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setMain(viewModel);
         ButterKnife.bind(this);
-        //ShowLoginActivity();
+        ShowLoginActivity();
     }//_____________________________________________________________________________________________ End OnBindView
 
 
