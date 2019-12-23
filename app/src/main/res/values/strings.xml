@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TrafficController</string>
+
+    <string name="PhoneNumber">شماره موبایل</string>
+    <string name="Password">رمز ورود</string>
+    <string name="Login">ورود</string>
+    <string name="EmptyPhoneNumber">شماره را بصورت صحیح وارد نمایید</string>
+    <string name="Ignore">بستن</string>
+    <string name="PleaseWait">شکیبا باشید ...</string>
+    <string name="LoginWarning">قبل از ورود به نرم افزار باید شماره موبایل خود را به مسئول اداری مربوطه اعلام بفرمایید.</string>
+
+</resources>
