@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin;
@@ -30,7 +31,7 @@ public class FragmentLogin extends Fragment {
     private Context context;
     private ViewModel_FragmentLogin viewModel;
     private View view;
-    private DialogProgress progress;
+//    private DialogProgress progress;
     private PublishSubject<String> ActivityObservables;
 
     @BindView(R.id.editPhoneNumber)
@@ -44,6 +45,9 @@ public class FragmentLogin extends Fragment {
 
     @BindView(R.id.btnLogin)
     Button btnLogin;
+
+    @BindView(R.id.gifWatting)
+    GifView gifWatting;
 
 
     @Override
@@ -121,8 +125,10 @@ public class FragmentLogin extends Fragment {
 
 
     private void ShowProgressDialog() {//___________________________________________________________ Start ShowProgressDialog
-        progress = new DialogProgress(context, null);
-        progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
+        btnLogin.setText("");
+        gifWatting.setVisibility(View.VISIBLE);
+//        progress = new DialogProgress(context, null);
+//        progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
     }//_____________________________________________________________________________________________ End ShowProgressDialog
 
 

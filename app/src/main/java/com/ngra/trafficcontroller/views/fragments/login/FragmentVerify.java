@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +64,6 @@ public class FragmentVerify extends Fragment {
     TextView message;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModel_FragmentVerify(context);
@@ -80,6 +79,7 @@ public class FragmentVerify extends Fragment {
 
     public FragmentVerify(Context context, PublishSubject<String> ActivityObservables) {//__________ Start FragmentVerify
         this.context = context;
+        this.ActivityObservables = ActivityObservables;
     }//_____________________________________________________________________________________________ Start FragmentVerify
 
 
@@ -93,7 +93,6 @@ public class FragmentVerify extends Fragment {
         SetClick();
         StartTimer(60);
     }//_____________________________________________________________________________________________ Start onStart
-
 
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick
@@ -138,7 +137,6 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End StartTimer
 
 
-
     private void SetBackVerifyCode() {//____________________________________________________________ Start SetBackVerifyCode
 
         Boolean c1 = SetBackVerifyCodeView(VerifyCode1);
@@ -157,6 +155,8 @@ public class FragmentVerify extends Fragment {
                     VerifyCode6.getText().toString();
 
             ShowProgressDialog();
+            progressBar.setProgress(0);
+            ActivityObservables.onNext("finishok");
             //activityVerifyCodeViewModel.SendVerifyCode(PhoneNumber, code);
 
         }
@@ -181,7 +181,6 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End SetBackVerifyCodeView
 
 
-
     private void SetTextChangeListener() {//________________________________________________________ Start SetTextChangeListener
 
         VerifyCode1.addTextChangedListener(TextChange(VerifyCode2));
@@ -201,6 +200,18 @@ public class FragmentVerify extends Fragment {
 
     }//_____________________________________________________________________________________________ End SetTextChangeListener
 
+
+//    private View.OnFocusChangeListener SetFocuseChange(EditText editText) {//______________________________________________ Satart TextChange
+//        return new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(hasFocus) {
+//                    editText.setText("");
+//                    SetBackVerifyCode();
+//                }
+//            }
+//        };
+//    }//_____________________________________________________________________________________________ End SetTextChangeListener
 
 
     private TextWatcher TextChange(EditText eNext) {//______________________________________________ Satart TextChange
@@ -227,8 +238,6 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End TextChange
 
 
-
-
     private View.OnKeyListener SetKeyBackSpace(EditText view) {//____________________________________ Start SetKeyBackSpace
         return new View.OnKeyListener() {
             @Override
@@ -251,7 +260,6 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End SetKeyBackSpace
 
 
-
     private void ReTryGetSMS() {//__________________________________________________________________ Start ReTryGetSMS
         TimeElapsed.setVisibility(View.GONE);
         ReTryGetSMSClick = true;
@@ -259,12 +267,10 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End ReTryGetSMS
 
 
-
     private void ShowProgressDialog() {//___________________________________________________________ Start ShowProgressDialog
         progress = new DialogProgress(context, null);
         progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
     }//_____________________________________________________________________________________________ End ShowProgressDialog
-
 
 
 }

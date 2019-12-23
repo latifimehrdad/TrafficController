@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="main"
@@ -8,12 +9,22 @@
     </data>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/ML_White"
         >
 
-    </LinearLayout>
+
+
+        <com.ngra.trafficcontroller.views.customview.MLCurveFooter
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_alignParentBottom="true"
+            app:backcolorf="@color/ML_footer"
+            />
+
+
+    </RelativeLayout>
 
 </layout>

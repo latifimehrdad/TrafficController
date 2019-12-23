@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="login"
@@ -81,19 +82,37 @@
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btnLogin"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:textColor="@color/ML_White"
-                android:textSize="@dimen/_12sdp"
-                fontPath="font/iransans_web_medium.ttf"
-                android:gravity="center"
-                android:text="@string/Login"
-                android:drawableLeft="@drawable/ic_lock_open"
-                />
+                >
+
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_bg"
+                    android:textColor="@color/ML_White"
+                    android:textSize="@dimen/_12sdp"
+                    fontPath="font/iransans_web_medium.ttf"
+                    android:gravity="center"
+                    android:text="@string/Login"
+                    android:drawableLeft="@drawable/ic_lock_open"
+                    />
+
+                <com.cunoraz.gifview.library.GifView
+                    android:id="@+id/gifWatting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    custom:gif="@drawable/watting"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="invisible"
+                    />
+
+            </RelativeLayout>
 
 
             <LinearLayout

@@ -17,4 +17,11 @@
         <attr name="PitOpenings" format="integer"/>
     </declare-styleable>
 
+    <declare-styleable name="MLCurveFooter">
+        <attr name="shadowf" format="integer"/>
+        <attr name="backcolorf" format="color"/>
+        <attr name="shadowcolorf" format="color"/>
+        <attr name="PitOpeningsf" format="integer"/>
+    </declare-styleable>
+
 </resources>

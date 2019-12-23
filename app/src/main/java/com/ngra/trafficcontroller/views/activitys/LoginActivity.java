@@ -65,6 +65,9 @@ public class LoginActivity extends AppCompatActivity {
                                     case "verify":
                                         ShowFragmentVerify();
                                         break;
+                                    case "finishok":
+                                        finish();
+                                        break;
                                 }
                             }
                         });

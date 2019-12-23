@@ -38,7 +38,7 @@
 
 
         //_______________________________________________ Header
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/layoutHeader"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_120sdp"
@@ -52,7 +52,29 @@
                 app:PitOpenings="0"
                 />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:src="@drawable/icon_header"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/imgLogo"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textColor="@color/ML_White"
+                android:textSize="@dimen/_10sdp"
+                fontPath="font/iransans_web_medium.ttf"
+                android:text="@string/app_name_header"
+                />
+
+        </RelativeLayout>
         //______________________________________________ Header
 
 
@@ -78,10 +100,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ML_White"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/_15sdp"
                     android:text="N"
-                    android:textStyle="bold"
+                    fontPath="font/iransans_web_medium.ttf"
                     />
 
             </LinearLayout>
@@ -98,10 +120,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ML_White"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/_15sdp"
                     android:text="G"
-                    android:textStyle="bold"
+                    fontPath="font/iransans_web_medium.ttf"
                     />
 
             </LinearLayout>
@@ -118,10 +140,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ML_White"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/_15sdp"
                     android:text="R"
-                    android:textStyle="bold"
+                    fontPath="font/iransans_web_medium.ttf"
                     />
 
             </LinearLayout>
@@ -137,16 +159,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ML_White"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/_15sdp"
                     android:text="A"
-                    android:textStyle="bold"
+                    fontPath="font/iransans_web_medium.ttf"
                     />
 
             </LinearLayout>
 
         </LinearLayout>
         //________________________________________________ Ngra Icon
+
+
+
+
 
 
     </RelativeLayout>
