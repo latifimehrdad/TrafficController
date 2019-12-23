@@ -21,14 +21,17 @@ import com.ngra.trafficcontroller.views.dialogs.DialogProgress;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.subjects.PublishSubject;
+
+import static com.ngra.trafficcontroller.utility.StaticFunctions.TextChangeForChangeBack;
 
 public class FragmentLogin extends Fragment {
 
     private Context context;
     private ViewModel_FragmentLogin viewModel;
     private View view;
-    private boolean passwordVisible;
     private DialogProgress progress;
+    private PublishSubject<String> ActivityObservables;
 
     @BindView(R.id.editPhoneNumber)
     EditText editPhoneNumber;
@@ -56,45 +59,29 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
-    public FragmentLogin(Context context) {//_______________________________________________________ Start FragmentLogin
+    public FragmentLogin(Context context, PublishSubject<String> ActivityObservables) {//___________ Start FragmentLogin
         this.context = context;
+        this.ActivityObservables = ActivityObservables;
     }//_____________________________________________________________________________________________ End FragmentLogin
 
 
     @Override
     public void onStart() {//_______________________________________________________________________ Start onStart
         super.onStart();
-        init();
         SetClick();
+        SetTextWatcher();
     }//_____________________________________________________________________________________________ End onStart
 
 
-    private void init() {//_________________________________________________________________________ Start init
-        editPassword.setInputType(InputType.TYPE_CLASS_TEXT |
-                InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        passwordVisible = false;
-    }//_____________________________________________________________________________________________ End init
-
-
     private void SetClick() {//_____________________________________________________________________ Start SetClick
-
-//        ForgetPassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ActivityBeforLogin.this, ActivitySendPhoneNumber.class);
-//                intent.putExtra("type", "forget");
-//                intent.putExtra("PhoneNumber", EditPhoneNumber.getText().toString());
-//                intent.putExtra("Password", EditPassword.getText().toString());
-//                startActivity(intent);
-//            }
-//        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (CheckEmpty()) {
-                    ShowProgressDialog();
+                    ActivityObservables.onNext("verify");
+                    //ShowProgressDialog();
                 }
             }
         });
@@ -138,5 +125,10 @@ public class FragmentLogin extends Fragment {
         progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
     }//_____________________________________________________________________________________________ End ShowProgressDialog
 
+
+
+    private void SetTextWatcher() {//_______________________________________________________________ Start SetTextWatcher
+        editPhoneNumber.addTextChangedListener(TextChangeForChangeBack(editPhoneNumber));
+    }//_____________________________________________________________________________________________ End SetTextWatcher
 
 }

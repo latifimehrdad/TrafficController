@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#BB0606</color>
-    <color name="colorPrimaryDark">#7C0202</color>
-    <color name="colorAccent">#BB0606</color>
 
+    <color name="colorPrimary">#BB0606</color>
+    <color name="colorPrimaryDark">#790101</color>
+    <color name="colorAccent">#0C389B</color>
 
     <color name="ML_White">#FFFFFF</color>
     <color name="ML_Black">#000000</color>
-    <color name="ML_Ngra">#0C389B</color>
+    <color name="ML_Ngra">@color/colorAccent</color>
     <color name="ML_EditEmpty">#FAA2AA</color>
     <color name="ML_EditEmptyBorder">#CCCCCC</color>
+
+    <color name="ML_VerifyCodeEmpty">#33BB0606</color>
+
 
 
 </resources>
