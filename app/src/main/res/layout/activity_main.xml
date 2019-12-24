@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ML_White"
+        android:background="@drawable/background"
         >
 
 
@@ -150,13 +150,87 @@
 
 
         //________________________________________________________ Footer
-        <com.ngra.trafficcontroller.views.customview.MLCurveFooter
+        <RelativeLayout
             android:id="@+id/mainFooter"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_100sdp"
             android:layout_alignParentBottom="true"
-            app:backcolorf="@color/ML_footer"
-            />
+            >
+
+            <com.ngra.trafficcontroller.views.customview.MLCurveFooter
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:backcolorf="@color/ML_footer"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:maxWidth="@dimen/_140sdp"
+                    android:textColor="@color/ML_White"
+                    android:textSize="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:text="@string/LastLocation"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:maxWidth="@dimen/_140sdp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:text="1398/10/03 - 12:35"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/ML_EditEmptyBorder"
+                    android:layout_marginTop="@dimen/_5sdp"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:maxWidth="@dimen/_140sdp"
+                    android:textColor="@color/ML_White"
+                    android:textSize="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:text="@string/LastInternet"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:maxWidth="@dimen/_140sdp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:text="1398/10/03 - 12:35"
+                    />
+
+
+            </LinearLayout>
+
+
+
+
+
+        </RelativeLayout>
+
+
         //__________________________________________________________ footer
 
 
@@ -175,6 +249,7 @@
                 android:layout_height="1px"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:orientation="vertical"
                 />
 
 
@@ -186,7 +261,33 @@
                 android:layout_marginBottom="@dimen/_4sdp"
                 android:layout_marginRight="@dimen/_4sdp"
                 android:background="@drawable/main_tail_background"
-                ></LinearLayout>
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_15sdp"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingLeft="@dimen/_3sdp"
+                android:paddingRight="@dimen/_3sdp"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:id="@+id/imgInternet"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/ML_White"
+                    fontPath="font/iransans_web_medium.ttf"
+                    android:text="@string/InternetState"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="@dimen/_90sdp"
@@ -196,7 +297,34 @@
                 android:layout_marginBottom="@dimen/_4sdp"
                 android:layout_marginLeft="@dimen/_4sdp"
                 android:background="@drawable/main_tail_background"
-                ></LinearLayout>
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_15sdp"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingLeft="@dimen/_3sdp"
+                android:paddingRight="@dimen/_3sdp"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:id="@+id/imgLocation"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/ML_White"
+                    fontPath="font/iransans_web_medium.ttf"
+                    android:text="@string/LocationState"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    />
+
+
+            </LinearLayout>
 
 
             <LinearLayout
@@ -207,7 +335,35 @@
                 android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginRight="@dimen/_4sdp"
                 android:background="@drawable/main_tail_background"
-                ></LinearLayout>
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_15sdp"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingLeft="@dimen/_3sdp"
+                android:paddingRight="@dimen/_3sdp"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:src="@drawable/ic_message"
+                    android:tint="@color/colorAccent"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/ML_White"
+                    fontPath="font/iransans_web_medium.ttf"
+                    android:text="@string/Inbox"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="@dimen/_90sdp"
@@ -217,12 +373,39 @@
                 android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginLeft="@dimen/_4sdp"
                 android:background="@drawable/main_tail_background"
-                ></LinearLayout>
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_15sdp"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingLeft="@dimen/_3sdp"
+                android:paddingRight="@dimen/_3sdp"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:src="@drawable/ic_call"
+                    android:tint="@color/colorAccent"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/ML_White"
+                    fontPath="font/iransans_web_medium.ttf"
+                    android:text="@string/CallWidthSupport"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    />
+
+            </LinearLayout>
 
 
             <LinearLayout
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/circle_layout"

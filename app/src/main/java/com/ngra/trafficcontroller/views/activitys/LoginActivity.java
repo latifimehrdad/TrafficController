@@ -1,9 +1,15 @@
 package com.ngra.trafficcontroller.views.activitys;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
     private PublishSubject<String> Observables;
+    private String PhoneNumber;
 
 
     @Override
@@ -44,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         Observables = PublishSubject.create();
         ObserverObservables();
         ShowFragmentLogin();
-        //Observables.onNext("login");
+        checkLocationPermission();
+        //ObservablesGpsAndNetworkChange.onNext("login");
     }//_____________________________________________________________________________________________ End OnBindView
 
 
@@ -67,6 +75,10 @@ public class LoginActivity extends AppCompatActivity {
                                         break;
                                     case "finishok":
                                         finish();
+                                        break;
+                                    default:
+                                        PhoneNumber = s;
+                                        ShowFragmentVerify();
                                         break;
                                 }
                             }
@@ -108,10 +120,87 @@ public class LoginActivity extends AppCompatActivity {
         ft = null;
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
-        FragmentVerify verify = new FragmentVerify(this, Observables);
+        FragmentVerify verify = new FragmentVerify(this, Observables,PhoneNumber);
         ft.replace(R.id.loginFragment, verify);
         ft.commit();
     }//_____________________________________________________________________________________________ End ShowFragmentVerify
+
+
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+
+    public void checkLocationPermission() {//_____________________________________________________________________________________________ Start checkLocationPermission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("دسترسی به موقعیت")
+                        .setMessage("برای نمایش مکان شما به موقعیت دسترسی بدهید")
+                        .setPositiveButton("تایید", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(LoginActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        }
+    }//_____________________________________________________________________________________________ End checkLocationPermission
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {//____________ Start onRequestPermissionsResult
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+        }
+    }//_____________________________________________________________________________________________ End onRequestPermissionsResult
+
+
 
 
 }

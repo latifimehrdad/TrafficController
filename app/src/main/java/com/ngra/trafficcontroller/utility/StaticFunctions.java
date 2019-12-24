@@ -4,21 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.View;
 import android.widget.EditText;
-
 
 import com.ngra.trafficcontroller.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import retrofit2.Response;
-
 public class StaticFunctions {
-
-    public static Boolean isCancel = false;
 
     public static String GetAuthorization(Context context) {//______________________________________ Start GetAuthorization
         String Authorization = "Bearer ";

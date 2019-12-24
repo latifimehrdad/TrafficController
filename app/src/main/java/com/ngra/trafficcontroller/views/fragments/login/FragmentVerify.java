@@ -1,6 +1,7 @@
 package com.ngra.trafficcontroller.views.fragments.login;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -21,10 +22,14 @@ import androidx.fragment.app.Fragment;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentVerifyBinding;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentVerify;
+import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 import com.ngra.trafficcontroller.views.dialogs.DialogProgress;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class FragmentVerify extends Fragment {
@@ -35,6 +40,7 @@ public class FragmentVerify extends Fragment {
     private DialogProgress progress;
     private boolean ReTryGetSMSClick = false;
     private PublishSubject<String> ActivityObservables;
+    private String PhoneNumber;
 
     @BindView(R.id.VerifyCode1)
     EditText VerifyCode1;
@@ -77,9 +83,10 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
-    public FragmentVerify(Context context, PublishSubject<String> ActivityObservables) {//__________ Start FragmentVerify
-        this.context = context;
-        this.ActivityObservables = ActivityObservables;
+    public FragmentVerify(Context c, PublishSubject<String> o, String P) {//________________________ Start FragmentVerify
+        this.context = c;
+        this.ActivityObservables = o;
+        this.PhoneNumber = P;
     }//_____________________________________________________________________________________________ Start FragmentVerify
 
 
@@ -87,6 +94,7 @@ public class FragmentVerify extends Fragment {
     public void onStart() {//_______________________________________________________________________ Start onStart
         super.onStart();
         VerifyCode1.requestFocus();
+        ObserverObservable();
         SetBackVerifyCode();
         SetTextChangeListener();
         ReTryGetSMS();
@@ -100,12 +108,83 @@ public class FragmentVerify extends Fragment {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ReTryGetSMSClick)
-                    StartTimer(Integer.valueOf(VerifyCode1.getText().toString() + VerifyCode2.getText().toString()));
+                if (ReTryGetSMSClick){
+                    viewModel.SendNumber(PhoneNumber);
+                }
             }
         });
 
     }//_____________________________________________________________________________________________ End SetClick
+
+
+
+    private void ObserverObservable() {//___________________________________________________________ Start ObserverObservable
+        viewModel
+                .Observables
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        getActivity()
+                                .runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DismissProgress();
+                                        switch (s) {
+                                            case "verifydone":
+                                                ActivityObservables.onNext("finishok");
+                                                break;
+                                            case "senddone":
+                                                StartTimer(60);
+                                                break;
+                                            case "failed":
+                                                VerifyCode1.setText("");
+                                                VerifyCode2.setText("");
+                                                VerifyCode3.setText("");
+                                                VerifyCode4.setText("");
+                                                VerifyCode5.setText("");
+                                                VerifyCode6.setText("");
+                                                VerifyCode1.requestFocus();
+                                                SetBackVerifyCode();
+                                                ShowMessage(
+                                                        viewModel.getMessageResult(),
+                                                        getResources().getColor(R.color.ML_White),
+                                                        getResources().getDrawable(R.drawable.ic_warning_red)
+                                                );
+                                                break;
+                                            case "onFailure":
+                                                VerifyCode1.setText("");
+                                                VerifyCode2.setText("");
+                                                VerifyCode3.setText("");
+                                                VerifyCode4.setText("");
+                                                VerifyCode5.setText("");
+                                                VerifyCode6.setText("");
+                                                VerifyCode1.requestFocus();
+                                                SetBackVerifyCode();
+                                                ShowMessage(
+                                                        getResources().getString(R.string.onFailure),
+                                                        getResources().getColor(R.color.ML_White),
+                                                        getResources().getDrawable(R.drawable.ic_warning_red)
+                                                );
+                                                break;
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }//_____________________________________________________________________________________________ End ObserverObservable
 
 
     private void StartTimer(int Elapse) {//___________________________________________________________________ Start StartTimer
@@ -156,8 +235,7 @@ public class FragmentVerify extends Fragment {
 
             ShowProgressDialog();
             progressBar.setProgress(0);
-            ActivityObservables.onNext("finishok");
-            //activityVerifyCodeViewModel.SendVerifyCode(PhoneNumber, code);
+            viewModel.VerifyNumber(PhoneNumber, code);
 
         }
 
@@ -271,6 +349,22 @@ public class FragmentVerify extends Fragment {
         progress = new DialogProgress(context, null);
         progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
     }//_____________________________________________________________________________________________ End ShowProgressDialog
+
+
+    private void ShowMessage(String message, int color, Drawable icon) {//__________________________ Start ShowMessage
+
+        DialogMessage dialogMessage = new DialogMessage(context, message, color, icon);
+        dialogMessage.setCancelable(false);
+        dialogMessage.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
+
+    }//_____________________________________________________________________________________________ End ShowMessage
+
+
+
+    private void DismissProgress() {//______________________________________________________________ Start DismissProgress
+        if(progress!= null)
+            progress.dismiss();
+    }//_____________________________________________________________________________________________ End DismissProgress
 
 
 }

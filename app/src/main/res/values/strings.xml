@@ -13,5 +13,12 @@
     <string name="VerifyCode">"لطفا 6 عدد کد فعال سازی  \n را وارد نمایید"</string>
     <string name="ElapsedTimeGetSMS">زمان باقی مانده\n جهت دریافت پیامک</string>
     <string name="ReTryGetSMS">دریافت مجدد\n پیامک</string>
+    <string name="onFailure">ارتباط با مرکز برقرار نشد</string>
+    <string name="LocationState">موقعیت مکانی</string>
+    <string name="InternetState">اینترنت</string>
+    <string name="LastLocation">آخرین زمان دریافت موقعیت مکانی</string>
+    <string name="LastInternet">آخرین زمان اتصال به اینترنت</string>
+    <string name="CallWidthSupport">تماس با پشتیبانی</string>
+    <string name="Inbox">پیامهای دریافتی</string>
 
 </resources>

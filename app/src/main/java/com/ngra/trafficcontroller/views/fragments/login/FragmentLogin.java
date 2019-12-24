@@ -1,9 +1,8 @@
 package com.ngra.trafficcontroller.views.fragments.login;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,18 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin;
-import com.ngra.trafficcontroller.views.dialogs.DialogProgress;
+import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import pl.droidsonroids.gif.GifImageView;
 
 import static com.ngra.trafficcontroller.utility.StaticFunctions.TextChangeForChangeBack;
 
@@ -32,8 +34,8 @@ public class FragmentLogin extends Fragment {
     private Context context;
     private ViewModel_FragmentLogin viewModel;
     private View view;
-//    private DialogProgress progress;
     private PublishSubject<String> ActivityObservables;
+    private String PhoneNumber;
 
     @BindView(R.id.editPhoneNumber)
     EditText editPhoneNumber;
@@ -48,7 +50,7 @@ public class FragmentLogin extends Fragment {
     Button btnLogin;
 
     @BindView(R.id.gifWatting)
-    GifView gifWatting;
+    GifImageView gifWatting;
 
 
     @Override
@@ -75,6 +77,7 @@ public class FragmentLogin extends Fragment {
         super.onStart();
         SetClick();
         SetTextWatcher();
+        ObserverObservable();
     }//_____________________________________________________________________________________________ End onStart
 
 
@@ -85,15 +88,8 @@ public class FragmentLogin extends Fragment {
             public void onClick(View v) {
 
                 if (CheckEmpty()) {
-                    ShowProgressDialog();
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ActivityObservables.onNext("verify");
-                        }
-                    }, 3000);
-
+                    ShowProgress();
+                    viewModel.SendNumber(PhoneNumber);
                 }
             }
         });
@@ -102,9 +98,60 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ End SetClick
 
 
+    private void ObserverObservable() {//___________________________________________________________ Start ObserverObservable
+        viewModel
+                .Observables
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        getActivity()
+                                .runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DismissProgress();
+                                        switch (s) {
+                                            case "done":
+                                                ActivityObservables.onNext(PhoneNumber);
+                                                break;
+                                            case "failed":
+                                                ShowMessage(
+                                                        viewModel.getMessageResult(),
+                                                        getResources().getColor(R.color.ML_White),
+                                                        getResources().getDrawable(R.drawable.ic_warning_red)
+                                                );
+                                                break;
+                                            case "onFailure":
+                                                ShowMessage(
+                                                        getResources().getString(R.string.onFailure),
+                                                        getResources().getColor(R.color.ML_White),
+                                                        getResources().getDrawable(R.drawable.ic_warning_red)
+                                                );
+                                                break;
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }//_____________________________________________________________________________________________ End ObserverObservable
+
+
     private Boolean CheckEmpty() {//________________________________________________________________ Start CheckEmpty
 
         boolean phone = false;
+        PhoneNumber = editPhoneNumber.getText().toString();
 
 
         if (editPhoneNumber.getText().length() != 11) {
@@ -132,17 +179,31 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ End CheckEmpty
 
 
-    private void ShowProgressDialog() {//___________________________________________________________ Start ShowProgressDialog
+    private void ShowProgress() {//_________________________________________________________________ Start ShowProgress
         btnLogin.setText("");
         gifWatting.setVisibility(View.VISIBLE);
-//        progress = new DialogProgress(context, null);
-//        progress.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
-    }//_____________________________________________________________________________________________ End ShowProgressDialog
+    }//_____________________________________________________________________________________________ End ShowProgress
 
+
+
+    private void DismissProgress() {//______________________________________________________________ Start DismissProgress
+        btnLogin.setText(getResources().getString(R.string.Login));
+        gifWatting.setVisibility(View.INVISIBLE);
+    }//_____________________________________________________________________________________________ End DismissProgress
 
 
     private void SetTextWatcher() {//_______________________________________________________________ Start SetTextWatcher
         editPhoneNumber.addTextChangedListener(TextChangeForChangeBack(editPhoneNumber));
     }//_____________________________________________________________________________________________ End SetTextWatcher
+
+
+    private void ShowMessage(String message, int color, Drawable icon) {//__________________________ Start ShowMessage
+
+        DialogMessage dialogMessage = new DialogMessage(context, message, color, icon);
+        dialogMessage.setCancelable(false);
+        dialogMessage.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
+
+    }//_____________________________________________________________________________________________ End ShowMessage
+
 
 }

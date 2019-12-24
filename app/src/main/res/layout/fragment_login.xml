@@ -101,14 +101,14 @@
                     android:drawableLeft="@drawable/ic_lock_open"
                     />
 
-                <com.cunoraz.gifview.library.GifView
+                <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/gifWatting"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/_70sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_marginTop="@dimen/_5sdp"
-                    custom:gif="@drawable/watting"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
+                    android:src="@drawable/watting"
                     android:visibility="invisible"
                     />
 
