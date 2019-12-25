@@ -2,13 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ngra.trafficcontroller">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
 
     <application
@@ -29,20 +31,40 @@
 
         <activity android:name=".views.activitys.LoginActivity"/>
 
-        <receiver android:name=".utility.broadcasts.GpsLocationReceiver">
+        <receiver android:name=".utility.broadcasts.ReceiverGpsLocation">
             <intent-filter>
                 <action android:name="android.location.PROVIDERS_CHANGED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".utility.broadcasts.NetworkChangeReceiver" >
+        <receiver android:name=".utility.broadcasts.ReceiverNetworkChange" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".utility.broadcasts.ReceiverLunchAppInBackground">
+            <intent-filter >
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="ir.ngra.Lunch" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".utility.services.ServiceSetTimeForLunchApp"/>
+
+        <receiver android:name=".utility.broadcasts.ReceiverJobInBackground">
+            <intent-filter>
+                <action android:name="accept"/>
+                <action android:name="disapprove"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".utility.services.GetCurrentLocation">
+        </service>
 
     </application>
 

@@ -1,7 +1,9 @@
 package com.ngra.trafficcontroller.views.application;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -12,6 +14,8 @@ import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.dagger.retrofit.DaggerRetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverGpsLocation;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverNetworkChange;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
@@ -28,6 +32,7 @@ public class TrafficController extends Application {
     public void onCreate() {//______________________________________________________________________ Start onCreate
         super.onCreate();
         this.context = getApplicationContext();
+        registerBroadcast();
         ConfigurationCalligraphy();
         ConfigrationRetrofitComponent();
     }//_____________________________________________________________________________________________ End onCreate
@@ -100,5 +105,16 @@ public class TrafficController extends Application {
                 activeNetwork.isConnectedOrConnecting();
         return  isConnected;
     }//_____________________________________________________________________________________________ End isInternetConnected
+
+
+
+    private void registerBroadcast() {//____________________________________________________________ Start registerBroadcast
+        BroadcastReceiver gpsChange = new ReceiverGpsLocation();
+        getApplicationContext().registerReceiver(gpsChange, new IntentFilter("android.location.PROVIDERS_CHANGED"));
+        BroadcastReceiver netChange = new ReceiverNetworkChange();
+        getApplicationContext().registerReceiver(netChange, new IntentFilter("android.location.CONNECTIVITY_CHANGE"));
+        getApplicationContext().registerReceiver(netChange, new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED"));
+    }//_____________________________________________________________________________________________ End registerBroadcast
+
 
 }

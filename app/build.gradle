@@ -60,11 +60,15 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
     implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
 
     implementation 'pl.charmas.android:android-reactive-location2:2.1@aar'
-    implementation 'com.google.android.gms:play-services-location:11.0.4'
-    implementation 'com.google.android.gms:play-services-places:11.0.4'
+    implementation 'com.google.android.gms:play-services-places:15.+'
+    implementation 'com.google.android.gms:play-services-location:15.+'
+//    implementation 'com.google.android.gms:play-services-location:11.0.4'
+//    implementation 'com.google.android.gms:play-services-places:11.0.4'
+
 
 }

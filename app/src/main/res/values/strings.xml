@@ -20,5 +20,7 @@
     <string name="LastInternet">آخرین زمان اتصال به اینترنت</string>
     <string name="CallWidthSupport">تماس با پشتیبانی</string>
     <string name="Inbox">پیامهای دریافتی</string>
+    <string name="DisconnectGPS">اتصال به موقعیت مکانی قطع شد</string>
+    <string name="DisconnectNet">انتصال به اینترنت قطع شد</string>
 
 </resources>

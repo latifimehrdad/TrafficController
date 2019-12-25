@@ -409,7 +409,15 @@
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/circle_layout"
-                />
+                android:gravity="center"
+                >
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/watting"
+                    />
+            </LinearLayout>
 
 
 
