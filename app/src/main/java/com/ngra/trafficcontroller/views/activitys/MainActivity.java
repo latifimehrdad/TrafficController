@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setMain(viewModel);
         ButterKnife.bind(this);
-        //CheckToken();
+        CheckToken();
         ObserverObservableGpsAndNetworkChange();
 
         if (TrafficController.getApplication(this).isLocationEnabled())

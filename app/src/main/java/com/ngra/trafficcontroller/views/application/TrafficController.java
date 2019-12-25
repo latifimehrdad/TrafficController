@@ -112,8 +112,7 @@ public class TrafficController extends Application {
         BroadcastReceiver gpsChange = new ReceiverGpsLocation();
         getApplicationContext().registerReceiver(gpsChange, new IntentFilter("android.location.PROVIDERS_CHANGED"));
         BroadcastReceiver netChange = new ReceiverNetworkChange();
-        getApplicationContext().registerReceiver(netChange, new IntentFilter("android.location.CONNECTIVITY_CHANGE"));
-        getApplicationContext().registerReceiver(netChange, new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED"));
+        getApplicationContext().registerReceiver(netChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }//_____________________________________________________________________________________________ End registerBroadcast
 
 

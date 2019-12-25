@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrafficController</string>
+    <string name="app_name">کنترل تردد نگرا</string>
     <string name="app_name_header">نرم افزار کنترل تردد نگرا</string>
 
     <string name="PhoneNumber">شماره موبایل</string>

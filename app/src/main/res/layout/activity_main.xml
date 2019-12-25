@@ -160,7 +160,7 @@
             <com.ngra.trafficcontroller.views.customview.MLCurveFooter
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:backcolorf="@color/ML_footer"
+                app:backcolorf="@color/colorPrimaryDark"
                 />
 
             <LinearLayout
@@ -412,11 +412,6 @@
                 android:gravity="center"
                 >
 
-                <pl.droidsonroids.gif.GifImageView
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/watting"
-                    />
             </LinearLayout>
 
 
