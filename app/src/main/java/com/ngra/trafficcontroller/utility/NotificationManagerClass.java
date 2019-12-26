@@ -89,11 +89,11 @@ public class NotificationManagerClass {
         when = System.currentTimeMillis();
         if (GPS) {
             icon = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.ic_location_off);
+                    R.drawable.gps_off);
             NotiId = 7126;
         } else {
             icon = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.ic_internet_off);
+                    R.drawable.net_off);
             NotiId = 6780;
         }
     }//_____________________________________________________________________________________________ End SetNotiIdAndBitmap

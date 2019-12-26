@@ -11,6 +11,9 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.dagger.realm.DaggerRealmComponent;
+import com.ngra.trafficcontroller.dagger.realm.RealmComponent;
+import com.ngra.trafficcontroller.dagger.realm.RealmModul;
 import com.ngra.trafficcontroller.dagger.retrofit.DaggerRetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
@@ -21,11 +24,14 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.reactivex.subjects.PublishSubject;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class TrafficController extends Application {
 
     private Context context;
     private RetrofitComponent retrofitComponent;
+    private RealmComponent realmComponent;
     public static PublishSubject<String> ObservablesGpsAndNetworkChange = PublishSubject.create();
 
     @Override
@@ -35,8 +41,8 @@ public class TrafficController extends Application {
         registerBroadcast();
         ConfigurationCalligraphy();
         ConfigrationRetrofitComponent();
+        ConfigrationRealmComponent();
     }//_____________________________________________________________________________________________ End onCreate
-
 
 
     private void ConfigrationRetrofitComponent() {//________________________________________________ Start ConfigrationRetrofitComponent
@@ -46,6 +52,15 @@ public class TrafficController extends Application {
                 .build();
     }//_____________________________________________________________________________________________ End ConfigrationRetrofitComponent
 
+
+    private void ConfigrationRealmComponent() {//___________________________________________________ Start ConfigrationRealmComponent
+        Realm.init(this);
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder().name("TrafficControllerRealm").schemaVersion(1).build());
+        realmComponent = DaggerRealmComponent
+                .builder()
+                .realmModul(new RealmModul())
+                .build();
+    }//_____________________________________________________________________________________________ End ConfigrationRealmComponent
 
 
     private void ConfigurationCalligraphy() {//_____________________________________________________ Start ConfigurationCalligraphy
@@ -60,11 +75,9 @@ public class TrafficController extends Application {
     }//_____________________________________________________________________________________________ End ConfigurationCalligraphy
 
 
-
     public static TrafficController getApplication(Context context) {//_____________________________ Start getApplication
         return (TrafficController) context.getApplicationContext();
     }//_____________________________________________________________________________________________ End getApplication
-
 
 
     public RetrofitComponent getRetrofitComponent() {//_____________________________________________ Start getRetrofitComponent
@@ -72,12 +85,11 @@ public class TrafficController extends Application {
     }//_____________________________________________________________________________________________ End getRetrofitComponent
 
 
-
-    public  boolean isLocationEnabled() {//_________________________________________________________ Start isLocationEnabled
+    public boolean isLocationEnabled() {//_________________________________________________________ Start isLocationEnabled
         int locationMode = 0;
         String locationProviders;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
 
@@ -88,24 +100,22 @@ public class TrafficController extends Application {
 
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
 
-        }else{
+        } else {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
         }
     }//_____________________________________________________________________________________________ End isLocationEnabled
 
 
-
     public boolean isInternetConnected() {//________________________________________________________ Start isInternetConnected
         ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-        return  isConnected;
+        return isConnected;
     }//_____________________________________________________________________________________________ End isInternetConnected
-
 
 
     private void registerBroadcast() {//____________________________________________________________ Start registerBroadcast
@@ -116,4 +126,7 @@ public class TrafficController extends Application {
     }//_____________________________________________________________________________________________ End registerBroadcast
 
 
+    public RealmComponent getRealmComponent() {//___________________________________________________ Start getRealmComponent
+        return realmComponent;
+    }//_____________________________________________________________________________________________ End getRealmComponent
 }

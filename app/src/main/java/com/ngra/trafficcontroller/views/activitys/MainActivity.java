@@ -5,20 +5,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,21 +22,24 @@ import android.widget.Toast;
 import com.google.android.gms.location.LocationRequest;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
-import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverGpsLocation;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverNetworkChange;
 import com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_MainActivity;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
+import org.reactivestreams.Subscription;
+
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewModel_MainActivity viewModel;
     int click = 1;
+    private Subscription subscription;
 
     @BindView(R.id.imgLocation)
     ImageView imgLocation;
@@ -71,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void OnBindView() {//___________________________________________________________________ Start OnBindView
         viewModel = new ViewModel_MainActivity(this);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         binding.setMain(viewModel);
         ButterKnife.bind(this);
-        CheckToken();
+        //CheckToken();
         ObserverObservableGpsAndNetworkChange();
 
         if (TrafficController.getApplication(this).isLocationEnabled())
@@ -91,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         imgInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //GetAddressFromLatLong();
+                ObservableInterval();
+                //GetCurrentLocation();
             }
         });
 
@@ -99,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
         imgLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+
 //                Locale locale = new Locale("fa_IR");
 //                Locale.setDefault(locale);
 //                ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
@@ -138,25 +144,54 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-                } else {
-                    Intent i = new Intent("ir.ngra.Lunch");
-                    sendBroadcast(i);
-                }
-
-
-            }
-        }, 1000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+//                } else {
+//                    Intent i = new Intent("ir.ngra.Lunch");
+//                    sendBroadcast(i);
+//                }
+//
+//
+//            }
+//        }, 1000);
 
 
     }//_____________________________________________________________________________________________ End OnBindView
 
 
+    private void ObservableInterval(){
+
+        Observable.interval(1,TimeUnit.MINUTES)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss", Locale.getDefault());
+                        String currentDateandTime = sdf.format(new Date());
+                        Log.i("meri", "T*** " + currentDateandTime);
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        GetCurrentLocation();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 
 
     private void GetAddressFromLatLong() {//_________________________________________________________ Start GetAddressFromLatLong
@@ -257,8 +292,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void GetCurrentLocation() {
 
-        Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
-
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setNumUpdates(1)
@@ -268,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(Location location) throws Exception {
-                        Toast.makeText(MainActivity.this, "subscription : " + location.getLatitude() + " __ " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                        Log.i("meri", "LatLong : " + location.getLatitude() + " __ " + location.getLongitude());
                     }
 
 
