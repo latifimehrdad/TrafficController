@@ -20,7 +20,14 @@
     <string name="LastInternet">آخرین زمان اتصال به اینترنت</string>
     <string name="CallWidthSupport">تماس با پشتیبانی</string>
     <string name="Inbox">پیامهای دریافتی</string>
-    <string name="DisconnectGPS">اتصال به موقعیت مکانی قطع شد</string>
-    <string name="DisconnectNet">انتصال به اینترنت قطع شد</string>
+    <string name="DisconnectGPS">موقعیت مکانی دردسترس نمیباشد</string>
+    <string name="DisconnectNet">اینترنت در دسترس نمیباشد</string>
+    <string name="MeasureDistance">مسافت طی \n شده</string>
+    <string name="ChartMeasureDistance">نمودار \n فعالیت</string>
+    <string name="TestMeasureDistance">امکانات \n بعدی</string>
+    <string name="MeasureDistanceToday">مسافت طی شده شما در امروز</string>
+    <string name="KM">کیلومتر</string>
+    <string name="Meter">متر</string>
+    <string name="InTenDays">در ده روز گذشته (به کیلومتر)</string>
 
 </resources>

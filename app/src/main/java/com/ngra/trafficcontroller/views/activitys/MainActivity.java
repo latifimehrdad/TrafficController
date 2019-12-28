@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,19 +18,30 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
+import com.ngra.trafficcontroller.models.ModelChartMeasureDistance;
+import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_MainActivity;
 import com.ngra.trafficcontroller.views.application.TrafficController;
+import com.ngra.trafficcontroller.views.dialogs.DialogChartMeasure;
+import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
 import org.reactivestreams.Subscription;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +57,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
 
 
@@ -62,6 +76,28 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.imgInternet)
     ImageView imgInternet;
 
+    @BindView(R.id.LastGPS)
+    TextView LastGPS;
+
+    @BindView(R.id.LastNet)
+    TextView LastNet;
+
+    @BindView(R.id.CircleMenu)
+    RelativeLayout CircleMenu;
+
+    @BindView(R.id.CircleMenuCenter)
+    LinearLayout CircleMenuCenter;
+
+    @BindView(R.id.ImgCircleMenu)
+    ImageView ImgCircleMenu;
+
+    @BindView(R.id.LayoutMeasureDistance)
+    LinearLayout LayoutMeasureDistance;
+
+    @BindView(R.id.LayoutMeasureDistanceChart)
+    LinearLayout LayoutMeasureDistanceChart;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {//__________________________________________ Start onCreate
         super.onCreate(savedInstanceState);
@@ -71,11 +107,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void OnBindView() {//___________________________________________________________________ Start OnBindView
         viewModel = new ViewModel_MainActivity(this);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setMain(viewModel);
         ButterKnife.bind(this);
-        //CheckToken();
+        init();
+        CheckToken();
         ObserverObservableGpsAndNetworkChange();
+
+    }//_____________________________________________________________________________________________ End OnBindView
+
+
+    private void init() {//_________________________________________________________________________ Start init
+
+        CircleMenu.setVisibility(View.INVISIBLE);
+        ImgCircleMenu.setImageResource(R.drawable.ic_apps);
 
         if (TrafficController.getApplication(this).isLocationEnabled())
             imgLocation.setImageResource(R.drawable.ic_location_on);
@@ -87,12 +132,74 @@ public class MainActivity extends AppCompatActivity {
         else
             imgInternet.setImageResource(R.drawable.ic_internet_off);
 
+        LastGPS.setText(viewModel.GetLastGPS());
+        LastNet.setText(viewModel.GetLastNet());
+        SetClicks();
+
+    }//_____________________________________________________________________________________________ End init
+
+
+    private void SetClicks() {//____________________________________________________________________ Start SetClicks
+
+        LayoutMeasureDistanceChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<ModelChartMeasureDistance>
+                        arrayList = viewModel.getModelChartMeasureDistances();
+                ShowChart(arrayList);
+            }
+        });
+
+
+        LayoutMeasureDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Integer MD = viewModel.getLocationsForMeasureDistance();
+                String message = getResources().getString(R.string.MeasureDistanceToday);
+                message = message +
+                        "\n" +
+                        String.valueOf(MD / 1000) +
+                        " "+
+                        getResources().getString(R.string.KM) +
+                        " و " +
+                        String.valueOf(MD % 1000) +
+                        " " +
+                        getResources().getString(R.string.Meter);
+
+                ShowMessage(
+                        message,
+                        getResources().getColor(R.color.ML_White),
+                        getResources().getDrawable(R.drawable.ic_directions_walk)
+                );
+
+            }
+        });
+
+        CircleMenuCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CircleMenu.getVisibility() == View.INVISIBLE) {
+                    CircleMenu.setVisibility(View.VISIBLE);
+                    ImgCircleMenu.setImageResource(R.drawable.ic_center_focus);
+                } else {
+                    CircleMenu.setVisibility(View.INVISIBLE);
+                    ImgCircleMenu.setImageResource(R.drawable.ic_apps);
+                }
+            }
+        });
+
 
         imgInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ObservableInterval();
+                //ObservableInterval();
                 //GetCurrentLocation();
+                MehrdadLatifiMap latifiMap = new MehrdadLatifiMap();
+                LatLng old = new LatLng(35.838232, 50.941357);
+                LatLng New = new LatLng(35.838464, 50.944758);
+                float[] results = latifiMap.MeasureDistance(old, New);
+                Log.i("meri", results.toString());
             }
         });
 
@@ -142,56 +249,22 @@ public class MainActivity extends AppCompatActivity {
 //                        });
             }
         });
+    }//_____________________________________________________________________________________________ End SetClicks
 
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-//                } else {
-//                    Intent i = new Intent("ir.ngra.Lunch");
-//                    sendBroadcast(i);
-//                }
-//
-//
-//            }
-//        }, 1000);
+
+    private void ShowMessage(String message, int color, Drawable icon) {//__________________________ Start ShowMessage
+        DialogMessage dialogMessage = new DialogMessage(this, message, color, icon);
+        dialogMessage.setCancelable(false);
+        dialogMessage.show(getSupportFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
+    }//_____________________________________________________________________________________________ End ShowMessage
 
 
-    }//_____________________________________________________________________________________________ End OnBindView
-
-
-    private void ObservableInterval(){
-
-        Observable.interval(1,TimeUnit.MINUTES)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss", Locale.getDefault());
-                        String currentDateandTime = sdf.format(new Date());
-                        Log.i("meri", "T*** " + currentDateandTime);
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        GetCurrentLocation();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
+    private void ShowChart(ArrayList<ModelChartMeasureDistance> arrayList) {//______________________ Start ShowChart
+        DialogChartMeasure measure = new DialogChartMeasure(this, arrayList);
+        measure.setCancelable(false);
+        measure.show(getSupportFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
+    }//_____________________________________________________________________________________________ End ShowChart
 
 
     private void GetAddressFromLatLong() {//_________________________________________________________ Start GetAddressFromLatLong
@@ -271,6 +344,13 @@ public class MainActivity extends AppCompatActivity {
                                                 imgInternet.setImageResource(R.drawable.ic_internet_off);
                                             }
                                             break;
+                                        case "LastGPS":
+                                            LastGPS.setText(viewModel.GetLastGPS());
+                                            break;
+
+                                        case "LastNet":
+                                            LastNet.setText(viewModel.GetLastNet());
+                                            break;
                                     }
                                 }
                             });
@@ -288,6 +368,46 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }//_____________________________________________________________________________________________ End ObserverObservableGpsAndNetworkChange
+
+
+    private void CheckToken() {//_______________________________ ___________________________________ Start CheckToken
+        SharedPreferences prefs = this.getSharedPreferences("trafficcontroller", 0);
+        if (prefs == null) {
+            ShowLoginActivity();
+        } else {
+            Boolean login = prefs.getBoolean("login", false);
+            if (login == false)
+                ShowLoginActivity();
+            else {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+                        } else {
+                            Intent i = new Intent("ir.ngra.Lunch");
+                            sendBroadcast(i);
+                        }
+
+
+                    }
+                }, 1000);
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End CheckToken
+
+
+    private void ShowLoginActivity() {//____________________________________________________________ Start ShowLoginActivity
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }//_____________________________________________________________________________________________ End ShowLoginActivity
+
+
+    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }//_____________________________________________________________________________________________ End attachBaseContext
 
 
     private void GetCurrentLocation() {
@@ -308,29 +428,35 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void ObservableInterval() {
 
-    private void CheckToken() {//_______________________________ ___________________________________ Start CheckToken
-        SharedPreferences prefs = this.getSharedPreferences("trafficcontroller", 0);
-        if (prefs == null) {
-            ShowLoginActivity();
-        } else {
-            Boolean login = prefs.getBoolean("login", false);
-            if (login == false)
-                ShowLoginActivity();
-        }
+        Observable.interval(1, TimeUnit.MINUTES)
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss", Locale.getDefault());
+                        String currentDateandTime = sdf.format(new Date());
+                        Log.i("meri", "T*** " + currentDateandTime);
+                    }
 
-    }//_____________________________________________________________________________________________ End CheckToken
+                    @Override
+                    public void onNext(Long aLong) {
+                        GetCurrentLocation();
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
 
-    private void ShowLoginActivity() {//____________________________________________________________ Start ShowLoginActivity
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }//_____________________________________________________________________________________________ End ShowLoginActivity
+                    }
 
+                    @Override
+                    public void onComplete() {
 
-    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
-    }//_____________________________________________________________________________________________ End attachBaseContext
+                    }
+                });
+    }
 
 
 }

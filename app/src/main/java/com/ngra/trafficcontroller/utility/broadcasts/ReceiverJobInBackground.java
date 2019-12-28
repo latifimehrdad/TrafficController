@@ -3,15 +3,24 @@ package com.ngra.trafficcontroller.utility.broadcasts;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
+import com.ngra.trafficcontroller.models.Model_Result;
+import com.ngra.trafficcontroller.utility.DeviceTools;
 import com.ngra.trafficcontroller.views.activitys.MainActivity;
 import com.ngra.trafficcontroller.views.application.TrafficController;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -29,17 +39,29 @@ import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private Context context;
+    private RealmResults<DataBaseLocation> locations;
 
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
         this.context = context;
-        GetCurrentLocation();
-        //SentLocatointoServer();
+
+        if (TrafficController.getApplication(context).isLocationEnabled())
+            GetCurrentLocation();
+
+        if (TrafficController.getApplication(context).isInternetConnected())
+            GetLocatointonFromDB();
+
+        DeleteOldLocationFromDataBase();
 
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
@@ -80,30 +102,146 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             } else {
                 ID = currentIdNum.intValue() + 1;
             }
-            Date date = new Date();
 
+            String time = getStringCurrentDate();
+            Date date = new Date();
             realm.beginTransaction();
             realm.createObject(DataBaseLocation.class, ID)
-                    .InsertDataBaseLocation(Latitude, Longitude, date,Altitude, Speed);
+                    .InsertDataBaseLocation(Latitude, Longitude, time, Altitude, Speed, date);
             realm.commitTransaction();
 
         } catch (Exception ex) {
             realm.cancelTransaction();
         }
 
+        SharedPreferences.Editor perf =
+                context.getSharedPreferences("trafficcontroller", 0).edit();
+        String time = getStringCurrentDate();
+        perf.putString("lastgps", time);
+        perf.apply();
+        ObservablesGpsAndNetworkChange.onNext("LastGPS");
+
 
     }//_____________________________________________________________________________________________ End StartSaveToDataBase
 
 
-    private void SentLocatointoServer() {//_________________________________________________________ Start SentLocatointoServer
+    public String getStringCurrentDate() {//_______________________________________________________ Start getStringCurrentDate
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        return simpleDateFormat.format(new Date());
+    }//_____________________________________________________________________________________________ End getStringCurrentDate
+
+
+    private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
                 .getRealm();
 
-        RealmResults<DataBaseLocation> locations = realm.where(DataBaseLocation.class).findAll();
-        Log.i("meri", "fdsfdsfds");
-    }//_____________________________________________________________________________________________ End SentLocatointoServer
+        locations = realm.where(DataBaseLocation.class).equalTo("Send", false).findAll();
+        SendLocatoinToServer();
+    }//_____________________________________________________________________________________________ End GetLocatointonFromDB
+
+
+    private void SendLocatoinToServer() {//_________________________________________________________ Start SendLocatoinToServer
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (DataBaseLocation location : locations) {
+            JSONObject temp = new JSONObject();
+            try {
+                temp.put("latitude", location.getLatitude());
+                temp.put("longitude", location.getLongitude());
+                temp.put("altitude", location.getAltitude());
+                temp.put("speed", location.getSpeed());
+                temp.put("time", location.getTime());
+                jsonArray.put(temp);
+            } catch (JSONException ex) {
+
+            }
+
+        }
+
+        try {
+            jsonObject.put("locations", jsonArray);
+        } catch (JSONException ex) {
+            return;
+        }
+
+        RetrofitModule.isCancel = false;
+        RetrofitComponent retrofitComponent =
+                TrafficController
+                        .getApplication(context)
+                        .getRetrofitComponent();
+
+        DeviceTools deviceTools = new DeviceTools(context);
+        String imei = deviceTools.getIMEI();
+
+
+        retrofitComponent
+                .getRetrofitApiInterface()
+                .SendLocation(
+                        imei,
+                        jsonObject.toString()
+                )
+                .enqueue(new Callback<Model_Result>() {
+                    @Override
+                    public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
+                        if (response != null) {
+                            String result = response.body().getResult();
+                            if (result.equalsIgnoreCase("done")) {
+                                Realm realm = TrafficController
+                                        .getApplication(context)
+                                        .getRealmComponent().getRealm();
+
+                                for (DataBaseLocation location : locations) {
+                                    try {
+                                        realm.beginTransaction();
+                                        location.setSend(true);
+                                        realm.commitTransaction();
+                                    } catch (Exception ex) {
+
+                                    }
+                                }
+                                SharedPreferences.Editor perf =
+                                        context.getSharedPreferences("trafficcontroller", 0).edit();
+                                String time = getStringCurrentDate();
+                                perf.putString("lastnet", time);
+                                perf.apply();
+                                ObservablesGpsAndNetworkChange.onNext("LastNet");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Model_Result> call, Throwable t) {
+
+                    }
+                });
+    }//_____________________________________________________________________________________________ End SendLocatoinToServer
+
+
+    private void DeleteOldLocationFromDataBase() {//________________________________________________ Start DeleteOldLocationFromDataBase
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DATE, -31);
+
+        Realm realm = TrafficController
+                .getApplication(context)
+                .getRealmComponent()
+                .getRealm();
+
+        RealmResults<DataBaseLocation> delete = realm
+                .where(DataBaseLocation.class)
+                .equalTo("Send", true)
+                .and()
+                .lessThanOrEqualTo("SaveDate", now.getTime())
+                .findAll();
+
+        realm.beginTransaction();
+        delete.deleteAllFromRealm();
+        realm.commitTransaction();
+
+    }//_____________________________________________________________________________________________ End DeleteOldLocationFromDataBase
 
 
     private void LogService() {//___________________________________________________________________ Start SentLocatointoServer

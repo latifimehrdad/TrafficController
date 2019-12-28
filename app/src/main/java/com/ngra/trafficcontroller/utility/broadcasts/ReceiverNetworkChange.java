@@ -29,7 +29,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
                             );
                 }
             }
-        },5000);
+        },10 * 1000);
 
         ObservablesGpsAndNetworkChange.onNext("changeNetwork");
     }//_____________________________________________________________________________________________ End onReceive

@@ -3,8 +3,11 @@ package com.ngra.trafficcontroller.views.activitys;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityLoginBinding;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_LoginActivity;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentLogin;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentVerify;
@@ -75,7 +79,24 @@ public class LoginActivity extends AppCompatActivity {
                                         ShowFragmentVerify();
                                         break;
                                     case "finishok":
-                                        finish();
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    sendBroadcast(
+                                                            new Intent(
+                                                                    LoginActivity.this,
+                                                                    ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+                                                } else {
+                                                    Intent i = new Intent("ir.ngra.Lunch");
+                                                    sendBroadcast(i);
+                                                    finish();
+                                                }
+
+                                            }
+                                        }, 1000);
+
                                         break;
                                     default:
                                         PhoneNumber = s;

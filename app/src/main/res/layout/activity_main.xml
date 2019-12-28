@@ -183,6 +183,7 @@
                     android:text="@string/LastLocation"
                     />
                 <TextView
+                    android:id="@+id/LastGPS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_3sdp"
@@ -211,6 +212,7 @@
                     android:text="@string/LastInternet"
                     />
                 <TextView
+                    android:id="@+id/LastNet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_3sdp"
@@ -403,7 +405,19 @@
             </LinearLayout>
 
 
+            <include layout="@layout/layout_circle_menu"
+                android:id="@+id/CircleMenu"
+                android:layout_height="@dimen/_200sdp"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="visible"
+                />
+
+
             <LinearLayout
+                android:id="@+id/CircleMenuCenter"
+                android:orientation="vertical"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:layout_centerVertical="true"
@@ -412,7 +426,18 @@
                 android:gravity="center"
                 >
 
+                <ImageView
+                    android:id="@+id/ImgCircleMenu"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:src="@drawable/ic_apps"
+                    android:tint="@color/colorPrimaryDark"/>
+
             </LinearLayout>
+
+
+
+
 
 
 

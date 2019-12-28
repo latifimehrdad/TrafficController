@@ -27,4 +27,11 @@ public interface RetrofitApiInterface {
                     @Field("imei") String imei
             );
 
+    @POST("Api.aspx?action=sync_location")
+    @FormUrlEncoded
+    Call<Model_Result> SendLocation(
+            @Field("imei") String imei,
+            @Field("locationsJson") String locationsJson
+    );
+
 }

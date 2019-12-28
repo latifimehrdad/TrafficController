@@ -12,21 +12,25 @@ public class DataBaseLocation extends RealmObject {
     private Integer ID;
     private double Latitude;
     private double Longitude;
-    private Date Time;
+    private String Time;
     private double Altitude;
     private float Speed;
+    private Date SaveDate;
+    private boolean Send = false;
 
     public void InsertDataBaseLocation(
             double latitude,
             double longitude,
-            Date time,
+            String time,
             double altitude,
-            float speed) {//________________________________________________________________________ Start DataBaseLocation
+            float speed,
+            Date saveDate) {//________________________________________________________________________ Start DataBaseLocation
         Latitude = latitude;
         Longitude = longitude;
         Time = time;
         Altitude = altitude;
         Speed = speed;
+        SaveDate = saveDate;
     }//_____________________________________________________________________________________________ End DataBaseLocation
 
 
@@ -54,11 +58,11 @@ public class DataBaseLocation extends RealmObject {
         Longitude = longitude;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return Time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         Time = time;
     }
 
@@ -76,5 +80,21 @@ public class DataBaseLocation extends RealmObject {
 
     public void setSpeed(float speed) {
         Speed = speed;
+    }
+
+    public boolean isSend() {
+        return Send;
+    }
+
+    public void setSend(boolean send) {
+        Send = send;
+    }
+
+    public Date getSaveDate() {
+        return SaveDate;
+    }
+
+    public void setSaveDate(Date saveDate) {
+        SaveDate = saveDate;
     }
 }
