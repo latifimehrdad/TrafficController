@@ -10,11 +10,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
+import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 import com.ngra.trafficcontroller.views.activitys.MainActivity;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
@@ -53,7 +55,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
-        Log.i("meri","***Start***");
         this.context = context;
 
         if (TrafficController.getApplication(context).isLocationEnabled())

@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
@@ -31,6 +32,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
             }
         },10 * 1000);
 
+        context.startService(new Intent(context, ServiceSetTimeForLunchApp.class));
         ObservablesGpsAndNetworkChange.onNext("changeNetwork");
     }//_____________________________________________________________________________________________ End onReceive
 }

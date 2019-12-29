@@ -1,15 +1,16 @@
 package com.ngra.trafficcontroller.utility.broadcasts;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+        import android.content.BroadcastReceiver;
+        import android.content.Context;
+        import android.content.Intent;
 
-import com.ngra.trafficcontroller.R;
-import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-import com.ngra.trafficcontroller.views.activitys.MainActivity;
-import com.ngra.trafficcontroller.views.application.TrafficController;
+        import com.ngra.trafficcontroller.R;
+        import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+        import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
+        import com.ngra.trafficcontroller.views.activitys.MainActivity;
+        import com.ngra.trafficcontroller.views.application.TrafficController;
 
-import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
+        import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class ReceiverGpsLocation extends BroadcastReceiver {
 
@@ -21,13 +22,13 @@ public class ReceiverGpsLocation extends BroadcastReceiver {
                     new NotificationManagerClass(
                             context,
                             context.getResources().getString(R.string.DisconnectGPS)
-                            ,false
-                            ,true
+                            , false
+                            , true
                     );
         }
-            ObservablesGpsAndNetworkChange.onNext("changeGPS");
+        context.startService(new Intent(context, ServiceSetTimeForLunchApp.class));
+        ObservablesGpsAndNetworkChange.onNext("changeGPS");
     }//_____________________________________________________________________________________________ End onReceive
-
 
 
 }
