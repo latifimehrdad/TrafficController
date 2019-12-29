@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin;
@@ -25,7 +26,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import pl.droidsonroids.gif.GifImageView;
 
 import static com.ngra.trafficcontroller.utility.StaticFunctions.TextChangeForChangeBack;
 
@@ -49,8 +49,8 @@ public class FragmentLogin extends Fragment {
     @BindView(R.id.btnLogin)
     Button btnLogin;
 
-    @BindView(R.id.gifWatting)
-    GifImageView gifWatting;
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
 
 
     @Override
@@ -181,14 +181,14 @@ public class FragmentLogin extends Fragment {
 
     private void ShowProgress() {//_________________________________________________________________ Start ShowProgress
         btnLogin.setText("");
-        gifWatting.setVisibility(View.VISIBLE);
+        spin_kit.setVisibility(View.VISIBLE);
     }//_____________________________________________________________________________________________ End ShowProgress
 
 
 
     private void DismissProgress() {//______________________________________________________________ Start DismissProgress
         btnLogin.setText(getResources().getString(R.string.Login));
-        gifWatting.setVisibility(View.INVISIBLE);
+        spin_kit.setVisibility(View.INVISIBLE);
     }//_____________________________________________________________________________________________ End DismissProgress
 
 

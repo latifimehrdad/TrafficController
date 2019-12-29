@@ -63,9 +63,9 @@ dependencies {
     implementation 'io.github.inflationx:calligraphy3:3.1.1'
     implementation 'io.github.inflationx:viewpump:2.0.3'
 
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
-
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     implementation 'pl.charmas.android:android-reactive-location2:2.1@aar'
     implementation 'com.google.android.gms:play-services-places:15.+'
