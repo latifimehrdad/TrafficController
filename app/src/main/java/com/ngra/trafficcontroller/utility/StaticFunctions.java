@@ -2,11 +2,26 @@ package com.ngra.trafficcontroller.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.google.android.gms.location.LocationRequest;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.database.DataBaseLocation;
+import com.ngra.trafficcontroller.views.application.TrafficController;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.realm.Realm;
+import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
+
+import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class StaticFunctions {
 
@@ -42,6 +57,7 @@ public class StaticFunctions {
         };
 
     }//_____________________________________________________________________________________________ End TextChangeForChangeBack
+
 
 //
 //    public static View.OnKeyListener SetBackClickAndGoHome(Boolean execute) {//_____________________ Start SetBackClickAndGoHome

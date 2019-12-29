@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +21,23 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityLoginBinding;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_LoginActivity;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentLogin;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentVerify;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -56,9 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         ObserverObservables();
         ShowFragmentLogin();
         checkLocationPermission();
-
-        //ObservablesGpsAndNetworkChange.onNext("login");
     }//_____________________________________________________________________________________________ End OnBindView
+
 
 
     private void ObserverObservables() {//__________________________________________________________ Start ObserverObservables
@@ -149,8 +159,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
     public void checkLocationPermission() {//_____________________________________________________________________________________________ Start checkLocationPermission
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -195,6 +203,29 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    private void CheckToken() {//_______________________________ ___________________________________ Start CheckToken
+        SharedPreferences prefs = this.getSharedPreferences("trafficcontroller", 0);
+        if (prefs == null) {
+            moveTaskToBack(true);
+            System.exit(0);
+        } else {
+            Boolean login = prefs.getBoolean("login", false);
+            if (login == false) {
+                moveTaskToBack(true);
+                System.exit(0);
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End CheckToken
+
+
+
+    @Override
+    protected void onDestroy() {//__________________________________________________________________ Start onDestroy
+        super.onDestroy();
+        CheckToken();
+    }//_____________________________________________________________________________________________ End onDestroy
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -232,6 +263,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }//_____________________________________________________________________________________________ End onRequestPermissionsResult
+
 
 
 

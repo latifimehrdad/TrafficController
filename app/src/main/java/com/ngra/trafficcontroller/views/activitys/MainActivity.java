@@ -5,6 +5,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,11 +13,14 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -67,7 +71,7 @@ import static com.ngra.trafficcontroller.views.application.TrafficController.Obs
 public class MainActivity extends AppCompatActivity {
 
     private ViewModel_MainActivity viewModel;
-    int click = 1;
+    private boolean ShowLogin = false;
     private Subscription subscription;
 
     @BindView(R.id.imgLocation)
@@ -96,6 +100,19 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.LayoutMeasureDistanceChart)
     LinearLayout LayoutMeasureDistanceChart;
+
+    @BindView(R.id.LayoutNetSetting)
+    LinearLayout LayoutNetSetting;
+
+    @BindView(R.id.ImgWifi)
+    ImageView ImgWifi;
+
+
+    @BindView(R.id.ImgData)
+    ImageView ImgData;
+
+    @BindView(R.id.LayoutPrimary)
+    RelativeLayout LayoutPrimary;
 
 
     @Override
@@ -141,6 +158,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void SetClicks() {//____________________________________________________________________ Start SetClicks
 
+
+        LayoutPrimary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
+                CircleMenu.setVisibility(View.INVISIBLE);
+                ImgCircleMenu.setImageResource(R.drawable.ic_apps);
+            }
+        });
+
+
         LayoutMeasureDistanceChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 message = message +
                         "\n" +
                         String.valueOf(MD / 1000) +
-                        " "+
+                        " " +
                         getResources().getString(R.string.KM) +
                         " و " +
                         String.valueOf(MD % 1000) +
@@ -179,6 +213,13 @@ public class MainActivity extends AppCompatActivity {
         CircleMenuCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
+
                 if (CircleMenu.getVisibility() == View.INVISIBLE) {
                     CircleMenu.setVisibility(View.VISIBLE);
                     ImgCircleMenu.setImageResource(R.drawable.ic_center_focus);
@@ -190,16 +231,60 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        ImgWifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
+
+                startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+//                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//                wifiManager.setWifiEnabled(true);
+            }
+        });
+
+
+        ImgData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
+
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setComponent(new ComponentName("com.android.settings",
+                        "com.android.settings.Settings$DataUsageSummaryActivity"));
+                startActivity(intent);
+            }
+        });
+
+
         imgInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ObservableInterval();
-                //GetCurrentLocation();
-                MehrdadLatifiMap latifiMap = new MehrdadLatifiMap();
-                LatLng old = new LatLng(35.838232, 50.941357);
-                LatLng New = new LatLng(35.838464, 50.944758);
-                float[] results = latifiMap.MeasureDistance(old, New);
-                Log.i("meri", results.toString());
+
+                if (TrafficController.getApplication(MainActivity.this).isInternetConnected())
+                    return;
+
+                if (LayoutNetSetting.getVisibility() == View.INVISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_in_bottom));
+                    LayoutNetSetting.setVisibility(View.VISIBLE);
+                } else {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -207,10 +292,21 @@ public class MainActivity extends AppCompatActivity {
         imgLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(startMain);
+
+                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                    LayoutNetSetting
+                            .startAnimation(AnimationUtils
+                                    .loadAnimation(getBaseContext(), R.anim.slide_out_bottom));
+                    LayoutNetSetting.setVisibility(View.INVISIBLE);
+                }
+
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+//                Intent startMain = new Intent(Intent.ACTION_MAIN);
+//                startMain.addCategory(Intent.CATEGORY_HOME);
+//                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(startMain);
 
 //                Locale locale = new Locale("fa_IR");
 //                Locale.setDefault(locale);
@@ -250,7 +346,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }//_____________________________________________________________________________________________ End SetClicks
-
 
 
     private void ShowMessage(String message, int color, Drawable icon) {//__________________________ Start ShowMessage
@@ -373,27 +468,15 @@ public class MainActivity extends AppCompatActivity {
     private void CheckToken() {//_______________________________ ___________________________________ Start CheckToken
         SharedPreferences prefs = this.getSharedPreferences("trafficcontroller", 0);
         if (prefs == null) {
+            ShowLogin = true;
             ShowLoginActivity();
         } else {
             Boolean login = prefs.getBoolean("login", false);
-            if (login == false)
+            if (login == false) {
+                ShowLogin = true;
                 ShowLoginActivity();
-            else {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-                        } else {
-                            Intent i = new Intent("ir.ngra.Lunch");
-                            sendBroadcast(i);
-                        }
-
-
-                    }
-                }, 1000);
-            }
+            } else
+                StartService();
         }
 
     }//_____________________________________________________________________________________________ End CheckToken
@@ -410,25 +493,7 @@ public class MainActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End attachBaseContext
 
 
-    private void GetCurrentLocation() {
-
-        LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(1)
-                .setInterval(1000);
-        ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
-        Disposable subscription = locationProvider.getUpdatedLocation(request)
-                .subscribe(new Consumer<Location>() {
-                    @Override
-                    public void accept(Location location) throws Exception {
-                        Log.i("meri", "LatLong : " + location.getLatitude() + " __ " + location.getLongitude());
-                    }
-
-
-                });
-    }
-
-    private void ObservableInterval() {
+    private void ObservableInterval() {//___________________________________________________________ Start ObservableInterval
 
         Observable.interval(1, TimeUnit.MINUTES)
                 .observeOn(Schedulers.io())
@@ -443,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Long aLong) {
-                        GetCurrentLocation();
+                        //GetCurrentLocation();
                     }
 
                     @Override
@@ -456,7 +521,25 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-    }
+    }//_____________________________________________________________________________________________ End ObservableInterval
+
+
+    private void StartService() {//_________________________________________________________________ Start StartService
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    sendBroadcast(new Intent(MainActivity.this, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+                } else {
+                    Intent i = new Intent("ir.ngra.Lunch");
+                    sendBroadcast(i);
+                }
+
+
+            }
+        }, 1000);
+    }//_____________________________________________________________________________________________ End StartService
 
 
 }

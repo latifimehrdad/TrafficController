@@ -127,8 +127,7 @@ public class DialogChartMeasure extends DialogFragment {
     private void setData() {//______________________________________________________________________ Start setData
 
         ArrayList<BarEntry> values = new ArrayList<>();
-        values.add(new BarEntry(0,5));
-        for(int i = 1; i< arrayList.size(); i ++){
+        for(int i = 0; i< arrayList.size(); i ++){
             values.add(new BarEntry(i,arrayList.get(i).getMeasure()));
         }
 

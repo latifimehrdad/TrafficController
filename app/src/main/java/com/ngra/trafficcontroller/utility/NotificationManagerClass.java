@@ -55,7 +55,7 @@ public class NotificationManagerClass {
         SetNotiIdAndBitmap(GPS);
         NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(
                 context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.miniicon)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 80, 80, false))
                 .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(Text))
@@ -74,7 +74,7 @@ public class NotificationManagerClass {
         SetNotiIdAndBitmap(GPS);
         CreateChannels();
         Notification.Builder builder = new Notification.Builder(context, CHANNEL_ONE_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.miniicon)
                 .setContentText(Text)
                 .setLargeIcon(icon)
                 .setStyle(new Notification.BigTextStyle()

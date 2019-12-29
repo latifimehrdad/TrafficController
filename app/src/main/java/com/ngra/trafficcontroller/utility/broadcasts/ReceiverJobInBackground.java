@@ -53,6 +53,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
+        Log.i("meri","***Start***");
         this.context = context;
 
         if (TrafficController.getApplication(context).isLocationEnabled())
@@ -120,8 +121,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         perf.putString("lastgps", time);
         perf.apply();
         ObservablesGpsAndNetworkChange.onNext("LastGPS");
-
-
     }//_____________________________________________________________________________________________ End StartSaveToDataBase
 
 
