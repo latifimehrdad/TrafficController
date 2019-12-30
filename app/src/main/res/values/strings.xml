@@ -22,7 +22,7 @@
     <string name="Inbox">پیامهای دریافتی</string>
     <string name="DisconnectGPS">موقعیت مکانی دردسترس نمیباشد</string>
     <string name="DisconnectNet">اینترنت در دسترس نمیباشد</string>
-    <string name="MeasureDistance">مسافت طی \n شده</string>
+    <string name="MeasureDistance">مسافت طی \n شده امروز</string>
     <string name="ChartMeasureDistance">نمودار \n فعالیت</string>
     <string name="TestMeasureDistance">امکانات \n بعدی</string>
     <string name="MeasureDistanceToday">مسافت طی شده شما در امروز</string>

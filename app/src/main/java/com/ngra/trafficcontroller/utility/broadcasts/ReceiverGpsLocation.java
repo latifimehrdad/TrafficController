@@ -6,8 +6,6 @@ package com.ngra.trafficcontroller.utility.broadcasts;
 
         import com.ngra.trafficcontroller.R;
         import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-        import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
-        import com.ngra.trafficcontroller.views.activitys.MainActivity;
         import com.ngra.trafficcontroller.views.application.TrafficController;
 
         import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
@@ -26,7 +24,6 @@ public class ReceiverGpsLocation extends BroadcastReceiver {
                             , true
                     );
         }
-        context.startService(new Intent(context, ServiceSetTimeForLunchApp.class));
         ObservablesGpsAndNetworkChange.onNext("changeGPS");
     }//_____________________________________________________________________________________________ End onReceive
 

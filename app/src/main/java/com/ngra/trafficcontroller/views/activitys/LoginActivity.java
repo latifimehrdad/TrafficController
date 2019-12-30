@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,26 +20,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityLoginBinding;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_LoginActivity;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentLogin;
 import com.ngra.trafficcontroller.views.fragments.login.FragmentVerify;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import butterknife.ButterKnife;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import ir.clinicemashin.ml_map_functions.MehrdadLatifiMap;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private PublishSubject<String> Observables;
     private String PhoneNumber;
+    private DisposableObserver<String> observer;
 
 
     @Override
@@ -70,63 +62,58 @@ public class LoginActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End OnBindView
 
 
-
     private void ObserverObservables() {//__________________________________________________________ Start ObserverObservables
+
+        observer = new DisposableObserver<String>() {
+            @Override
+            public void onNext(String s) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (s) {
+                            case "Login":
+                                ShowFragmentLogin();
+                                break;
+                            case "Verify":
+                                ShowFragmentVerify();
+                                break;
+                            case "FinishOk":
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    sendBroadcast(
+                                            new Intent(
+                                                    LoginActivity.this,
+                                                    ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+                                    finish();
+                                } else {
+                                    Intent i = new Intent("ir.ngra.Lunch");
+                                    sendBroadcast(i);
+                                    finish();
+                                }
+                                break;
+                            default:
+                                PhoneNumber = s;
+                                ShowFragmentVerify();
+                                break;
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
         Observables
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String s) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                switch (s) {
-                                    case "login":
-                                        ShowFragmentLogin();
-                                        break;
-                                    case "verify":
-                                        ShowFragmentVerify();
-                                        break;
-                                    case "finishok":
-                                        Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                                    sendBroadcast(
-                                                            new Intent(
-                                                                    LoginActivity.this,
-                                                                    ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-                                                } else {
-                                                    Intent i = new Intent("ir.ngra.Lunch");
-                                                    sendBroadcast(i);
-                                                    finish();
-                                                }
-
-                                            }
-                                        }, 1000);
-
-                                        break;
-                                    default:
-                                        PhoneNumber = s;
-                                        ShowFragmentVerify();
-                                        break;
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                .subscribe(observer);
 
     }//_____________________________________________________________________________________________ End ObserverObservables
 
@@ -141,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         ft = null;
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
-        FragmentLogin login = new FragmentLogin(this, Observables);
+        FragmentLogin login = new FragmentLogin(this, this);
         ft.replace(R.id.loginFragment, login);
         ft.commit();
     }//_____________________________________________________________________________________________ End ShowFragmentLogin
@@ -152,11 +139,10 @@ public class LoginActivity extends AppCompatActivity {
         ft = null;
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
-        FragmentVerify verify = new FragmentVerify(this, Observables,PhoneNumber);
+        FragmentVerify verify = new FragmentVerify(this, PhoneNumber, this);
         ft.replace(R.id.loginFragment, verify);
         ft.commit();
     }//_____________________________________________________________________________________________ End ShowFragmentVerify
-
 
 
     public void checkLocationPermission() {//_____________________________________________________________________________________________ Start checkLocationPermission
@@ -189,8 +175,7 @@ public class LoginActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End checkLocationPermission
 
 
-
-    public void checkReadPhonestate(){//____________________________________________________________ Start checkReadPhonestate
+    public void checkReadPhonestate() {//____________________________________________________________ Start checkReadPhonestate
         int permissionCheck = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_PHONE_STATE);
 
@@ -200,7 +185,6 @@ public class LoginActivity extends AppCompatActivity {
             //TODO
         }
     }//_____________________________________________________________________________________________ End checkReadPhonestate
-
 
 
     private void CheckToken() {//_______________________________ ___________________________________ Start CheckToken
@@ -213,11 +197,13 @@ public class LoginActivity extends AppCompatActivity {
             if (login == false) {
                 moveTaskToBack(true);
                 System.exit(0);
+            } else {
+                if(observer != null)
+                    observer.dispose();
             }
         }
 
     }//_____________________________________________________________________________________________ End CheckToken
-
 
 
     @Override
@@ -225,6 +211,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
         CheckToken();
     }//_____________________________________________________________________________________________ End onDestroy
+
+
+    public PublishSubject<String> getObservables() {//______________________________________________ Start getObservables
+        return Observables;
+    }//_____________________________________________________________________________________________ End getObservables
 
 
     @Override
@@ -263,9 +254,6 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }//_____________________________________________________________________________________________ End onRequestPermissionsResult
-
-
-
 
 
 }

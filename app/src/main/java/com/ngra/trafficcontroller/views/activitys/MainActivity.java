@@ -33,8 +33,7 @@ import com.ngra.trafficcontroller.views.application.TrafficController;
 import com.ngra.trafficcontroller.views.dialogs.DialogChartMeasure;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
-import org.reactivestreams.Subscription;
-
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewModel_MainActivity viewModel;
     private boolean ShowLogin = false;
-    private Subscription subscription;
 
     @BindView(R.id.imgLocation)
     ImageView imgLocation;
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         binding.setMain(viewModel);
         ButterKnife.bind(this);
         init();
-        CheckToken();
+        //CheckToken();
         ObserverObservableGpsAndNetworkChange();
 
     }//_____________________________________________________________________________________________ End OnBindView
@@ -150,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         LayoutPrimary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                File file = new File(MainActivity.this.getFilesDir(), "config.txt");
+                file.delete();
 
                 if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
                     LayoutNetSetting
@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         CircleMenuCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,8 +231,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-//                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//                wifiManager.setWifiEnabled(true);
             }
         });
 
@@ -290,47 +289,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
-
-//                Intent startMain = new Intent(Intent.ACTION_MAIN);
-//                startMain.addCategory(Intent.CATEGORY_HOME);
-//                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(startMain);
-
-//                Locale locale = new Locale("fa_IR");
-//                Locale.setDefault(locale);
-//                ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
-//                Observable<List<Address>> reverseGeocodeObservable = locationProvider
-//                        .getReverseGeocodeObservable(locale, 35.830154, 50.962814, 5);
-//
-//                reverseGeocodeObservable
-//                        .subscribeOn(Schedulers.io())               // use I/O thread to query for addresses
-//                        .observeOn(AndroidSchedulers.mainThread())  // return result in main android thread to manipulate UI
-//                        .subscribe(new DisposableObserver<List<Address>>() {
-//                            @Override
-//                            public void onNext(List<Address> addresses) {
-//                                if (addresses.size() == 0)
-//                                    return;
-//                                String LongAddress = "";
-//                                for (Address longAddress : addresses) {
-//                                    String ad = longAddress.getAddressLine(0);
-//                                    if (ad.length() > LongAddress.length()) {
-//                                        LongAddress = ad;
-//                                    }
-//                                }
-//                                ShowNotificationOld(LongAddress);
-//
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onComplete() {
-//
-//                            }
-//                        });
             }
         });
     }//_____________________________________________________________________________________________ End SetClicks
@@ -348,57 +306,6 @@ public class MainActivity extends AppCompatActivity {
         measure.setCancelable(false);
         measure.show(getSupportFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
     }//_____________________________________________________________________________________________ End ShowChart
-
-
-    private void GetAddressFromLatLong() {//_________________________________________________________ Start GetAddressFromLatLong
-        String LongAddress = "";
-        try {
-            Geocoder geocoder;
-            List<Address> addresses;
-            Locale locale = new Locale("fa_IR");
-            Locale.setDefault(locale);
-            geocoder = new Geocoder(getApplicationContext(), locale);
-            addresses = geocoder.getFromLocation(35.830154, 50.962814, 5); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-            if (addresses.size() == 0) {
-
-            } else {
-                for (Address longAddress : addresses) {
-                    String ad = longAddress.getAddressLine(0);
-                    if (ad.length() > LongAddress.length()) {
-                        LongAddress = ad;
-                    }
-                }
-                ShowNotificationOld(LongAddress);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }//_____________________________________________________________________________________________ End GetAddressFromLatLong
-
-
-    NotificationManager notifManager;
-
-    private void ShowNotificationOld(String Text) {//________________________________ Start ShowNotificationOld
-
-        long when = System.currentTimeMillis();
-        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(
-                this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(this.getResources().getString(R.string.app_name))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(Text))
-                .setWhen(when);
-        getManager().notify(7126, mNotifyBuilder.build());
-
-    }//_____________________________________________________________________________________________ End ShowNotificationOld
-
-
-    private NotificationManager getManager() {//____________________________________________________ Start getManager
-        if (notifManager == null) {
-            notifManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-        return notifManager;
-    }//_____________________________________________________________________________________________ End getManager
 
 
     private void ObserverObservableGpsAndNetworkChange() {//________________________________________ Start ObserverObservableGpsAndNetworkChange
@@ -528,6 +435,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 1000);
     }//_____________________________________________________________________________________________ End StartService
-
 
 }

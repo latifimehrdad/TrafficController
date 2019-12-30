@@ -9,15 +9,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.github.ybq.android.spinkit.SpinKitView;
+import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin;
+import com.ngra.trafficcontroller.views.activitys.LoginActivity;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
 import butterknife.BindView;
@@ -25,7 +28,6 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 import static com.ngra.trafficcontroller.utility.StaticFunctions.TextChangeForChangeBack;
 
@@ -34,8 +36,9 @@ public class FragmentLogin extends Fragment {
     private Context context;
     private ViewModel_FragmentLogin viewModel;
     private View view;
-    private PublishSubject<String> ActivityObservables;
     private String PhoneNumber;
+    private LoginActivity loginActivity;
+    private DisposableObserver<String> observer;
 
     @BindView(R.id.editPhoneNumber)
     EditText editPhoneNumber;
@@ -46,11 +49,14 @@ public class FragmentLogin extends Fragment {
     @BindView(R.id.imgShowPassword)
     ImageView imgShowPassword;
 
-    @BindView(R.id.btnLogin)
-    Button btnLogin;
+    @BindView(R.id.BtnLogin)
+    RelativeLayout BtnLogin;
 
-    @BindView(R.id.spin_kit)
-    SpinKitView spin_kit;
+    @BindView(R.id.ProgressGif)
+    GifView ProgressGif;
+
+    @BindView(R.id.BtnLoginText)
+    TextView BtnLoginText;
 
 
     @Override
@@ -66,9 +72,9 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
-    public FragmentLogin(Context context, PublishSubject<String> ActivityObservables) {//___________ Start FragmentLogin
+    public FragmentLogin(Context context, LoginActivity loginActivity) {//__________________________ Start FragmentLogin
         this.context = context;
-        this.ActivityObservables = ActivityObservables;
+        this.loginActivity = loginActivity;
     }//_____________________________________________________________________________________________ End FragmentLogin
 
 
@@ -78,12 +84,13 @@ public class FragmentLogin extends Fragment {
         SetClick();
         SetTextWatcher();
         ObserverObservable();
+        DismissProgress();
     }//_____________________________________________________________________________________________ End onStart
 
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -99,51 +106,55 @@ public class FragmentLogin extends Fragment {
 
 
     private void ObserverObservable() {//___________________________________________________________ Start ObserverObservable
+
+        observer = new DisposableObserver<String>() {
+            @Override
+            public void onNext(String s) {
+                getActivity()
+                        .runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DismissProgress();
+                                switch (s) {
+                                    case "Done":
+                                        loginActivity.getObservables().onNext(PhoneNumber);
+                                        break;
+                                    case "Failed":
+                                        ShowMessage(
+                                                viewModel.getMessageResult(),
+                                                getResources().getColor(R.color.ML_White),
+                                                getResources().getDrawable(R.drawable.ic_warning_red)
+                                        );
+                                        break;
+                                    case "onFailure":
+                                        ShowMessage(
+                                                getResources().getString(R.string.onFailure),
+                                                getResources().getColor(R.color.ML_White),
+                                                getResources().getDrawable(R.drawable.ic_warning_red)
+                                        );
+                                        break;
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+
         viewModel
-                .Observables
+                .getObservables()
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String s) {
-                        getActivity()
-                                .runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DismissProgress();
-                                        switch (s) {
-                                            case "done":
-                                                ActivityObservables.onNext(PhoneNumber);
-                                                break;
-                                            case "failed":
-                                                ShowMessage(
-                                                        viewModel.getMessageResult(),
-                                                        getResources().getColor(R.color.ML_White),
-                                                        getResources().getDrawable(R.drawable.ic_warning_red)
-                                                );
-                                                break;
-                                            case "onFailure":
-                                                ShowMessage(
-                                                        getResources().getString(R.string.onFailure),
-                                                        getResources().getColor(R.color.ML_White),
-                                                        getResources().getDrawable(R.drawable.ic_warning_red)
-                                                );
-                                                break;
-                                        }
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                .subscribe(observer);
 
     }//_____________________________________________________________________________________________ End ObserverObservable
 
@@ -180,15 +191,15 @@ public class FragmentLogin extends Fragment {
 
 
     private void ShowProgress() {//_________________________________________________________________ Start ShowProgress
-        btnLogin.setText("");
-        spin_kit.setVisibility(View.VISIBLE);
+        BtnLoginText.setVisibility(View.INVISIBLE);
+        ProgressGif.setVisibility(View.VISIBLE);
     }//_____________________________________________________________________________________________ End ShowProgress
 
 
 
     private void DismissProgress() {//______________________________________________________________ Start DismissProgress
-        btnLogin.setText(getResources().getString(R.string.Login));
-        spin_kit.setVisibility(View.INVISIBLE);
+        BtnLoginText.setVisibility(View.VISIBLE);
+        ProgressGif.setVisibility(View.INVISIBLE);
     }//_____________________________________________________________________________________________ End DismissProgress
 
 
@@ -204,6 +215,14 @@ public class FragmentLogin extends Fragment {
         dialogMessage.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
 
     }//_____________________________________________________________________________________________ End ShowMessage
+
+
+    @Override
+    public void onDestroy() {//_____________________________________________________________________ Start onDestroy
+        super.onDestroy();
+        if(observer != null)
+            observer.dispose();
+    }//_____________________________________________________________________________________________ End onDestroy
 
 
 }

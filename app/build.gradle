@@ -65,11 +65,14 @@ dependencies {
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'com.github.Cutta:GifView:1.1'
 
     implementation 'pl.charmas.android:android-reactive-location2:2.1@aar'
     implementation 'com.google.android.gms:play-services-places:15.+'
     implementation 'com.google.android.gms:play-services-location:15.+'
+
+    implementation 'com.github.latifimehrdad:MapLibrary:0.0.2'
+
 //    implementation 'com.google.android.gms:play-services-location:11.0.4'
 //    implementation 'com.google.android.gms:play-services-places:11.0.4'
 

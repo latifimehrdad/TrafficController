@@ -2,6 +2,7 @@ package com.ngra.trafficcontroller.viewmodels.fragment.login;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
@@ -18,7 +19,7 @@ public class ViewModel_FragmentVerify {
 
     private Context context;
     private String messageResult;
-    public PublishSubject<String> Observables;
+    private PublishSubject<String> Observables;
 
     public ViewModel_FragmentVerify(Context context) {//____________________________________________ Start ViewModel_FragmentVerify
         this.context = context;
@@ -49,10 +50,10 @@ public class ViewModel_FragmentVerify {
                             String result = response.body().getResult();
                             if (result.equalsIgnoreCase("failed")) {
                                 setMessageResult(response.body().getError());
-                                Observables.onNext("failed");
+                                Observables.onNext("Failed");
                             } else if (result.equalsIgnoreCase("done")){
                                 setMessageResult(response.body().getCode());
-                                Observables.onNext("senddone");
+                                Observables.onNext("SendDone");
                             }
                         }
                     }
@@ -95,11 +96,10 @@ public class ViewModel_FragmentVerify {
                             String result = response.body().getResult();
                             if (result.equalsIgnoreCase("failed")) {
                                 setMessageResult(response.body().getError());
-                                Observables.onNext("failed");
+                                Observables.onNext("Failed");
                             } else if (result.equalsIgnoreCase("done")){
                                 setMessageResult(response.body().getCode());
                                 SaveUserLogin(PhoneNumbet);
-                                Observables.onNext("verifydone");
                             }
                         }
                     }
@@ -120,11 +120,18 @@ public class ViewModel_FragmentVerify {
 
         SharedPreferences.Editor token =
                 context.getSharedPreferences("trafficcontroller", 0).edit();
-
         token.putString("phone", PhoneNumbet);
         token.putBoolean("login",true);
         token.putString("code",getMessageResult());
         token.apply();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Observables.onNext("VerifyDone");
+            }
+        },1000);
+
 
     }//_____________________________________________________________________________________________ End SaveUserLogin
 
@@ -138,6 +145,11 @@ public class ViewModel_FragmentVerify {
     public void setMessageResult(String messageResult) {
         this.messageResult = messageResult;
     }
+
+    public PublishSubject<String> getObservables() {
+        return Observables;
+    }
+
     //______________________________________________________________________________________________  End Getter & Sette
 
 }

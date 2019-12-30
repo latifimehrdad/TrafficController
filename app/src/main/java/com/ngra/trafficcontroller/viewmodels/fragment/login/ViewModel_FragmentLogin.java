@@ -16,7 +16,7 @@ public class ViewModel_FragmentLogin {
 
     private Context context;
     private String messageResult;
-    public PublishSubject<String> Observables;
+    private PublishSubject<String> Observables;
 
     public ViewModel_FragmentLogin(Context context) {//_____________________________________________ Start ViewModel_FragmentLogin
         this.context = context;
@@ -47,10 +47,10 @@ public class ViewModel_FragmentLogin {
                             String result = response.body().getResult();
                             if (result.equalsIgnoreCase("failed")) {
                                 setMessageResult(response.body().getError());
-                                Observables.onNext("failed");
-                            } else if (result.equalsIgnoreCase("done")){
+                                Observables.onNext("Failed");
+                            } else if (result.equalsIgnoreCase("done")) {
                                 setMessageResult(response.body().getCode());
-                                Observables.onNext("done");
+                                Observables.onNext("Done");
                             }
                         }
                     }
@@ -74,5 +74,10 @@ public class ViewModel_FragmentLogin {
     public void setMessageResult(String messageResult) {
         this.messageResult = messageResult;
     }
+
+    public PublishSubject<String> getObservables() {
+        return Observables;
+    }
+
     //______________________________________________________________________________________________  End Getter & Setter
 }
