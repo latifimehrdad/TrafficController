@@ -34,11 +34,9 @@ import com.ngra.trafficcontroller.views.dialogs.DialogChartMeasure;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         binding.setMain(viewModel);
         ButterKnife.bind(this);
         init();
-        //CheckToken();
+        CheckToken();
         ObserverObservableGpsAndNetworkChange();
 
     }//_____________________________________________________________________________________________ End OnBindView
