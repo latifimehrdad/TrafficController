@@ -64,12 +64,12 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 );
 
         this.context = context;
-        LogService("Start **** ");
+        //LogService("Start **** ");
 
         if (TrafficController.getApplication(context).isLocationEnabled())
             GetCurrentLocation();
         else
-            LogService("GPS OFF **** ");
+            //LogService("GPS OFF **** ");
 
 //        if (TrafficController.getApplication(context).isInternetConnected())
 //            GetLocatointonFromDB();
@@ -87,7 +87,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setNumUpdates(1)
                 .setInterval(1000);
-        LogService("Get GPS **** ");
+        //LogService("Get GPS **** ");
         ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
         Disposable subscription = locationProvider.getUpdatedLocation(request)
                 .subscribe(new Consumer<Location>() {
@@ -105,7 +105,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
 
     private void SaveToDataBase(double Latitude, double Longitude, double Altitude, float Speed) {// StartSaveToDataBase
-        LogService("Save GPS S **** ");
+        //LogService("Save GPS S **** ");
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
@@ -136,7 +136,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         String time = getStringCurrentDate();
         perf.putString("lastgps", time);
         perf.apply();
-        LogService("Save GPS E **** ");
+        //LogService("Save GPS E **** ");
         GetLocatointonFromDB();
         ObservablesGpsAndNetworkChange.onNext("LastGPS");
     }//_____________________________________________________________________________________________ End StartSaveToDataBase
@@ -149,7 +149,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
 
     private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB
-        LogService("Get DB **** ");
+        //LogService("Get DB **** ");
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
@@ -162,7 +162,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private void SendLocatoinToServer() {//_________________________________________________________ Start SendLocatoinToServer
 
-        LogService("Send DB S " + locations.size() + " **** ");
+        //LogService("Send DB S " + locations.size() + " **** ");
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
@@ -195,7 +195,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         DeviceTools deviceTools = new DeviceTools(context);
         String imei = deviceTools.getIMEI();
-        LogService("Send DB IMEI " + imei + " **** ");
+        //LogService("Send DB IMEI " + imei + " **** ");
 
         retrofitComponent
                 .getRetrofitApiInterface()
@@ -208,7 +208,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                     public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
                         if (response != null) {
                             String result = response.body().getResult();
-                            LogService("Send DB onResponse " + result + " **** ");
+                            //LogService("Send DB onResponse " + result + " **** ");
                             if (result.equalsIgnoreCase("done")) {
                                 Realm realm = TrafficController
                                         .getApplication(context)
@@ -235,7 +235,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
                     @Override
                     public void onFailure(Call<Model_Result> call, Throwable t) {
-                        LogService("Send DB onFailure "  + " **** ");
+                        //LogService("Send DB onFailure "  + " **** ");
                     }
                 });
     }//_____________________________________________________________________________________________ End SendLocatoinToServer
@@ -264,20 +264,20 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     }//_____________________________________________________________________________________________ End DeleteOldLocationFromDataBase
 
 
-    private void LogService(String test) {//________________________________________________________ Start SentLocatointoServer
-        File file = new File(context.getFilesDir(), "config.txt");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss", Locale.getDefault());
-        String currentDateandTime = sdf.format(new Date());
-
-        if (file.exists()) {
-            String text = readFromFile(context);
-            text = text + System.getProperty("line.separator") + test + currentDateandTime ;
-            writeToFile(text, context);
-        } else {
-            String text = " T***** " + currentDateandTime;
-            writeToFile(text, context);
-        }
-    }//_____________________________________________________________________________________________ End SentLocatointoServer
+//    private void LogService(String test) {//________________________________________________________ Start SentLocatointoServer
+//        File file = new File(context.getFilesDir(), "config.txt");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd _ HH:mm:ss", Locale.getDefault());
+//        String currentDateandTime = sdf.format(new Date());
+//
+//        if (file.exists()) {
+//            String text = readFromFile(context);
+//            text = text + System.getProperty("line.separator") + test + currentDateandTime ;
+//            writeToFile(text, context);
+//        } else {
+//            String text = " T***** " + currentDateandTime;
+//            writeToFile(text, context);
+//        }
+//    }//_____________________________________________________________________________________________ End SentLocatointoServer
 
 
     private void writeToFile(String data, Context context) {
