@@ -10,6 +10,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.dagger.realm.DaggerRealmComponent;
 import com.ngra.trafficcontroller.dagger.realm.RealmComponent;
@@ -27,7 +29,7 @@ import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class TrafficController extends Application {
+public class TrafficController extends MultiDexApplication {
 
     private Context context;
     private RetrofitComponent retrofitComponent;

@@ -30,4 +30,7 @@
     <string name="Meter">متر</string>
     <string name="InTenDays">در ده روز گذشته (به کیلومتر)</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

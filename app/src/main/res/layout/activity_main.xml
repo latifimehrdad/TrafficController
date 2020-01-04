@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="main"
-            type="com.ngra.trafficcontroller.viewmodels.activitys.ViewModel_MainActivity" />
+            type="com.ngra.trafficcontroller.viewmodels.activitys.VM_ActivityMain" />
     </data>
 
-
     <RelativeLayout
-        android:id="@+id/LayoutPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
@@ -19,7 +16,7 @@
 
         //_______________________________________________ Header
         <RelativeLayout
-            android:id="@+id/layoutHeader"
+
             android:layout_width="match_parent"
             android:layout_height="@dimen/_120sdp"
             android:orientation="vertical"
@@ -58,9 +55,10 @@
         //______________________________________________ Header
 
 
+
         //_________________________________________________ Ngra Icon
         <LinearLayout
-            android:id="@+id/mainHeader"
+            android:id="@+id/MainHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_85sdp"
@@ -149,351 +147,21 @@
         //________________________________________________ Ngra Icon
 
 
-
-        //________________________________________________________ Footer
-        <RelativeLayout
-            android:id="@+id/mainFooter"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_100sdp"
-            android:layout_alignParentBottom="true"
-            >
-
-            <com.ngra.trafficcontroller.views.customview.MLCurveFooter
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:backcolorf="@color/colorPrimaryDark"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:maxWidth="@dimen/_140sdp"
-                    android:textColor="@color/ML_White"
-                    android:textSize="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:text="@string/LastLocation"
-                    />
-                <TextView
-                    android:id="@+id/LastGPS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:maxWidth="@dimen/_140sdp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:text="1398/10/03 - 12:35"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/ML_EditEmptyBorder"
-                    android:layout_marginTop="@dimen/_5sdp"/>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:maxWidth="@dimen/_140sdp"
-                    android:textColor="@color/ML_White"
-                    android:textSize="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:text="@string/LastInternet"
-                    />
-                <TextView
-                    android:id="@+id/LastNet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:maxWidth="@dimen/_140sdp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/_8sdp"
-                    android:gravity="center"
-                    android:text="1398/10/03 - 12:35"
-                    />
-
-
-            </LinearLayout>
-
-
-
-
-
-        </RelativeLayout>
-
-
-        //__________________________________________________________ footer
-
-
-        <RelativeLayout
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/mainHeader"
-            android:layout_above="@id/mainFooter"
-            android:padding="@dimen/_10sdp"
-            android:orientation="vertical"
-            >
-
-            <LinearLayout
-                android:id="@+id/layoutCenter"
-                android:layout_width="1px"
-                android:layout_height="1px"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical"
-                />
-
-
-
-
-
-            <LinearLayout
-                android:id="@+id/LayoutInternet"
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_toLeftOf="@id/layoutCenter"
-                android:layout_above="@id/layoutCenter"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:layout_marginRight="@dimen/_4sdp"
-                android:background="@drawable/main_tail_background"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/_15sdp"
-                android:paddingTop="@dimen/_3sdp"
-                android:paddingLeft="@dimen/_3sdp"
-                android:paddingRight="@dimen/_3sdp"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:id="@+id/imgInternet"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/ML_White"
-                    fontPath="font/iransans_web_medium.ttf"
-                    android:text="@string/InternetState"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    />
-
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:id="@+id/LayoutNetSetting"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_alignLeft="@id/LayoutInternet"
-                android:layout_alignRight="@id/LayoutInternet"
-                android:layout_above="@id/LayoutInternet"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/_1sdp"
-                android:visibility="invisible"
-                android:padding="@dimen/_3sdp"
-                >
-
-                <ImageView
-                    android:id="@+id/ImgWifi"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_wifi"
-                    android:tint="@color/colorAccent"
-                    android:padding="@dimen/_2sdp"
-                    android:background="@drawable/circle_layout_transparent"
-                    />
-
-
-                <ImageView
-                    android:id="@+id/ImgData"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_internet_on"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:padding="@dimen/_5sdp"
-                    android:tint="@color/colorAccent"
-                    android:background="@drawable/circle_layout_transparent"
-                    />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_toRightOf="@id/layoutCenter"
-                android:layout_above="@id/layoutCenter"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:layout_marginLeft="@dimen/_4sdp"
-                android:background="@drawable/main_tail_background"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/_15sdp"
-                android:paddingTop="@dimen/_3sdp"
-                android:paddingLeft="@dimen/_3sdp"
-                android:paddingRight="@dimen/_3sdp"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:id="@+id/imgLocation"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/ML_White"
-                    fontPath="font/iransans_web_medium.ttf"
-                    android:text="@string/LocationState"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_toLeftOf="@id/layoutCenter"
-                android:layout_below="@id/layoutCenter"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:layout_marginRight="@dimen/_4sdp"
-                android:background="@drawable/main_tail_background"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/_15sdp"
-                android:paddingTop="@dimen/_3sdp"
-                android:paddingLeft="@dimen/_3sdp"
-                android:paddingRight="@dimen/_3sdp"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    android:src="@drawable/ic_message"
-                    android:tint="@color/ML_White"
-                    />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/ML_White"
-                    fontPath="font/iransans_web_medium.ttf"
-                    android:text="@string/Inbox"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_toRightOf="@id/layoutCenter"
-                android:layout_below="@id/layoutCenter"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:layout_marginLeft="@dimen/_4sdp"
-                android:background="@drawable/main_tail_background"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/_15sdp"
-                android:paddingTop="@dimen/_3sdp"
-                android:paddingLeft="@dimen/_3sdp"
-                android:paddingRight="@dimen/_3sdp"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    android:src="@drawable/ic_call"
-                    android:tint="@color/ML_White"
-                    />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/ML_White"
-                    fontPath="font/iransans_web_medium.ttf"
-                    android:text="@string/CallWidthSupport"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    />
-
-            </LinearLayout>
-
-
-            <include layout="@layout/layout_circle_menu"
-                android:id="@+id/CircleMenu"
-                android:layout_height="@dimen/_200sdp"
-                android:layout_width="@dimen/_200sdp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible"
-                />
-
-
-            <LinearLayout
-                android:id="@+id/CircleMenuCenter"
-                android:orientation="vertical"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/circle_layout"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:id="@+id/ImgCircleMenu"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:src="@drawable/ic_apps"
-                    android:tint="@color/colorPrimaryDark"/>
-
-            </LinearLayout>
-
-
-
-
-
-
-
-        </RelativeLayout>
+            android:layout_below="@id/MainHeader"
+            android:layout_marginTop="@dimen/_5sdp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_main" />
 
 
 
 
     </RelativeLayout>
 
+
 </layout>
+

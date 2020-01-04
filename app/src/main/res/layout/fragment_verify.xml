@@ -3,7 +3,7 @@
     <data>
         <variable
             name="verify"
-            type="com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentVerify" />
+            type="com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentVerify" />
     </data>
 
     <LinearLayout

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,12 +14,13 @@ import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
-import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin;
-import com.ngra.trafficcontroller.views.activitys.LoginActivity;
+import com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentLogin;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
 import butterknife.BindView;
@@ -34,10 +34,10 @@ import static com.ngra.trafficcontroller.utility.StaticFunctions.TextChangeForCh
 public class FragmentLogin extends Fragment {
 
     private Context context;
-    private ViewModel_FragmentLogin viewModel;
+    private VM_FragmentLogin viewModel;
     private View view;
     private String PhoneNumber;
-    private LoginActivity loginActivity;
+    private NavController navController;
     private DisposableObserver<String> observer;
 
     @BindView(R.id.editPhoneNumber)
@@ -60,8 +60,12 @@ public class FragmentLogin extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewModel = new ViewModel_FragmentLogin(context);
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {//__________________________________________________________ Start onCreateView
+        this.context = getContext();
+        viewModel = new VM_FragmentLogin(context);
         FragmentLoginBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_login, container, false
         );
@@ -72,15 +76,15 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
-    public FragmentLogin(Context context, LoginActivity loginActivity) {//__________________________ Start FragmentLogin
-        this.context = context;
-        this.loginActivity = loginActivity;
+    public FragmentLogin() {//______________________________________________________________________ Start FragmentLogin
+
     }//_____________________________________________________________________________________________ End FragmentLogin
 
 
     @Override
     public void onStart() {//_______________________________________________________________________ Start onStart
         super.onStart();
+        navController = Navigation.findNavController(view);
         SetClick();
         SetTextWatcher();
         ObserverObservable();
@@ -117,7 +121,12 @@ public class FragmentLogin extends Fragment {
                                 DismissProgress();
                                 switch (s) {
                                     case "Done":
-                                        loginActivity.getObservables().onNext(PhoneNumber);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("PhoneNumber", PhoneNumber);
+                                        navController.navigate(
+                                                R.id.action_fragmentLogin_to_fragmentVerify,
+                                                bundle
+                                        );
                                         break;
                                     case "Failed":
                                         ShowMessage(

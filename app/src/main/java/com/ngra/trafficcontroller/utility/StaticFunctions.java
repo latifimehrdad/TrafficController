@@ -72,7 +72,7 @@ public class StaticFunctions {
 //                    return false;
 //                }
 //                if (execute)
-//                    MainActivity.FragmentMessage.onNext("Main");
+//                    MainActivity1.FragmentMessage.onNext("Main");
 //                return true;
 //            }
 //        };

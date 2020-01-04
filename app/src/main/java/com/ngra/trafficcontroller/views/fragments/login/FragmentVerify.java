@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,12 @@ import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentVerifyBinding;
-import com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentVerify;
-import com.ngra.trafficcontroller.views.activitys.LoginActivity;
+import com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentVerify;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 import com.ngra.trafficcontroller.views.dialogs.DialogProgress;
 
@@ -35,13 +35,13 @@ import io.reactivex.schedulers.Schedulers;
 public class FragmentVerify extends Fragment {
 
     private Context context;
-    private ViewModel_FragmentVerify viewModel;
+    private VM_FragmentVerify viewModel;
     private View view;
     private DialogProgress progress;
+    private NavController navController;
     private boolean ReTryGetSMSClick = false;
     private String PhoneNumber;
     private DisposableObserver<String> observer;
-    private LoginActivity loginActivity;
 
     @BindView(R.id.VerifyCode1)
     EditText VerifyCode1;
@@ -72,8 +72,12 @@ public class FragmentVerify extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewModel = new ViewModel_FragmentVerify(context);
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {//__________________________________________________________ Start onCreateView
+        this.context = getContext();
+        viewModel = new VM_FragmentVerify(context);
         FragmentVerifyBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_verify, container, false
         );
@@ -84,16 +88,16 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
-    public FragmentVerify(Context c, String P, LoginActivity loginActivity) {//_____________________ Start FragmentVerify
-        this.context = c;
-        this.PhoneNumber = P;
-        this.loginActivity = loginActivity;
+    public FragmentVerify() {//_____________________________________________________________________ Start FragmentVerify
+
     }//_____________________________________________________________________________________________ Start FragmentVerify
 
 
     @Override
     public void onStart() {//_______________________________________________________________________ Start onStart
         super.onStart();
+        PhoneNumber = getArguments().getString("PhoneNumber");
+        navController = Navigation.findNavController(view);
         VerifyCode1.requestFocus();
         ObserverObservable();
         SetBackVerifyCode();
@@ -130,7 +134,7 @@ public class FragmentVerify extends Fragment {
                             public void run() {
                                 switch (s) {
                                     case "VerifyDone":
-                                        loginActivity.getObservables().onNext("FinishOk");
+                                        //loginActivity.getObservables().onNext("FinishOk");
                                         break;
                                     case "SendDone":
                                         DismissProgress();

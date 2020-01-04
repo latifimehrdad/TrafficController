@@ -5,19 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
-import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-import com.ngra.trafficcontroller.views.activitys.MainActivity;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import org.json.JSONArray;
@@ -25,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

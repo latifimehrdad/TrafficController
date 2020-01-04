@@ -4,7 +4,7 @@
     <data>
         <variable
             name="login"
-            type="com.ngra.trafficcontroller.viewmodels.fragment.login.ViewModel_FragmentLogin" />
+            type="com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentLogin" />
     </data>
 
     <LinearLayout xmlns:app="http://schemas.android.com/tools"

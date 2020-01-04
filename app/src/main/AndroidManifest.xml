@@ -22,7 +22,9 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="false"
         tools:replace="android:supportsRtl"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
+
         <activity android:name=".views.activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".views.activitys.LoginActivity"/>
 
         <receiver android:name=".utility.broadcasts.ReceiverGpsLocation">
             <intent-filter>
