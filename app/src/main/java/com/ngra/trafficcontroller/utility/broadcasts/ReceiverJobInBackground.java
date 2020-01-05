@@ -60,6 +60,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             context.sendBroadcast(i);
         }
 
+        NotificationManagerClass managerClass =
+                new NotificationManagerClass(
+                        context,
+                        "شروع برنامه"
+                        , false
+                        , 0
+                );
 
         this.context = context;
         SaveLog("Start : " + getStringCurrentDate());

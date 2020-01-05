@@ -21,7 +21,7 @@ public class ReceiverGpsLocation extends BroadcastReceiver {
                             context,
                             context.getResources().getString(R.string.DisconnectGPS)
                             , false
-                            , true
+                            , 1
                     );
         }
         ObservablesGpsAndNetworkChange.onNext("changeGPS");

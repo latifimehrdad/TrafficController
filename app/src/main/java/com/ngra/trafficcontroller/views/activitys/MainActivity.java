@@ -25,10 +25,6 @@ import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
 import com.ngra.trafficcontroller.viewmodels.activitys.VM_ActivityMain;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Calendar;
-
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {

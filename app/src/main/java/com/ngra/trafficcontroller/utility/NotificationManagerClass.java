@@ -29,10 +29,10 @@ public class NotificationManagerClass {
     private String CHANNEL_ONE_ID = "com.ngra.trafficcontroller";
     private String Text;
     private Boolean ShowAlways;
-    private boolean GPS;
+    private int GPS;
 
 
-    public NotificationManagerClass(Context context, String text, Boolean showAlways, boolean GPS) {// Start NotificationManager
+    public NotificationManagerClass(Context context, String text, Boolean showAlways, int GPS) {// Start NotificationManager
         this.context = context;
         Text = text;
         ShowAlways = showAlways;
@@ -85,16 +85,21 @@ public class NotificationManagerClass {
     }//_____________________________________________________________________________________________ End ShowNotificationNew
 
 
-    private void SetNotiIdAndBitmap(boolean GPS) {//________________________________________________ Start SetNotiIdAndBitmap
+    private void SetNotiIdAndBitmap(int GPS) {//________________________________________________ Start SetNotiIdAndBitmap
         when = System.currentTimeMillis();
-        if (GPS) {
+        if (GPS == 1) {
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.gps_off);
             NotiId = 7126;
-        } else {
+        } else if (GPS == 0){
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.net_off);
             NotiId = 6780;
+        }
+        else if (GPS == 2){
+            NotiId = 110;
+            icon = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.changetime);
         }
     }//_____________________________________________________________________________________________ End SetNotiIdAndBitmap
 

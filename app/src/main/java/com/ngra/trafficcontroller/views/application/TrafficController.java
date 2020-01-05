@@ -3,6 +3,7 @@ package com.ngra.trafficcontroller.views.application;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,6 +20,7 @@ import com.ngra.trafficcontroller.dagger.realm.RealmModul;
 import com.ngra.trafficcontroller.dagger.retrofit.DaggerRetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverDateTimeChange;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverGpsLocation;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverNetworkChange;
 
@@ -35,6 +37,9 @@ public class TrafficController extends MultiDexApplication {
     private RetrofitComponent retrofitComponent;
     private RealmComponent realmComponent;
     public static PublishSubject<String> ObservablesGpsAndNetworkChange = PublishSubject.create();
+    private   IntentFilter s_intentFilter;
+
+
 
     @Override
     public void onCreate() {//______________________________________________________________________ Start onCreate
@@ -125,6 +130,15 @@ public class TrafficController extends MultiDexApplication {
         getApplicationContext().registerReceiver(gpsChange, new IntentFilter("android.location.PROVIDERS_CHANGED"));
         BroadcastReceiver netChange = new ReceiverNetworkChange();
         getApplicationContext().registerReceiver(netChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        s_intentFilter = new IntentFilter();
+        s_intentFilter.addAction(Intent.ACTION_TIME_TICK);
+        s_intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        s_intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+
+        ReceiverDateTimeChange timeChange = new ReceiverDateTimeChange();
+        getApplicationContext().registerReceiver(timeChange,s_intentFilter);
+
     }//_____________________________________________________________________________________________ End registerBroadcast
 
 

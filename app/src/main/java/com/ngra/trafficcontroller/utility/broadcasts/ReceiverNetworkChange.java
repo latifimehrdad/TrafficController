@@ -25,7 +25,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
                                     context,
                                     context.getResources().getString(R.string.DisconnectNet)
                                     ,false
-                                    ,false
+                                    ,0
                             );
                 }
             }

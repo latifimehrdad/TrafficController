@@ -70,6 +70,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".utility.broadcasts.ReceiverDateTimeChange">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_TICK"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.ACTION_TIME_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".utility.services.GetCurrentLocation">
         </service>
