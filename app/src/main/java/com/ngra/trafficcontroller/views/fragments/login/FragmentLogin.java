@@ -1,8 +1,12 @@
 package com.ngra.trafficcontroller.views.fragments.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +98,7 @@ public class FragmentLogin extends Fragment {
         ObserverObservable();
         DismissLoading();
     }//_____________________________________________________________________________________________ End onStart
+
 
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick

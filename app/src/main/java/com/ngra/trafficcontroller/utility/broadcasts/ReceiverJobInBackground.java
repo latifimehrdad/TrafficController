@@ -53,13 +53,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
-        NotificationManagerClass managerClass =
-                new NotificationManagerClass(
-                        context,
-                        "شروع برنامه"
-                        , false
-                        , true
-                );
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+        } else {
+            Intent i = new Intent("ir.ngra.Lunch");
+            context.sendBroadcast(i);
+        }
+
 
         this.context = context;
         SaveLog("Start : " + getStringCurrentDate());
@@ -76,12 +76,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
             DeleteOldLocationFromDataBase();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-        } else {
-            Intent i = new Intent("ir.ngra.Lunch");
-            context.sendBroadcast(i);
-        }
 
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
@@ -256,6 +250,9 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                         SaveLog("Response Failure : " + getStringCurrentDate());
                     }
                 });
+
+
+
     }//_____________________________________________________________________________________________ End SendLocatoinToServer
 
 

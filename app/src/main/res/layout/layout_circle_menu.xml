@@ -41,6 +41,7 @@
 
 
     <LinearLayout
+        android:id="@+id/LogDelete"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentLeft="true"
@@ -64,7 +65,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:gravity="center"
             android:lines="2"
-            android:text="@string/TestMeasureDistance"
+            android:text="Delete Log"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/_8sdp"
             android:paddingRight="@dimen/_2sdp"

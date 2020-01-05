@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
 
     <application
@@ -46,7 +47,11 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".utility.broadcasts.ReceiverLunchAppInBackground">
+
+        <receiver android:name=".utility.broadcasts.ReceiverLunchAppInBackground"
+            android:enabled="true"
+            android:process="com.ngra.trafficcontroller"
+            >
             <intent-filter >
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="ir.ngra.Lunch" />
@@ -55,7 +60,10 @@
 
         <service android:name=".utility.services.ServiceSetTimeForLunchApp"/>
 
-        <receiver android:name=".utility.broadcasts.ReceiverJobInBackground">
+        <receiver android:name=".utility.broadcasts.ReceiverJobInBackground"
+            android:enabled="true"
+            android:process="com.ngra.trafficcontroller"
+            >
             <intent-filter>
                 <action android:name="accept"/>
                 <action android:name="disapprove"/>

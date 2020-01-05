@@ -3,9 +3,13 @@ package com.ngra.trafficcontroller.views.activitys;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,12 +25,14 @@ import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
 import com.ngra.trafficcontroller.viewmodels.activitys.VM_ActivityMain;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Calendar;
+
 import butterknife.ButterKnife;
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private VM_ActivityMain vm_activityMain;
     private boolean doubleBackToExitPressedOnce = false;
     private NavController navController;
 
@@ -38,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End onCreate
 
 
-
     private void onBindView() {//___________________________________________________________________ Start onBindView
-        vm_activityMain = new VM_ActivityMain(this);
+        VM_ActivityMain vm_activityMain = new VM_ActivityMain(this);
         ActivityMainBinding binding = DataBindingUtil
                 .setContentView(this, R.layout.activity_main);
         binding.setMain(vm_activityMain);
@@ -48,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         checkLocationPermission();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     }//_____________________________________________________________________________________________ End onBindView
-
 
 
 //    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
@@ -86,21 +90,39 @@ public class MainActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End checkLocationPermission
 
 
-    public void checkReadPhonestate() {//____________________________________________________________ Start checkReadPhonestate
+    public void checkReadPhonestate() {//___________________________________________________________ Start checkReadPhonestate
         int permissionCheck = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_PHONE_STATE);
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 2);
-        } else {
-            //TODO
         }
     }//_____________________________________________________________________________________________ End checkReadPhonestate
 
 
+
+
+    private void WhiteList(){//_____________________________________________________________________ Start WhiteList
+        PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        boolean isIgnoringBatteryOptimizations = false;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+            if(!isIgnoringBatteryOptimizations){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 3);
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End WhiteList
+
+
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {//____________ Start onRequestPermissionsResult
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {//_________________________________________________________________ Start onRequestPermissionsResult
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
@@ -113,7 +135,21 @@ public class MainActivity extends AppCompatActivity {
             }
             case 2: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    //TODO
+                    WhiteList();
+                }
+            }
+            case 3:{
+                if (requestCode == 3) {
+                    PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+                    boolean isIgnoringBatteryOptimizations = false;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+                    }
+                    if(isIgnoringBatteryOptimizations){
+                        // Ignoring battery optimization
+                    }else{
+                        // Not ignoring battery optimization
+                    }
                 }
             }
 
