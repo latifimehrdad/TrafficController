@@ -6,24 +6,12 @@ import android.location.Location;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-
-import com.google.android.gms.location.LocationRequest;
 import com.ngra.trafficcontroller.R;
-import com.ngra.trafficcontroller.database.DataBaseLocation;
-import com.ngra.trafficcontroller.views.application.TrafficController;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.realm.Realm;
-import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
-
-import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class StaticFunctions {
+
+    public static boolean isCancel = false;
 
     public static String GetAuthorization(Context context) {//______________________________________ Start GetAuthorization
         String Authorization = "Bearer ";

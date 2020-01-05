@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.location.LocationRequest;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
+import com.ngra.trafficcontroller.database.DataBaseLog;
 import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
@@ -54,26 +57,47 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 new NotificationManagerClass(
                         context,
                         "شروع برنامه"
-                        ,false
-                        ,true
+                        , false
+                        , true
                 );
 
         this.context = context;
-        //LogService("Start **** ");
+        SaveLog("Start : " + getStringCurrentDate());
 
         if (TrafficController.getApplication(context).isLocationEnabled())
             GetCurrentLocation();
         else
-            //LogService("GPS OFF **** ");
+            SaveLog("GPS OFF : " + getStringCurrentDate());
 
 //        if (TrafficController.getApplication(context).isInternetConnected())
 //            GetLocatointonFromDB();
 //        else
 //            LogService("NET OFF **** ");
 
-        DeleteOldLocationFromDataBase();
+            DeleteOldLocationFromDataBase();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+        } else {
+            Intent i = new Intent("ir.ngra.Lunch");
+            context.sendBroadcast(i);
+        }
 
     }//_____________________________________________________________________________________________ End GetCurrentLocation
+
+
+    private void SaveLog(String log) {//____________________________________________________________ Start SaveLog
+        Realm realm = TrafficController
+                .getApplication(context)
+                .getRealmComponent()
+                .getRealm();
+
+        realm.beginTransaction();
+        realm.createObject(DataBaseLog.class)
+                .insert(log);
+        realm.commitTransaction();
+    }//_____________________________________________________________________________________________ End SaveLog
+
 
 
     private void GetCurrentLocation() {//___________________________________________________________ Start GetCurrentLocation
@@ -82,12 +106,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setNumUpdates(1)
                 .setInterval(1000);
-        //LogService("Get GPS **** ");
+
         ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
         Disposable subscription = locationProvider.getUpdatedLocation(request)
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(Location location) throws Exception {
+                        SaveLog("Get GPS : " + getStringCurrentDate());
                         SaveToDataBase(
                                 location.getLatitude(),
                                 location.getLongitude(),
@@ -100,7 +125,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
 
     private void SaveToDataBase(double Latitude, double Longitude, double Altitude, float Speed) {// StartSaveToDataBase
-        //LogService("Save GPS S **** ");
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
@@ -131,7 +155,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         String time = getStringCurrentDate();
         perf.putString("lastgps", time);
         perf.apply();
-        //LogService("Save GPS E **** ");
         GetLocatointonFromDB();
         ObservablesGpsAndNetworkChange.onNext("LastGPS");
     }//_____________________________________________________________________________________________ End StartSaveToDataBase
@@ -144,20 +167,20 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
 
     private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB
-        //LogService("Get DB **** ");
+
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
                 .getRealm();
 
         locations = realm.where(DataBaseLocation.class).equalTo("Send", false).findAll();
+        SaveLog("Get DB : " + locations.size() + "-- " + getStringCurrentDate());
         SendLocatoinToServer();
     }//_____________________________________________________________________________________________ End GetLocatointonFromDB
 
 
     private void SendLocatoinToServer() {//_________________________________________________________ Start SendLocatoinToServer
 
-        //LogService("Send DB S " + locations.size() + " **** ");
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
@@ -203,7 +226,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                     public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
                         if (response != null) {
                             String result = response.body().getResult();
-                            //LogService("Send DB onResponse " + result + " **** ");
+                            SaveLog("Response : "+ result + " -- " + getStringCurrentDate());
                             if (result.equalsIgnoreCase("done")) {
                                 Realm realm = TrafficController
                                         .getApplication(context)
@@ -230,7 +253,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
                     @Override
                     public void onFailure(Call<Model_Result> call, Throwable t) {
-                        //LogService("Send DB onFailure "  + " **** ");
+                        SaveLog("Response Failure : " + getStringCurrentDate());
                     }
                 });
     }//_____________________________________________________________________________________________ End SendLocatoinToServer
@@ -238,7 +261,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private void DeleteOldLocationFromDataBase() {//________________________________________________ Start DeleteOldLocationFromDataBase
         Calendar now = Calendar.getInstance();
-        now.add(Calendar.DATE, -31);
+        now.add(Calendar.DATE, -11);
 
         Realm realm = TrafficController
                 .getApplication(context)
@@ -314,6 +337,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         return ret;
     }
+
+
 
 
 }

@@ -13,7 +13,9 @@
     <color name="ML_Main_Gradiant">#7CFFFF</color>
     <color name="ML_VerifyCodeEmpty">#33062DBB</color>
     <color name="ML_VerifyCodeFull">#004DB9</color>
-
+    <color name="ML_Progress">#00000000</color>
+    <color name="ML_Button">#C41414</color>
+    <color name="ML_ButtonClick">#910000</color>
 
 
 </resources>

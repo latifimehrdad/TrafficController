@@ -125,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
         NavDestination navDestination = navController.getCurrentDestination();
         String fragment = navDestination.getLabel().toString();
-        if ((!fragment.equalsIgnoreCase("fragmentLogin")) &&
-                (!fragment.equalsIgnoreCase("fragmentHome"))) {
+        if ((!fragment.equalsIgnoreCase("fragment_login")) &&
+                (!fragment.equalsIgnoreCase("fragment_home"))) {
             super.onBackPressed();
             return;
         }

@@ -98,13 +98,14 @@ public class FragmentVerify extends Fragment {
         super.onStart();
         PhoneNumber = getArguments().getString("PhoneNumber");
         navController = Navigation.findNavController(view);
-        VerifyCode1.requestFocus();
         ObserverObservable();
+        VerifyCode1.requestFocus();
         SetBackVerifyCode();
         SetTextChangeListener();
         ReTryGetSMS();
         SetClick();
         StartTimer(60);
+        VerifyCode1.requestFocus();
     }//_____________________________________________________________________________________________ Start onStart
 
 
@@ -132,16 +133,15 @@ public class FragmentVerify extends Fragment {
                         .runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                DismissProgress();
                                 switch (s) {
                                     case "VerifyDone":
-                                        //loginActivity.getObservables().onNext("FinishOk");
+                                        navController.navigate(R.id.action_fragmentVerify_to_fragmentHome);
                                         break;
                                     case "SendDone":
-                                        DismissProgress();
                                         StartTimer(60);
                                         break;
                                     case "Failed":
-                                        DismissProgress();
                                         VerifyCode1.setText("");
                                         VerifyCode2.setText("");
                                         VerifyCode3.setText("");
@@ -157,7 +157,6 @@ public class FragmentVerify extends Fragment {
                                         );
                                         break;
                                     case "onFailure":
-                                        DismissProgress();
                                         VerifyCode1.setText("");
                                         VerifyCode2.setText("");
                                         VerifyCode3.setText("");
@@ -304,8 +303,10 @@ public class FragmentVerify extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0)
+                if (s.length() > 0) {
                     eNext.requestFocus();
+
+                }
                 SetBackVerifyCode();
             }
         };
@@ -323,6 +324,7 @@ public class FragmentVerify extends Fragment {
                     if (event.getAction() != KeyEvent.ACTION_DOWN)
                         return true;
                     if (edit.getText().length() == 0) {
+                        view.setText("");
                         view.requestFocus();
                         SetBackVerifyCode();
                         return true;

@@ -91,9 +91,11 @@
                 >
 
                 <ImageView
+                    android:id="@+id/imgProgress"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:src="@drawable/ic_lock_open"/>
 
@@ -110,11 +112,12 @@
 
                 <com.cunoraz.gifview.library.GifView
                     android:id="@+id/ProgressGif"
-                    android:layout_width="@dimen/_80sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    custom:gif="@drawable/watting"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    custom:gif="@drawable/loading"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
                     />
 
             </RelativeLayout>

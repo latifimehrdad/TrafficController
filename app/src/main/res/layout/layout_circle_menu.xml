@@ -114,6 +114,7 @@
 
 
     <LinearLayout
+        android:id="@+id/LogFile"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentBottom="true"
@@ -137,7 +138,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:gravity="center"
             android:lines="2"
-            android:text="@string/TestMeasureDistance"
+            android:text="Show Log"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/_8sdp"
             android:paddingRight="@dimen/_2sdp"

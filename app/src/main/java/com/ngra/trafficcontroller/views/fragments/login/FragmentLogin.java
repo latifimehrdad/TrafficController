@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
+import com.ngra.trafficcontroller.utility.StaticFunctions;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentLogin;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
@@ -58,6 +59,9 @@ public class FragmentLogin extends Fragment {
     @BindView(R.id.BtnLoginText)
     TextView BtnLoginText;
 
+    @BindView(R.id.imgProgress)
+    ImageView imgProgress;
+
 
     @Override
     public View onCreateView(
@@ -88,7 +92,7 @@ public class FragmentLogin extends Fragment {
         SetClick();
         SetTextWatcher();
         ObserverObservable();
-        DismissProgress();
+        DismissLoading();
     }//_____________________________________________________________________________________________ End onStart
 
 
@@ -98,9 +102,21 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (CheckEmpty()) {
-                    ShowProgress();
-                    viewModel.SendNumber(PhoneNumber);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("PhoneNumber", "09367085703");
+//                navController.navigate(
+//                        R.id.action_fragmentLogin_to_fragmentVerify,
+//                        bundle
+//                );
+
+                if(StaticFunctions.isCancel) {
+                    if (CheckEmpty()) {
+                        ShowLoading();
+                        viewModel.SendNumber(PhoneNumber);
+                    }
+                } else {
+                    StaticFunctions.isCancel = true;
+                    DismissLoading();
                 }
             }
         });
@@ -118,7 +134,7 @@ public class FragmentLogin extends Fragment {
                         .runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                DismissProgress();
+                                DismissLoading();
                                 switch (s) {
                                     case "Done":
                                         Bundle bundle = new Bundle();
@@ -199,19 +215,6 @@ public class FragmentLogin extends Fragment {
     }//_____________________________________________________________________________________________ End CheckEmpty
 
 
-    private void ShowProgress() {//_________________________________________________________________ Start ShowProgress
-        BtnLoginText.setVisibility(View.INVISIBLE);
-        ProgressGif.setVisibility(View.VISIBLE);
-    }//_____________________________________________________________________________________________ End ShowProgress
-
-
-
-    private void DismissProgress() {//______________________________________________________________ Start DismissProgress
-        BtnLoginText.setVisibility(View.VISIBLE);
-        ProgressGif.setVisibility(View.INVISIBLE);
-    }//_____________________________________________________________________________________________ End DismissProgress
-
-
     private void SetTextWatcher() {//_______________________________________________________________ Start SetTextWatcher
         editPhoneNumber.addTextChangedListener(TextChangeForChangeBack(editPhoneNumber));
     }//_____________________________________________________________________________________________ End SetTextWatcher
@@ -224,6 +227,25 @@ public class FragmentLogin extends Fragment {
         dialogMessage.show(getFragmentManager(), NotificationCompat.CATEGORY_PROGRESS);
 
     }//_____________________________________________________________________________________________ End ShowMessage
+
+
+    private void DismissLoading() {//_______________________________________________________________ Start DismissLoading
+        StaticFunctions.isCancel = true;
+        BtnLoginText.setText(getResources().getString(R.string.Login));
+        BtnLogin.setBackground(getResources().getDrawable(R.drawable.button_bg));
+        ProgressGif.setVisibility(View.GONE);
+        imgProgress.setVisibility(View.VISIBLE);
+
+    }//_____________________________________________________________________________________________ End DismissLoading
+
+
+    private void ShowLoading() {//__________________________________________________________________ Start ShowLoading
+        StaticFunctions.isCancel = false;
+        BtnLoginText.setText(getResources().getString(R.string.Cancel));
+        BtnLogin.setBackground(getResources().getDrawable(R.drawable.button_red));
+        ProgressGif.setVisibility(View.VISIBLE);
+        imgProgress.setVisibility(View.INVISIBLE);
+    }//_____________________________________________________________________________________________ End ShowLoading
 
 
     @Override
