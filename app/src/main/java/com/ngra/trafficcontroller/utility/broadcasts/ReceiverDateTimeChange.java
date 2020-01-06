@@ -4,12 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 
 
 public class ReceiverDateTimeChange extends BroadcastReceiver {
+
+
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent) {//_______________________________________ Start onReceive
         final String action = intent.getAction();
 
         if (action.equals(Intent.ACTION_TIME_CHANGED) ||
@@ -17,12 +20,12 @@ public class ReceiverDateTimeChange extends BroadcastReceiver {
             NotificationManagerClass managerClass =
                     new NotificationManagerClass(
                             context,
-                            "کار زشتی میکنی ساعت و تغییر میدی"
+                            context.getResources().getString(R.string.DonChangeTime)
                             , false
                             , 2
                     );
         }
 
 
-    }
+    }//_____________________________________________________________________________________________ End onReceive
 }

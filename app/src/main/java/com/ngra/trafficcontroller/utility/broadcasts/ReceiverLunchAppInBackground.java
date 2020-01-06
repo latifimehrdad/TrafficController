@@ -3,9 +3,6 @@ package com.ngra.trafficcontroller.utility.broadcasts;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-
-import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
 
 public class ReceiverLunchAppInBackground extends BroadcastReceiver {

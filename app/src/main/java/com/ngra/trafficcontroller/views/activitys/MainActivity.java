@@ -1,6 +1,7 @@
 package com.ngra.trafficcontroller.views.activitys;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import androidx.navigation.Navigation;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.VM_ActivityMain;
 
 import butterknife.ButterKnife;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 //    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
 //        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
 //    }//_____________________________________________________________________________________________ End attachBaseContext
+
+
 
 
     public void checkLocationPermission() {//_____________________________________________________________________________________________ Start checkLocationPermission

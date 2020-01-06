@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
@@ -15,6 +16,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start onReceive
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

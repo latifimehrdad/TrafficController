@@ -6,6 +6,7 @@ package com.ngra.trafficcontroller.utility.broadcasts;
 
         import com.ngra.trafficcontroller.R;
         import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+        import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
         import com.ngra.trafficcontroller.views.application.TrafficController;
 
         import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
@@ -15,6 +16,7 @@ public class ReceiverGpsLocation extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start onReceive
+
         if (!TrafficController.getApplication(context).isLocationEnabled()) {
             NotificationManagerClass managerClass =
                     new NotificationManagerClass(

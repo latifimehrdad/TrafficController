@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.views.activitys.MainActivity;
 
 public class NotificationManagerClass {
 
@@ -30,6 +33,9 @@ public class NotificationManagerClass {
     private String Text;
     private Boolean ShowAlways;
     private int GPS;
+    private NotificationCompat.Builder OldNotifyBuilder;
+    private Notification.Builder NewNotifyBuilder;
+    private android.app.Notification notification;
 
 
     public NotificationManagerClass(Context context, String text, Boolean showAlways, int GPS) {// Start NotificationManager
@@ -48,13 +54,18 @@ public class NotificationManagerClass {
 
 
 
-
-
     private void ShowNotificationOld() {//__________________________________________________________ Start ShowNotificationOld
 
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
         SetNotiIdAndBitmap(GPS);
-        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(
+        OldNotifyBuilder = new NotificationCompat.Builder(
                 context)
+                .setOngoing(ShowAlways)
                 .setSmallIcon(R.drawable.miniicon)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 80, 80, false))
                 .setContentTitle(context.getResources().getString(R.string.app_name))
@@ -62,26 +73,37 @@ public class NotificationManagerClass {
                 .setSound(getSound())
                 .setAutoCancel(true)
                 .setWhen(when)
+                .setContentIntent(resultPendingIntent)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-        mNotifyBuilder.setColor(context.getResources().getColor(R.color.colorPrimary));
-        getManager().notify(NotiId, mNotifyBuilder.build());
+        OldNotifyBuilder.setColor(context.getResources().getColor(R.color.colorPrimary));
+        getManager().notify(NotiId, OldNotifyBuilder.build());
+        notification = OldNotifyBuilder.build();
 
     }//_____________________________________________________________________________________________ End ShowNotificationOld
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void ShowNotificationNew() {//___________________________________________________________ Start ShowNotificationNew
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
         SetNotiIdAndBitmap(GPS);
         CreateChannels();
-        Notification.Builder builder = new Notification.Builder(context, CHANNEL_ONE_ID)
+        NewNotifyBuilder = new Notification.Builder(context, CHANNEL_ONE_ID)
+                .setOngoing(ShowAlways)
                 .setSmallIcon(R.drawable.miniicon)
                 .setContentText(Text)
                 .setLargeIcon(icon)
                 .setStyle(new Notification.BigTextStyle()
                         .bigText(Text))
+                .setContentIntent(resultPendingIntent)
                 .setAutoCancel(true);
-        builder.setColor(context.getResources().getColor(R.color.colorPrimary));
-        getManager().notify(NotiId, builder.build());
+        NewNotifyBuilder.setColor(context.getResources().getColor(R.color.colorPrimary));
+        getManager().notify(NotiId, NewNotifyBuilder.build());
+        notification = NewNotifyBuilder.build();
     }//_____________________________________________________________________________________________ End ShowNotificationNew
 
 
@@ -90,16 +112,21 @@ public class NotificationManagerClass {
         if (GPS == 1) {
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.gps_off);
-            NotiId = 7126;
+            NotiId = context.getResources().getInteger(R.integer.NotificationGPS);
         } else if (GPS == 0){
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.net_off);
-            NotiId = 6780;
+            NotiId = context.getResources().getInteger(R.integer.NotificationNet);
         }
         else if (GPS == 2){
-            NotiId = 110;
+            NotiId = context.getResources().getInteger(R.integer.NotificationDate);
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.changetime);
+        }
+        else if (GPS == 3) {
+            NotiId = context.getResources().getInteger(R.integer.NotificationRun);
+            icon = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.miniicon);
         }
     }//_____________________________________________________________________________________________ End SetNotiIdAndBitmap
 
@@ -130,4 +157,19 @@ public class NotificationManagerClass {
         return notifManager;
     }//_____________________________________________________________________________________________ End getManager
 
+
+    public NotificationCompat.Builder getOldNotifyBuilder() {//_____________________________________ Start getOldNotifyBuilder
+        return OldNotifyBuilder;
+    }//_____________________________________________________________________________________________ End getOldNotifyBuilder
+
+
+
+    public Notification.Builder getNewNotifyBuilder() {//___________________________________________ Start getNewNotifyBuilder
+        return NewNotifyBuilder;
+    }//_____________________________________________________________________________________________ End getNewNotifyBuilder
+
+
+    public Notification getNotification() {//_______________________________________________________ Start getNotification
+        return notification;
+    }//_____________________________________________________________________________________________ End getNotification
 }

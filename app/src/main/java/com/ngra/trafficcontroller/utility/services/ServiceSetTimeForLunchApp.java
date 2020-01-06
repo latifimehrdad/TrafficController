@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+
+import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.database.DataBaseLog;
+import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 import java.text.SimpleDateFormat;
@@ -22,31 +25,24 @@ public class ServiceSetTimeForLunchApp extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {//____________________________ Start onStartCommand
 
-//        NotificationManagerClass managerClass =
-//                new NotificationManagerClass(
-//                        getApplicationContext(),
-//                        "شروع برنامه"
-//                        , false
-//                        , true
-//                );
+        NotificationManagerClass managerClass =
+                new NotificationManagerClass(
+                        getApplicationContext(),
+                        getApplicationContext().getResources().getString(R.string.ServiceRun)
+                        , true
+                        , 3
+                );
+        Integer id = getApplicationContext().getResources().getInteger(R.integer.NotificationRun);
+        android.app.Notification alarmNotify = managerClass.getNotification();
+        startForeground(id,alarmNotify);
 
         SaveLog("onStart Service : " + getStringCurrentDate());
-//        Calendar now = Calendar.getInstance();
-//        Intent intent1 = new Intent(getApplicationContext(), ReceiverJobInBackground.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-//        AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
-//        am.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 120*1000, pendingIntent);
-
         Calendar now = Calendar.getInstance();
-        now.add(Calendar.MINUTE,2);
         Intent intent1 = new Intent(getApplicationContext(), ReceiverJobInBackground.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), pendingIntent);
-        } else {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 120 * 1000, pendingIntent);
-        }
+        am.setRepeating (AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 120*1000, pendingIntent);
+
         return Service.START_STICKY;
     }//_____________________________________________________________________________________________ End onStartCommand
 

@@ -2,9 +2,11 @@ package com.ngra.trafficcontroller.views.application;
 
 import android.app.Application;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -22,6 +24,7 @@ import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverDateTimeChange;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverGpsLocation;
+import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.utility.broadcasts.ReceiverNetworkChange;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
@@ -37,14 +40,14 @@ public class TrafficController extends MultiDexApplication {
     private RetrofitComponent retrofitComponent;
     private RealmComponent realmComponent;
     public static PublishSubject<String> ObservablesGpsAndNetworkChange = PublishSubject.create();
-    private   IntentFilter s_intentFilter;
-
+    private IntentFilter s_intentFilter;
 
 
     @Override
     public void onCreate() {//______________________________________________________________________ Start onCreate
         super.onCreate();
         this.context = getApplicationContext();
+        setComponentEnabledSetting();
         registerBroadcast();
         ConfigurationCalligraphy();
         ConfigrationRetrofitComponent();
@@ -137,7 +140,7 @@ public class TrafficController extends MultiDexApplication {
         s_intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
 
         ReceiverDateTimeChange timeChange = new ReceiverDateTimeChange();
-        getApplicationContext().registerReceiver(timeChange,s_intentFilter);
+        getApplicationContext().registerReceiver(timeChange, s_intentFilter);
 
     }//_____________________________________________________________________________________________ End registerBroadcast
 
@@ -145,4 +148,16 @@ public class TrafficController extends MultiDexApplication {
     public RealmComponent getRealmComponent() {//___________________________________________________ Start getRealmComponent
         return realmComponent;
     }//_____________________________________________________________________________________________ End getRealmComponent
+
+
+    private void setComponentEnabledSetting() {//___________________________________________________ Start setComponentEnabledSetting
+        ComponentName receiver = new ComponentName(this, ReceiverLunchAppInBackground.class);
+        PackageManager pm = this.getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }//_____________________________________________________________________________________________ End setComponentEnabledSetting
+
+
 }

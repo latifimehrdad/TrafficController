@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="NotificationGPS">7126</integer>
+    <integer name="NotificationNet">6780</integer>
+    <integer name="NotificationDate">110</integer>
+    <integer name="NotificationRun">212</integer>
+
+
+</resources>

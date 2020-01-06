@@ -49,6 +49,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private Context context;
     private RealmResults<DataBaseLocation> locations;
+    private boolean GetGPS;
 
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
@@ -73,16 +74,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         if (TrafficController.getApplication(context).isLocationEnabled())
             GetCurrentLocation();
-        else
-            SaveLog("GPS OFF : " + getStringCurrentDate());
+        else {
 
-//        if (TrafficController.getApplication(context).isInternetConnected())
-//            GetLocatointonFromDB();
-//        else
-//            LogService("NET OFF **** ");
+            SaveLog("GPS OFF : " + getStringCurrentDate());
+            GetLocatointonFromDB();
+        }
 
             DeleteOldLocationFromDataBase();
-
 
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
@@ -103,6 +101,16 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private void GetCurrentLocation() {//___________________________________________________________ Start GetCurrentLocation
 
+        GetGPS = false;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!GetGPS)
+                    GetLocatointonFromDB();
+            }
+        },10000);
+
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setNumUpdates(1)
@@ -113,6 +121,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(Location location) throws Exception {
+                        GetGPS = true;
                         SaveLog("Get GPS : " + getStringCurrentDate());
                         SaveToDataBase(
                                 location.getLatitude(),
