@@ -3,37 +3,31 @@ package com.ngra.trafficcontroller.utility.services;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 public class GetCurrentLocation extends Service implements LocationListener
 {
 
     private LocationManager locationManager;
-//    public static LSInterface lsInterface;
+    public static LSInterface lsInterface;
     public Context mcontext;
+    public  int count = 0;
 
 
-//    public interface LSInterface
-//    {//_____________________________________________________________________________________________ Start INTGetDataService
-//
-//        void GetLatLong(double lat, double lon);
-//        void ShowAlertLocation();
-//
-//    }//_____________________________________________________________________________________________ End INTGetDataService
+    public interface LSInterface
+    {//_____________________________________________________________________________________________ Start INTGetDataService
+
+        void GetLatLong(double lat, double lon);
+        void ShowAlertLocation();
+
+    }//_____________________________________________________________________________________________ End INTGetDataService
 
 
 
@@ -44,9 +38,9 @@ public class GetCurrentLocation extends Service implements LocationListener
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+        count = 0;
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         int b = isLocationEnabled();
-        Log.i("meri", "Service : " + b);
         if (b == 1) {
 
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -58,7 +52,7 @@ public class GetCurrentLocation extends Service implements LocationListener
         }
         else
         {
-            //lsInterface.ShowAlertLocation();
+            lsInterface.ShowAlertLocation();
         }
         return START_STICKY;
     }
@@ -73,17 +67,25 @@ public class GetCurrentLocation extends Service implements LocationListener
 
     @Override
     public void onLocationChanged(Location location) {
+
+        lsInterface.ShowAlertLocation();
         try {
-            Log.i("meri", location.getLatitude() + "___" + location.getLongitude());
-            //lsInterface.GetLatLong(location.getLatitude(),location.getLongitude());
-            locationManager.removeUpdates(GetCurrentLocation.this);
+            if(count > 10) {
+                lsInterface.GetLatLong(location.getLatitude(), location.getLongitude());
+                locationManager.removeUpdates(GetCurrentLocation.this);
+                locationManager = null;
+                this.stopSelf();
+            }
+            else {
+                count = count + 1;
+                lsInterface.ShowAlertLocation();
+            }
         }
         catch (Throwable t)
         {
 
         }
-        locationManager = null;
-        this.stopSelf();
+
     }
 
     @Override
@@ -113,9 +115,6 @@ public class GetCurrentLocation extends Service implements LocationListener
         else
             return 0;
     }
-
-
-
 
 
 

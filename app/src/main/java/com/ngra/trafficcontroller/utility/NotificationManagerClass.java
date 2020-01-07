@@ -29,7 +29,9 @@ public class NotificationManagerClass {
     private Bitmap icon;
     private long when;
     private String CHANNEL_ONE_NAME = "New Event";
-    private String CHANNEL_ONE_ID = "com.ngra.trafficcontroller";
+    private String CHANNEL_ONE_ID = "com.ngra.trafficcontroller.Event";
+    private String CHANNEL_SERVICE_NAME = "Run App";
+    private String CHANNEL_SERVICE_ID = "com.ngra.trafficcontroller.Run";
     private String Text;
     private Boolean ShowAlways;
     private int GPS;
@@ -38,20 +40,26 @@ public class NotificationManagerClass {
     private android.app.Notification notification;
 
 
-    public NotificationManagerClass(Context context, String text, Boolean showAlways, int GPS) {// Start NotificationManager
+    public NotificationManagerClass(
+            Context context,
+            String text,
+            Boolean showAlways,
+            int GPS) {//____________________________________________________________________________ Start NotificationManager
         this.context = context;
         Text = text;
         ShowAlways = showAlways;
         this.GPS = GPS;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CreateChannels();
+            if (GPS == 3)
+                CreateChannelsRun();
+            else
+                CreateChannelsEvent();
             ShowNotificationNew();
         } else {
             ShowNotificationOld();
         }
 
     }//_____________________________________________________________________________________________ End NotificationManager
-
 
 
     private void ShowNotificationOld() {//__________________________________________________________ Start ShowNotificationOld
@@ -70,11 +78,13 @@ public class NotificationManagerClass {
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 80, 80, false))
                 .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(Text))
-                .setSound(getSound())
                 .setAutoCancel(true)
                 .setWhen(when)
-                .setContentIntent(resultPendingIntent)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                .setContentIntent(resultPendingIntent);
+        if(GPS != 3) {
+            OldNotifyBuilder.setSound(getSound());
+            OldNotifyBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        }
         OldNotifyBuilder.setColor(context.getResources().getColor(R.color.colorPrimary));
         getManager().notify(NotiId, OldNotifyBuilder.build());
         notification = OldNotifyBuilder.build();
@@ -91,7 +101,6 @@ public class NotificationManagerClass {
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         SetNotiIdAndBitmap(GPS);
-        CreateChannels();
         NewNotifyBuilder = new Notification.Builder(context, CHANNEL_ONE_ID)
                 .setOngoing(ShowAlways)
                 .setSmallIcon(R.drawable.miniicon)
@@ -113,17 +122,15 @@ public class NotificationManagerClass {
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.gps_off);
             NotiId = context.getResources().getInteger(R.integer.NotificationGPS);
-        } else if (GPS == 0){
+        } else if (GPS == 0) {
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.net_off);
             NotiId = context.getResources().getInteger(R.integer.NotificationNet);
-        }
-        else if (GPS == 2){
+        } else if (GPS == 2) {
             NotiId = context.getResources().getInteger(R.integer.NotificationDate);
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.changetime);
-        }
-        else if (GPS == 3) {
+        } else if (GPS == 3) {
             NotiId = context.getResources().getInteger(R.integer.NotificationRun);
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.miniicon);
@@ -131,9 +138,8 @@ public class NotificationManagerClass {
     }//_____________________________________________________________________________________________ End SetNotiIdAndBitmap
 
 
-
     @TargetApi(Build.VERSION_CODES.O)
-    public void CreateChannels() {//________________________________________________________________ Start createChannels
+    public void CreateChannelsEvent() {//___________________________________________________________ Start CreateChannelsEvent
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
                 CHANNEL_ONE_NAME, notifManager.IMPORTANCE_HIGH);
         notificationChannel.enableLights(true);
@@ -141,8 +147,21 @@ public class NotificationManagerClass {
         notificationChannel.setShowBadge(true);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(notificationChannel);
-    }//_____________________________________________________________________________________________ End createChannels
+    }//_____________________________________________________________________________________________ End CreateChannelsEvent
 
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void CreateChannelsRun() {//_____________________________________________________________ Start CreateChannelsRun
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_SERVICE_ID,
+                CHANNEL_SERVICE_NAME, notifManager.IMPORTANCE_HIGH);
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(context.getResources().getColor(R.color.colorPrimary));
+        notificationChannel.setShowBadge(true);
+        notificationChannel.setSound(null,null);
+        notificationChannel.enableVibration(false);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        getManager().createNotificationChannel(notificationChannel);
+    }//_____________________________________________________________________________________________ End CreateChannelsRun
 
 
     public Uri getSound() {//________________________________________________________________________ Start getSound
@@ -161,7 +180,6 @@ public class NotificationManagerClass {
     public NotificationCompat.Builder getOldNotifyBuilder() {//_____________________________________ Start getOldNotifyBuilder
         return OldNotifyBuilder;
     }//_____________________________________________________________________________________________ End getOldNotifyBuilder
-
 
 
     public Notification.Builder getNewNotifyBuilder() {//___________________________________________ Start getNewNotifyBuilder

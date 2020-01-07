@@ -51,6 +51,16 @@
                 android:text="@string/app_name_header"
                 />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.2"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:textSize="@dimen/_10sdp"
+                android:textColor="@color/ML_White"
+                />
+
         </RelativeLayout>
         //______________________________________________ Header
 

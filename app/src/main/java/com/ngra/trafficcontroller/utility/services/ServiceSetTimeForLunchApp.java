@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 
@@ -32,6 +31,7 @@ public class ServiceSetTimeForLunchApp extends Service {
                         , true
                         , 3
                 );
+
         Integer id = getApplicationContext().getResources().getInteger(R.integer.NotificationRun);
         android.app.Notification alarmNotify = managerClass.getNotification();
         startForeground(id,alarmNotify);

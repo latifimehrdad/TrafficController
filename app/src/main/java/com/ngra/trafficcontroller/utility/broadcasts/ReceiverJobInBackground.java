@@ -16,7 +16,7 @@ import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.database.DataBaseLog;
 import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
-import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import org.json.JSONArray;
@@ -45,7 +45,7 @@ import retrofit2.Response;
 
 import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
-public class ReceiverJobInBackground extends BroadcastReceiver {
+public class ReceiverJobInBackground extends BroadcastReceiver{
 
     private Context context;
     private RealmResults<DataBaseLocation> locations;
@@ -54,6 +54,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
         } else {
@@ -61,13 +62,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             context.sendBroadcast(i);
         }
 
-        NotificationManagerClass managerClass =
-                new NotificationManagerClass(
-                        context,
-                        "شروع برنامه"
-                        , false
-                        , 0
-                );
 
         this.context = context;
         SaveLog("Start : " + getStringCurrentDate());
@@ -109,26 +103,30 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 if(!GetGPS)
                     GetLocatointonFromDB();
             }
-        },10000);
+        },20000);
 
+        final int[] count = {0};
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(1)
-                .setInterval(1000);
+                .setNumUpdates(10)
+                .setInterval(1100);
 
         ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
         Disposable subscription = locationProvider.getUpdatedLocation(request)
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(Location location) throws Exception {
-                        GetGPS = true;
-                        SaveLog("Get GPS : " + getStringCurrentDate());
-                        SaveToDataBase(
-                                location.getLatitude(),
-                                location.getLongitude(),
-                                location.getAltitude(),
-                                location.getSpeed()
-                        );
+                        count[0] = count[0] + 1;
+                        if(count[0] == 10) {
+                            GetGPS = true;
+                            SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
+                            SaveToDataBase(
+                                    location.getLatitude(),
+                                    location.getLongitude(),
+                                    location.getAltitude(),
+                                    location.getSpeed()
+                            );
+                        }
                     }
                 });
     }//_____________________________________________________________________________________________ End GetCurrentLocation
@@ -350,8 +348,5 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         return ret;
     }
-
-
-
 
 }
