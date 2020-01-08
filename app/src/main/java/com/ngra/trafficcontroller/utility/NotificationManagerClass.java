@@ -50,10 +50,7 @@ public class NotificationManagerClass {
         ShowAlways = showAlways;
         this.GPS = GPS;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (GPS == 3)
-                CreateChannelsRun();
-            else
-                CreateChannelsEvent();
+            CreateChannelsEvent();
             ShowNotificationNew();
         } else {
             ShowNotificationOld();
@@ -81,7 +78,7 @@ public class NotificationManagerClass {
                 .setAutoCancel(true)
                 .setWhen(when)
                 .setContentIntent(resultPendingIntent);
-        if(GPS != 3) {
+        if (GPS != 3) {
             OldNotifyBuilder.setSound(getSound());
             OldNotifyBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
         }
@@ -150,18 +147,18 @@ public class NotificationManagerClass {
     }//_____________________________________________________________________________________________ End CreateChannelsEvent
 
 
-    @TargetApi(Build.VERSION_CODES.O)
-    public void CreateChannelsRun() {//_____________________________________________________________ Start CreateChannelsRun
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_SERVICE_ID,
-                CHANNEL_SERVICE_NAME, notifManager.IMPORTANCE_HIGH);
-        notificationChannel.enableLights(true);
-        notificationChannel.setLightColor(context.getResources().getColor(R.color.colorPrimary));
-        notificationChannel.setShowBadge(true);
-        notificationChannel.setSound(null,null);
-        notificationChannel.enableVibration(false);
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        getManager().createNotificationChannel(notificationChannel);
-    }//_____________________________________________________________________________________________ End CreateChannelsRun
+//    @TargetApi(Build.VERSION_CODES.O)
+//    public void CreateChannelsRun() {//_____________________________________________________________ Start CreateChannelsRun
+//        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_SERVICE_ID,
+//                CHANNEL_SERVICE_NAME, notifManager.IMPORTANCE_HIGH);
+//        notificationChannel.enableLights(true);
+//        notificationChannel.setLightColor(context.getResources().getColor(R.color.colorPrimary));
+//        notificationChannel.setShowBadge(true);
+//        notificationChannel.setSound(null,null);
+//        notificationChannel.enableVibration(false);
+//        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+//        getManager().createNotificationChannel(notificationChannel);
+//    }//_____________________________________________________________________________________________ End CreateChannelsRun
 
 
     public Uri getSound() {//________________________________________________________________________ Start getSound

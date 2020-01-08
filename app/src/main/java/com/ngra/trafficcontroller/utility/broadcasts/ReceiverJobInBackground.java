@@ -55,12 +55,12 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-        } else {
-            Intent i = new Intent("ir.ngra.Lunch");
-            context.sendBroadcast(i);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
+//        } else {
+//            Intent i = new Intent("ir.ngra.Lunch");
+//            context.sendBroadcast(i);
+//        }
 
 
         this.context = context;
@@ -108,7 +108,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
         final int[] count = {0};
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(10)
+                .setNumUpdates(5)
                 .setInterval(1100);
 
         ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
@@ -117,7 +117,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                     @Override
                     public void accept(Location location) throws Exception {
                         count[0] = count[0] + 1;
-                        if(count[0] == 10) {
+                        if(count[0] == 5) {
                             GetGPS = true;
                             SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
                             SaveToDataBase(

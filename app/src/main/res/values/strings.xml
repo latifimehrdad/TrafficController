@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">کنترل تردد نگرا</string>
     <string name="app_name_header">نرم افزار کنترل تردد نگرا</string>
+    <string name="version">1.5</string>
 
     <string name="PhoneNumber">شماره موبایل</string>
     <string name="Password">رمز ورود</string>
