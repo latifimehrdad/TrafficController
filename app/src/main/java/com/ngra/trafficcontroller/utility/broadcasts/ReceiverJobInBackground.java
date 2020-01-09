@@ -105,19 +105,19 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
             }
         },20000);
 
-        final int[] count = {0};
+//        final int[] count = {0};
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(5)
-                .setInterval(1100);
+                .setNumUpdates(1)
+                .setInterval(1000);
 
         ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
         Disposable subscription = locationProvider.getUpdatedLocation(request)
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(Location location) throws Exception {
-                        count[0] = count[0] + 1;
-                        if(count[0] == 5) {
+//                        count[0] = count[0] + 1;
+ //                       if(count[0] == 5) {
                             GetGPS = true;
                             SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
                             SaveToDataBase(
@@ -126,7 +126,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                                     location.getAltitude(),
                                     location.getSpeed()
                             );
-                        }
+//                        }
                     }
                 });
     }//_____________________________________________________________________________________________ End GetCurrentLocation
@@ -233,28 +233,30 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                     @Override
                     public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
                         if (response != null) {
-                            String result = response.body().getResult();
-                            SaveLog("Response : "+ result + " -- " + getStringCurrentDate());
-                            if (result.equalsIgnoreCase("done")) {
-                                Realm realm = TrafficController
-                                        .getApplication(context)
-                                        .getRealmComponent().getRealm();
+                            if(response.body() != null) {
+                                String result = response.body().getResult();
+                                SaveLog("Response : " + result + " -- " + getStringCurrentDate());
+                                if (result.equalsIgnoreCase("done")) {
+                                    Realm realm = TrafficController
+                                            .getApplication(context)
+                                            .getRealmComponent().getRealm();
 
-                                for (DataBaseLocation location : locations) {
-                                    try {
-                                        realm.beginTransaction();
-                                        location.setSend(true);
-                                        realm.commitTransaction();
-                                    } catch (Exception ex) {
+                                    for (DataBaseLocation location : locations) {
+                                        try {
+                                            realm.beginTransaction();
+                                            location.setSend(true);
+                                            realm.commitTransaction();
+                                        } catch (Exception ex) {
 
+                                        }
                                     }
+                                    SharedPreferences.Editor perf =
+                                            context.getSharedPreferences("trafficcontroller", 0).edit();
+                                    String time = getStringCurrentDate();
+                                    perf.putString("lastnet", time);
+                                    perf.apply();
+                                    ObservablesGpsAndNetworkChange.onNext("LastNet");
                                 }
-                                SharedPreferences.Editor perf =
-                                        context.getSharedPreferences("trafficcontroller", 0).edit();
-                                String time = getStringCurrentDate();
-                                perf.putString("lastnet", time);
-                                perf.apply();
-                                ObservablesGpsAndNetworkChange.onNext("LastNet");
                             }
                         }
                     }

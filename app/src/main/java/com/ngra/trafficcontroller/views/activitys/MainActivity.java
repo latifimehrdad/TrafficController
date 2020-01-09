@@ -24,10 +24,10 @@ import androidx.navigation.Navigation;
 
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.ActivityMainBinding;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
 import com.ngra.trafficcontroller.viewmodels.activitys.VM_ActivityMain;
 
 import butterknife.ButterKnife;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End onBindView
 
 
-//    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
-//        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
-//    }//_____________________________________________________________________________________________ End attachBaseContext
+
+    public void attachBaseContext(Context newBase) {//______________________________________________ Start attachBaseContext
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }//_____________________________________________________________________________________________ End attachBaseContext
 
 
 

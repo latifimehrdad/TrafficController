@@ -1,12 +1,8 @@
 package com.ngra.trafficcontroller.views.fragments.login;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,13 +102,6 @@ public class FragmentLogin extends Fragment {
         BtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Bundle bundle = new Bundle();
-//                bundle.putString("PhoneNumber", "09367085703");
-//                navController.navigate(
-//                        R.id.action_fragmentLogin_to_fragmentVerify,
-//                        bundle
-//                );
 
                 if(StaticFunctions.isCancel) {
                     if (CheckEmpty()) {

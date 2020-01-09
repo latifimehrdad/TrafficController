@@ -366,6 +366,8 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End DismissProgress
 
 
+
+
     @Override
     public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();

@@ -41,7 +41,7 @@
 
 
     <LinearLayout
-        android:id="@+id/LogDelete"
+        android:id="@+id/ShowMap"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentLeft="true"
@@ -55,7 +55,7 @@
         <ImageView
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/ic_directions_walk"
+            android:src="@drawable/ic_filter_tilt_shift"
             android:tint="@color/colorPrimaryDark"
             />
 
@@ -65,7 +65,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:gravity="center"
             android:lines="2"
-            android:text="Delete Log"
+            android:text="@string/WorkingRange"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/_8sdp"
             android:paddingRight="@dimen/_2sdp"
