@@ -2,7 +2,7 @@
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyB4uEndQFm4CX7GOP5nTWO6u8Le6tKD3Ic</string>
     <string name="app_name">کنترل تردد نگرا</string>
     <string name="app_name_header">نرم افزار کنترل تردد نگرا</string>
-    <string name="version">نسخه 1.5</string>
+    <string name="version">نسخه 1.6</string>
 
     <string name="PhoneNumber">شماره موبایل</string>
     <string name="Password">رمز ورود</string>

@@ -130,15 +130,23 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
 
-    private void SaveToDataBase(double Latitude, double Longitude, double Altitude, float Speed) {// StartSaveToDataBase
+    private void SaveToDataBase(
+            double Latitude,
+            double Longitude,
+            double Altitude,
+            float Speed) {//________________________________________________________________________ StartSaveToDataBase
+
         Realm realm = TrafficController
                 .getApplication(context)
                 .getRealmComponent()
                 .getRealm();
 
         Date last = realm.where(DataBaseLocation.class).maximumDate("SaveDate");
+        long bet = 2 * 60 * 1000 + 1;
         Date date = new Date();
-        long bet = Math.abs(last.getTime() - date.getTime());
+        if (last != null)
+            bet = Math.abs(last.getTime() - date.getTime());
+
         if (bet < 2 * 60 * 1000)
             return;
 
