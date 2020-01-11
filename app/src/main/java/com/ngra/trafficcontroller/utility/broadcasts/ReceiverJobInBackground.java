@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
@@ -45,7 +44,7 @@ import retrofit2.Response;
 
 import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
-public class ReceiverJobInBackground extends BroadcastReceiver{
+public class ReceiverJobInBackground extends BroadcastReceiver {
 
     private Context context;
     private RealmResults<DataBaseLocation> locations;
@@ -74,7 +73,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
             GetLocatointonFromDB();
         }
 
-            DeleteOldLocationFromDataBase();
+        DeleteOldLocationFromDataBase();
 
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
@@ -92,7 +91,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
     }//_____________________________________________________________________________________________ End SaveLog
 
 
-
     private void GetCurrentLocation() {//___________________________________________________________ Start GetCurrentLocation
 
         GetGPS = false;
@@ -100,10 +98,10 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!GetGPS)
+                if (!GetGPS)
                     GetLocatointonFromDB();
             }
-        },20000);
+        }, 20000);
 
 //        final int[] count = {0};
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
@@ -117,15 +115,15 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                     @Override
                     public void accept(Location location) throws Exception {
 //                        count[0] = count[0] + 1;
- //                       if(count[0] == 5) {
-                            GetGPS = true;
-                            SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
-                            SaveToDataBase(
-                                    location.getLatitude(),
-                                    location.getLongitude(),
-                                    location.getAltitude(),
-                                    location.getSpeed()
-                            );
+                        //                       if(count[0] == 5) {
+                        GetGPS = true;
+                        SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
+                        SaveToDataBase(
+                                location.getLatitude(),
+                                location.getLongitude(),
+                                location.getAltitude(),
+                                location.getSpeed()
+                        );
 //                        }
                     }
                 });
@@ -138,6 +136,12 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                 .getRealmComponent()
                 .getRealm();
 
+        Date last = realm.where(DataBaseLocation.class).maximumDate("SaveDate");
+        Date date = new Date();
+        long bet = Math.abs(last.getTime() - date.getTime());
+        if (bet < 2 * 60 * 1000)
+            return;
+
         try {
             Integer ID = 1;
             Number currentIdNum = realm.where(DataBaseLocation.class).max("ID");
@@ -148,7 +152,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
             }
 
             String time = getStringCurrentDate();
-            Date date = new Date();
             realm.beginTransaction();
             realm.createObject(DataBaseLocation.class, ID)
                     .InsertDataBaseLocation(Latitude, Longitude, time, Altitude, Speed, date);
@@ -183,7 +186,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
 
         locations = realm.where(DataBaseLocation.class).equalTo("Send", false).findAll();
         SaveLog("Get DB : " + locations.size() + "-- " + getStringCurrentDate());
-        SendLocatoinToServer();
+        if (locations.size() > 0)
+            SendLocatoinToServer();
     }//_____________________________________________________________________________________________ End GetLocatointonFromDB
 
 
@@ -233,7 +237,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                     @Override
                     public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
                         if (response != null) {
-                            if(response.body() != null) {
+                            if (response.body() != null) {
                                 String result = response.body().getResult();
                                 SaveLog("Response : " + result + " -- " + getStringCurrentDate());
                                 if (result.equalsIgnoreCase("done")) {
@@ -266,7 +270,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver{
                         SaveLog("Response Failure : " + getStringCurrentDate());
                     }
                 });
-
 
 
     }//_____________________________________________________________________________________________ End SendLocatoinToServer
