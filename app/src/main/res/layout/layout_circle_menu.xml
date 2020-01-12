@@ -6,13 +6,22 @@
 
 
 
+    <ImageView
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_61sdp"
+        android:src="@drawable/downlogo"
+        android:tint="@color/ML_White"
+        />
+
     <LinearLayout
         android:id="@+id/LayoutMeasureDistance"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_3sdp"
         android:background="@drawable/circle_layout_primarydark"
         android:gravity="center"
         android:orientation="vertical"
@@ -40,13 +49,23 @@
     </LinearLayout>
 
 
+
+    <ImageView
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/_61sdp"
+        android:src="@drawable/leftlogo"
+        android:tint="@color/ML_White"
+        />
+
     <LinearLayout
         android:id="@+id/ShowMap"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_3sdp"
         android:background="@drawable/circle_layout_primarydark"
         android:gravity="center"
         android:orientation="vertical"
@@ -77,13 +96,23 @@
     </LinearLayout>
 
 
+    <ImageView
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_61sdp"
+        android:src="@drawable/rightlogo"
+        android:tint="@color/ML_White"
+        />
+
     <LinearLayout
         android:id="@+id/LayoutMeasureDistanceChart"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_3sdp"
         android:background="@drawable/circle_layout_primarydark"
         android:gravity="center"
         android:orientation="vertical"
@@ -114,13 +143,23 @@
     </LinearLayout>
 
 
+    <ImageView
+        android:layout_width="@dimen/_12sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_61sdp"
+        android:src="@drawable/uplogo"
+        android:tint="@color/ML_White"
+        />
+
     <LinearLayout
         android:id="@+id/LogFile"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
         android:background="@drawable/circle_layout_primarydark"
         android:gravity="center"
         android:orientation="vertical"

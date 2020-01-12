@@ -74,27 +74,25 @@ public class DeviceTools {
     public String getIMEI() {
         if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
 
-            //String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-
             String deviceId="";
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//
-//                SubscriptionManager subsManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
-//
-//                List<SubscriptionInfo> subsList = subsManager.getActiveSubscriptionInfoList();
-//
-//                if (subsList!=null) {
-//                    for (SubscriptionInfo subsInfo : subsList) {
-//                        if (subsInfo != null) {
-//                            deviceId  = subsInfo.getIccId();
-//                        }
-//                    }
-//                }
-//            } else {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+
+                SubscriptionManager subsManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+
+                List<SubscriptionInfo> subsList = subsManager.getActiveSubscriptionInfoList();
+
+                if (subsList!=null) {
+                    for (SubscriptionInfo subsInfo : subsList) {
+                        if (subsInfo != null) {
+                            deviceId  = subsInfo.getIccId();
+                        }
+                    }
+                }
+            } else {
                 TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 deviceId = tm.getDeviceId();
- //           }
+            }
             return deviceId != null ? deviceId : "";
         }
         else return "";

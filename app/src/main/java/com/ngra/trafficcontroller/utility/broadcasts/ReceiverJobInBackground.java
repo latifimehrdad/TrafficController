@@ -53,15 +53,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            context.sendBroadcast(new Intent(context, ReceiverLunchAppInBackground.class).setAction("ir.ngra.Lunch"));
-//        } else {
-//            Intent i = new Intent("ir.ngra.Lunch");
-//            context.sendBroadcast(i);
-//        }
-
-
         this.context = context;
         SaveLog("Start : " + getStringCurrentDate());
 
@@ -101,7 +92,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 if (!GetGPS)
                     GetLocatointonFromDB();
             }
-        }, 20000);
+        }, 10000);
 
 //        final int[] count = {0};
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
