@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
 import com.ngra.trafficcontroller.utility.StaticFunctions;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentLogin;
@@ -103,13 +104,13 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(StaticFunctions.isCancel) {
+                if(RetrofitModule.isCancel) {
                     if (CheckEmpty()) {
                         ShowLoading();
                         viewModel.SendNumber(PhoneNumber);
                     }
                 } else {
-                    StaticFunctions.isCancel = true;
+                    RetrofitModule.isCancel = true;
                     DismissLoading();
                 }
             }
@@ -130,7 +131,7 @@ public class FragmentLogin extends Fragment {
                             public void run() {
                                 DismissLoading();
                                 switch (s) {
-                                    case "Done":
+                                    case "Successful":
                                         Bundle bundle = new Bundle();
                                         bundle.putString("PhoneNumber", PhoneNumber);
                                         navController.navigate(
@@ -138,14 +139,14 @@ public class FragmentLogin extends Fragment {
                                                 bundle
                                         );
                                         break;
-                                    case "Failed":
+                                    case "Error":
                                         ShowMessage(
-                                                viewModel.getMessageResult(),
+                                                viewModel.getMessageResponcse(),
                                                 getResources().getColor(R.color.ML_White),
                                                 getResources().getDrawable(R.drawable.ic_warning_red)
                                         );
                                         break;
-                                    case "onFailure":
+                                    case "Failure":
                                         ShowMessage(
                                                 getResources().getString(R.string.onFailure),
                                                 getResources().getColor(R.color.ML_White),
@@ -224,7 +225,7 @@ public class FragmentLogin extends Fragment {
 
 
     private void DismissLoading() {//_______________________________________________________________ Start DismissLoading
-        StaticFunctions.isCancel = true;
+        RetrofitModule.isCancel = true;
         BtnLoginText.setText(getResources().getString(R.string.Login));
         BtnLogin.setBackground(getResources().getDrawable(R.drawable.button_bg));
         ProgressGif.setVisibility(View.GONE);
@@ -234,7 +235,7 @@ public class FragmentLogin extends Fragment {
 
 
     private void ShowLoading() {//__________________________________________________________________ Start ShowLoading
-        StaticFunctions.isCancel = false;
+        RetrofitModule.isCancel = false;
         BtnLoginText.setText(getResources().getString(R.string.Cancel));
         BtnLogin.setBackground(getResources().getDrawable(R.drawable.button_red));
         ProgressGif.setVisibility(View.VISIBLE);

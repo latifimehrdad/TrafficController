@@ -13,6 +13,9 @@ import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.database.DataBaseLog;
+import com.ngra.trafficcontroller.models.ModelLocation;
+import com.ngra.trafficcontroller.models.ModelLocations;
+import com.ngra.trafficcontroller.models.ModelResponcePrimery;
 import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
 
@@ -29,8 +32,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.disposables.Disposable;
@@ -42,6 +47,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.ngra.trafficcontroller.utility.StaticFunctions.CheckResponse;
+import static com.ngra.trafficcontroller.utility.StaticFunctions.GetAuthorization;
 import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class ReceiverJobInBackground extends BroadcastReceiver {
@@ -194,8 +201,9 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-
+        ArrayList<ModelLocation> list = new ArrayList<>();
         for (DataBaseLocation location : locations) {
+            list.add(new ModelLocation(location.getLatitude(),location.getLongitude(),location.getAltitude(),location.getSpeed(),location.getSaveDate()));
             JSONObject temp = new JSONObject();
             try {
                 temp.put("latitude", location.getLatitude());
@@ -210,11 +218,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         }
 
-        try {
-            jsonObject.put("locations", jsonArray);
-        } catch (JSONException ex) {
-            return;
-        }
+        ModelLocations lo = new ModelLocations(list);
+
+//        try {
+//            jsonObject.put("locations", list);
+//        } catch (JSONException ex) {
+//            return;
+//        }
 
         RetrofitModule.isCancel = false;
         RetrofitComponent retrofitComponent =
@@ -224,51 +234,85 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         DeviceTools deviceTools = new DeviceTools(context);
         String imei = deviceTools.getIMEI();
-        //LogService("Send DB IMEI " + imei + " **** ");
+        String Authorization = GetAuthorization(context);
 
         retrofitComponent
                 .getRetrofitApiInterface()
-                .SendLocation(
+                .DeviceLogs(
                         imei,
-                        jsonObject.toString()
+                        Authorization,
+                        lo
                 )
-                .enqueue(new Callback<Model_Result>() {
+                .enqueue(new Callback<ModelResponcePrimery>() {
                     @Override
-                    public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
-                        if (response != null) {
-                            if (response.body() != null) {
-                                String result = response.body().getResult();
-                                SaveLog("Response : " + result + " -- " + getStringCurrentDate());
-                                if (result.equalsIgnoreCase("done")) {
-                                    Realm realm = TrafficController
-                                            .getApplication(context)
-                                            .getRealmComponent().getRealm();
+                    public void onResponse(Call<ModelResponcePrimery> call, Response<ModelResponcePrimery> response) {
+                        String MessageResponcse = CheckResponse(response, true);
+                        if (response.body() != null) {
+                            Realm realm = TrafficController
+                                    .getApplication(context)
+                                    .getRealmComponent().getRealm();
 
-                                    for (DataBaseLocation location : locations) {
-                                        try {
-                                            realm.beginTransaction();
-                                            location.setSend(true);
-                                            realm.commitTransaction();
-                                        } catch (Exception ex) {
+                            for (DataBaseLocation location : locations) {
+                                try {
+                                    realm.beginTransaction();
+                                    location.setSend(true);
+                                    realm.commitTransaction();
+                                } catch (Exception ex) {
 
-                                        }
-                                    }
-                                    SharedPreferences.Editor perf =
-                                            context.getSharedPreferences("trafficcontroller", 0).edit();
-                                    String time = getStringCurrentDate();
-                                    perf.putString("lastnet", time);
-                                    perf.apply();
-                                    ObservablesGpsAndNetworkChange.onNext("LastNet");
                                 }
                             }
+                            SharedPreferences.Editor perf =
+                                    context.getSharedPreferences("trafficcontroller", 0).edit();
+                            String time = getStringCurrentDate();
+                            perf.putString("lastnet", time);
+                            perf.apply();
+                            ObservablesGpsAndNetworkChange.onNext("LastNet");
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Model_Result> call, Throwable t) {
+                    public void onFailure(Call<ModelResponcePrimery> call, Throwable t) {
                         SaveLog("Response Failure : " + getStringCurrentDate());
                     }
                 });
+
+//                .enqueue(new Callback<Model_Result>() {
+//                    @Override
+//                    public void onResponse(Call<Model_Result> call, Response<Model_Result> response) {
+//                        if (response != null) {
+//                            if (response.body() != null) {
+//                                String result = response.body().getResult();
+//                                SaveLog("Response : " + result + " -- " + getStringCurrentDate());
+//                                if (result.equalsIgnoreCase("done")) {
+//                                    Realm realm = TrafficController
+//                                            .getApplication(context)
+//                                            .getRealmComponent().getRealm();
+//
+//                                    for (DataBaseLocation location : locations) {
+//                                        try {
+//                                            realm.beginTransaction();
+//                                            location.setSend(true);
+//                                            realm.commitTransaction();
+//                                        } catch (Exception ex) {
+//
+//                                        }
+//                                    }
+//                                    SharedPreferences.Editor perf =
+//                                            context.getSharedPreferences("trafficcontroller", 0).edit();
+//                                    String time = getStringCurrentDate();
+//                                    perf.putString("lastnet", time);
+//                                    perf.apply();
+//                                    ObservablesGpsAndNetworkChange.onNext("LastNet");
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Model_Result> call, Throwable t) {
+//                        SaveLog("Response Failure : " + getStringCurrentDate());
+//                    }
+//                });
 
 
     }//_____________________________________________________________________________________________ End SendLocatoinToServer

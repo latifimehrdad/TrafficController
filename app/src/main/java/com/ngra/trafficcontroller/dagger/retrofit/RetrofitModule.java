@@ -20,11 +20,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.ngra.trafficcontroller.dagger.retrofit.RetrofitApis.Host;
+
 @Module
 public class RetrofitModule {
 
     private Context context;
-    private String Host = "http://185.159.87.200/";
     public static boolean isCancel = false;
 
     public RetrofitModule(Context context) {

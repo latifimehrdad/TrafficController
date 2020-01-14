@@ -6,16 +6,27 @@ import android.location.Location;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.models.ModelMessage;
+import com.ngra.trafficcontroller.models.ModelResponcePrimery;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Response;
 
 
 public class StaticFunctions {
 
-    public static boolean isCancel = false;
-
     public static String GetAuthorization(Context context) {//______________________________________ Start GetAuthorization
         String Authorization = "Bearer ";
-        SharedPreferences prefs = context.getSharedPreferences("wmstoken", 0);
+        SharedPreferences prefs = context.getSharedPreferences("trafficcontrollertoken", 0);
         if (prefs != null) {
             String access_token = prefs.getString("accesstoken", null);
             if (access_token != null)
@@ -67,40 +78,52 @@ public class StaticFunctions {
 //    }//_____________________________________________________________________________________________ End SetBackClickAndGoHome
 
 
-//    public static String CheckResponse(Response response, Boolean Authorization) {//________________ Start CheckResponse
-//        if (response.body() != null)
-//            return null;
-//        else {
-//            if (Authorization) {
-//                try {
-//                    JSONObject jObjError = new JSONObject(response.errorBody().string());
-//                    return jObjError.getString("error_description");
-//                } catch (Exception ex) {
-//                    return "Failure";
-//                }
-//            } else {
-//                return GetErrorٍMessage(response);
-//            }
-//        }
-//
-//    }//_____________________________________________________________________________________________ End CheckResponse
+    public static String CheckResponse(Response response, Boolean Authorization) {//________________ Start CheckResponse
+        if (response.body() != null)
+            return null;
+        else {
+            if (Authorization) {
+                try {
+                    String Messages = "";
+                    Gson gson = new Gson();
+                    ModelResponcePrimery messages = gson.fromJson(
+                            response.errorBody().string(),
+                            ModelResponcePrimery.class);
+
+                    if(messages.getMessages().size() == 0)
+                       Messages = "No Message";
+                    else {
+                        for(ModelMessage message: messages.getMessages()) {
+                            Messages = Messages + message.getMessage();
+                        }
+                    }
+                    return Messages;
+                } catch (Exception ex) {
+                    return "Failure";
+                }
+            } else {
+                return GetErrorMessage(response);
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End CheckResponse
 
 
-//    public static String GetErrorٍMessage(Response response) {//_____________________________________ Start GetErrorٍMessage
-//        try {
-//            JSONObject jObjError = new JSONObject(response.errorBody().string());
-//            JSONArray jsonArray = jObjError.getJSONArray("messages");
-//            String message = "";
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                JSONObject temp = new JSONObject(jsonArray.get(i).toString());
-//                message = message + temp.getString("message");
-//                message = message + "\n";
-//            }
-//            return message;
-//        } catch (Exception ex) {
-//            return "Failure";
-//        }
-//    }//_____________________________________________________________________________________________ End GetErrorٍMessage
+    public static String GetErrorMessage(Response response) {//_____________________________________ Start GetErrorٍMessage
+        try {
+            JSONObject jObjError = new JSONObject(response.errorBody().string());
+            JSONArray jsonArray = jObjError.getJSONArray("messages");
+            String message = "";
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject temp = new JSONObject(jsonArray.get(i).toString());
+                message = message + temp.getString("message");
+                message = message + "\n";
+            }
+            return message;
+        } catch (Exception ex) {
+            return "Failure";
+        }
+    }//_____________________________________________________________________________________________ End GetErrorٍMessage
 
 
 //    public static String GetMessage(Response<ModelResponcePrimery> response) {//____________________ Start GetMessage

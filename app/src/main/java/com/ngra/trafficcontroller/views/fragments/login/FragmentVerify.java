@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class FragmentVerify extends Fragment {
 
     private Context context;
-    private VM_FragmentVerify viewModel;
+    private VM_FragmentVerify vm_fragmentVerify;
     private View view;
     private DialogProgress progress;
     private NavController navController;
@@ -77,11 +77,11 @@ public class FragmentVerify extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState) {//__________________________________________________________ Start onCreateView
         this.context = getContext();
-        viewModel = new VM_FragmentVerify(context);
+        vm_fragmentVerify = new VM_FragmentVerify(context);
         FragmentVerifyBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_verify, container, false
         );
-        binding.setVerify(viewModel);
+        binding.setVerify(vm_fragmentVerify);
         view = binding.getRoot();
         ButterKnife.bind(this, view);
         return view;
@@ -100,6 +100,7 @@ public class FragmentVerify extends Fragment {
         navController = Navigation.findNavController(view);
         ObserverObservable();
         VerifyCode1.requestFocus();
+        progressBar.setProgress(0);
         SetBackVerifyCode();
         SetTextChangeListener();
         ReTryGetSMS();
@@ -114,14 +115,13 @@ public class FragmentVerify extends Fragment {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ReTryGetSMSClick){
-                    viewModel.SendNumber(PhoneNumber);
+                if (ReTryGetSMSClick) {
+                    vm_fragmentVerify.SendNumber(PhoneNumber);
                 }
             }
         });
 
     }//_____________________________________________________________________________________________ End SetClick
-
 
 
     private void ObserverObservable() {//___________________________________________________________ Start ObserverObservable
@@ -135,13 +135,16 @@ public class FragmentVerify extends Fragment {
                             public void run() {
                                 DismissProgress();
                                 switch (s) {
-                                    case "VerifyDone":
+                                    case "LoginDone":
                                         navController.navigate(R.id.action_fragmentVerify_to_fragmentHome);
                                         break;
-                                    case "SendDone":
+                                    case "VerifyDone":
+                                        GetLoginToken();
+                                        break;
+                                    case "SuccessfulToken":
                                         StartTimer(60);
                                         break;
-                                    case "Failed":
+                                    case "Error":
                                         VerifyCode1.setText("");
                                         VerifyCode2.setText("");
                                         VerifyCode3.setText("");
@@ -151,12 +154,12 @@ public class FragmentVerify extends Fragment {
                                         VerifyCode1.requestFocus();
                                         SetBackVerifyCode();
                                         ShowMessage(
-                                                viewModel.getMessageResult(),
+                                                vm_fragmentVerify.getMessageResponcse(),
                                                 getResources().getColor(R.color.ML_White),
                                                 getResources().getDrawable(R.drawable.ic_warning_red)
                                         );
                                         break;
-                                    case "onFailure":
+                                    case "Failure":
                                         VerifyCode1.setText("");
                                         VerifyCode2.setText("");
                                         VerifyCode3.setText("");
@@ -187,13 +190,21 @@ public class FragmentVerify extends Fragment {
             }
         };
 
-        viewModel
+        vm_fragmentVerify
                 .getObservables()
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 
     }//_____________________________________________________________________________________________ End ObserverObservable
+
+
+
+    private void GetLoginToken() {//________________________________________________________________ Start GetLoginToken
+        vm_fragmentVerify.GetLoginToken(PhoneNumber);
+    }//_____________________________________________________________________________________________ End GetLoginToken
+
+
 
 
     private void StartTimer(int Elapse) {//___________________________________________________________________ Start StartTimer
@@ -243,8 +254,7 @@ public class FragmentVerify extends Fragment {
                     VerifyCode6.getText().toString();
 
             ShowProgressDialog();
-            progressBar.setProgress(0);
-            viewModel.VerifyNumber(PhoneNumber, code);
+            vm_fragmentVerify.VerifyNumber(PhoneNumber, code);
 
         }
 
@@ -361,17 +371,15 @@ public class FragmentVerify extends Fragment {
 
 
     private void DismissProgress() {//______________________________________________________________ Start DismissProgress
-        if(progress!= null)
+        if (progress != null)
             progress.dismiss();
     }//_____________________________________________________________________________________________ End DismissProgress
-
-
 
 
     @Override
     public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
-        if(observer != null)
+        if (observer != null)
             observer.dispose();
     }//_____________________________________________________________________________________________ End onDestroy
 }
