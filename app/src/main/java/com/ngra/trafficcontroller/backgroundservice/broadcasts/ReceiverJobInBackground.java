@@ -1,4 +1,4 @@
-package com.ngra.trafficcontroller.utility.broadcasts;
+package com.ngra.trafficcontroller.backgroundservice.broadcasts;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +9,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
+import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
+import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.database.DataBaseLocation;
@@ -16,7 +20,6 @@ import com.ngra.trafficcontroller.database.DataBaseLog;
 import com.ngra.trafficcontroller.models.ModelLocation;
 import com.ngra.trafficcontroller.models.ModelLocations;
 import com.ngra.trafficcontroller.models.ModelResponcePrimery;
-import com.ngra.trafficcontroller.models.Model_Result;
 import com.ngra.trafficcontroller.utility.DeviceTools;
 
 import com.ngra.trafficcontroller.views.application.TrafficController;
@@ -53,6 +56,9 @@ import static com.ngra.trafficcontroller.views.application.TrafficController.Obs
 
 public class ReceiverJobInBackground extends BroadcastReceiver {
 
+    private static boolean InterWorkingRange = false;
+    private static int CountNotification = 0;
+
     private Context context;
     private RealmResults<DataBaseLocation> locations;
     private boolean GetGPS;
@@ -61,6 +67,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {//_______________________________________ Start GetCurrentLocation
 
         this.context = context;
+
+        SharedPreferences.Editor perf =
+                context.getSharedPreferences("trafficcontroller", 0).edit();
+        String time = getStringCurrentDate();
+        perf.putString("lasttime", time);
+        perf.apply();
+
         SaveLog("Start : " + getStringCurrentDate());
 
         if (TrafficController.getApplication(context).isLocationEnabled())
@@ -123,6 +136,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                                 location.getSpeed()
                         );
 //                        }
+                        CheckPointInWorkingRange(location);
                     }
                 });
     }//_____________________________________________________________________________________________ End GetCurrentLocation
@@ -203,7 +217,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         JSONArray jsonArray = new JSONArray();
         ArrayList<ModelLocation> list = new ArrayList<>();
         for (DataBaseLocation location : locations) {
-            list.add(new ModelLocation(location.getLatitude(),location.getLongitude(),location.getAltitude(),location.getSpeed(),location.getSaveDate()));
+            list.add(new ModelLocation(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getSpeed(), location.getSaveDate()));
             JSONObject temp = new JSONObject();
             try {
                 temp.put("latitude", location.getLatitude());
@@ -267,6 +281,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                             perf.putString("lastnet", time);
                             perf.apply();
                             ObservablesGpsAndNetworkChange.onNext("LastNet");
+                            SaveLog("Response Done : " + getStringCurrentDate());
                         }
                     }
 
@@ -339,6 +354,65 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         realm.commitTransaction();
 
     }//_____________________________________________________________________________________________ End DeleteOldLocationFromDataBase
+
+
+    private void CheckPointInWorkingRange(Location point) {//_______________________________________ Start CheckPointInWorkingRange()
+        List<LatLng> latLngs = new ArrayList<>();
+        latLngs.add(new LatLng(35.831420, 50.959401));
+        latLngs.add(new LatLng(35.830141, 50.963637));
+        latLngs.add(new LatLng(35.829315, 50.963046));
+        latLngs.add(new LatLng(35.829080, 50.963432));
+        latLngs.add(new LatLng(35.826106, 50.961197));
+        latLngs.add(new LatLng(35.826665, 50.958141));
+        latLngs.add(new LatLng(35.831420, 50.959401));
+        LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
+        boolean in = MehrdadLatifiMap.MlMap_isInside(latLng, latLngs);
+        if (in) {
+            if (ReceiverJobInBackground.InterWorkingRange) {
+                if (ReceiverJobInBackground.CountNotification != 1) {
+                    ShowNotification(true);
+                }
+            } else {
+                ReceiverJobInBackground.CountNotification = 0;
+                ShowNotification(true);
+            }
+        } else {
+            if (!ReceiverJobInBackground.InterWorkingRange) {
+                if (ReceiverJobInBackground.CountNotification != 1) {
+                    ShowNotification(false);
+                }
+            } else {
+                ReceiverJobInBackground.CountNotification = 0;
+                ShowNotification(false);
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End CheckPointInWorkingRange()
+
+
+    private void ShowNotification(boolean inter) {
+        if (inter) {
+            ReceiverJobInBackground.InterWorkingRange = true;
+            ReceiverJobInBackground.CountNotification = ReceiverJobInBackground.CountNotification + 1;
+            NotificationManagerClass managerClass =
+                    new NotificationManagerClass(
+                            context,
+                            context.getResources().getString(R.string.EnterToWorkingRange)
+                            , false
+                            , 4
+                    );
+        } else {
+            ReceiverJobInBackground.InterWorkingRange = false;
+            ReceiverJobInBackground.CountNotification = ReceiverJobInBackground.CountNotification + 1;
+            NotificationManagerClass managerClass =
+                    new NotificationManagerClass(
+                            context,
+                            context.getResources().getString(R.string.ExitToWorkingRange)
+                            , false
+                            , 5
+                    );
+        }
+    }
 
 
 //    private void LogService(String test) {//________________________________________________________ Start SentLocatointoServer

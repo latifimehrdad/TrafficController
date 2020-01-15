@@ -1,6 +1,5 @@
 package com.ngra.trafficcontroller.views.application;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -22,10 +21,10 @@ import com.ngra.trafficcontroller.dagger.realm.RealmModul;
 import com.ngra.trafficcontroller.dagger.retrofit.DaggerRetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverDateTimeChange;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverGpsLocation;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverLunchAppInBackground;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverNetworkChange;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverDateTimeChange;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverGpsLocation;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverLunchAppInBackground;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverNetworkChange;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;

@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".utility.broadcasts.ReceiverGpsLocation"
+        <receiver android:name=".backgroundservice.broadcasts.ReceiverGpsLocation"
             android:enabled="true"
             android:process="com.ngra.trafficcontroller"
             >
@@ -46,7 +46,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".utility.broadcasts.ReceiverNetworkChange"
+        <receiver android:name=".backgroundservice.broadcasts.ReceiverNetworkChange"
             android:enabled="true"
             android:process="com.ngra.trafficcontroller"
             >
@@ -56,7 +56,7 @@
         </receiver>
 
 
-        <receiver android:name=".utility.broadcasts.ReceiverLunchAppInBackground"
+        <receiver android:name=".backgroundservice.broadcasts.ReceiverLunchAppInBackground"
             android:enabled="true"
             android:process="com.ngra.trafficcontroller"
             >
@@ -66,9 +66,9 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".utility.services.ServiceSetTimeForLunchApp"/>
+        <service android:name=".backgroundservice.services.ServiceSetTimeForLunchApp"/>
 
-        <receiver android:name=".utility.broadcasts.ReceiverJobInBackground"
+        <receiver android:name=".backgroundservice.broadcasts.ReceiverJobInBackground"
             android:enabled="true"
             android:process="com.ngra.trafficcontroller"
             >
@@ -78,7 +78,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".utility.broadcasts.ReceiverDateTimeChange"
+        <receiver android:name=".backgroundservice.broadcasts.ReceiverDateTimeChange"
             android:enabled="true"
             android:process="com.ngra.trafficcontroller"
             >
@@ -90,7 +90,7 @@
         </receiver>
 
         <service
-            android:name=".utility.services.GetCurrentLocation">
+            android:name=".backgroundservice.services.GetCurrentLocation">
         </service>
 
 

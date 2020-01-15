@@ -1,6 +1,5 @@
 package com.ngra.trafficcontroller.utility;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -131,6 +130,15 @@ public class NotificationManagerClass {
             NotiId = context.getResources().getInteger(R.integer.NotificationRun);
             icon = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.miniicon);
+        } else if (GPS == 4) {
+            NotiId = context.getResources().getInteger(R.integer.NotificationEnter);
+            icon = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.enter_locatoin);
+        }
+        else if (GPS == 5) {
+            NotiId = context.getResources().getInteger(R.integer.NotificationExit);
+            icon = BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.exit_location);
         }
     }//_____________________________________________________________________________________________ End SetNotiIdAndBitmap
 

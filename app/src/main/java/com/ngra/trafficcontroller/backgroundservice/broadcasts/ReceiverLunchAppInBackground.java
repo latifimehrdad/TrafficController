@@ -1,9 +1,9 @@
-package com.ngra.trafficcontroller.utility.broadcasts;
+package com.ngra.trafficcontroller.backgroundservice.broadcasts;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
+import com.ngra.trafficcontroller.backgroundservice.services.ServiceSetTimeForLunchApp;
 
 public class ReceiverLunchAppInBackground extends BroadcastReceiver {
 

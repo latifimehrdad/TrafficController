@@ -12,9 +12,7 @@ import com.ngra.trafficcontroller.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class ApplicationUtility {

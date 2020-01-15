@@ -1,4 +1,4 @@
-package com.ngra.trafficcontroller.utility.broadcasts;
+package com.ngra.trafficcontroller.backgroundservice.broadcasts;
 
         import android.content.BroadcastReceiver;
         import android.content.Context;
@@ -6,7 +6,6 @@ package com.ngra.trafficcontroller.utility.broadcasts;
 
         import com.ngra.trafficcontroller.R;
         import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-        import com.ngra.trafficcontroller.utility.services.ServiceSetTimeForLunchApp;
         import com.ngra.trafficcontroller.views.application.TrafficController;
 
         import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;

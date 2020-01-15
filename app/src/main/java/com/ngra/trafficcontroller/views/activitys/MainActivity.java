@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {//__________________________________________ Start onCreate
         super.onCreate(savedInstanceState);
         onBindView();
+
     }//_____________________________________________________________________________________________ End onCreate
 
 
@@ -185,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 2000);
     }//_____________________________________________________________________________________________ End onBackPressed
+
 
 
 }

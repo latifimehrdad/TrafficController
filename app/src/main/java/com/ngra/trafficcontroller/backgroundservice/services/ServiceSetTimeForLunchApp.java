@@ -1,4 +1,4 @@
-package com.ngra.trafficcontroller.utility.services;
+package com.ngra.trafficcontroller.backgroundservice.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.database.DataBaseLog;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-import com.ngra.trafficcontroller.utility.broadcasts.ReceiverJobInBackground;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import java.text.SimpleDateFormat;

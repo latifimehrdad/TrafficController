@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,7 +22,6 @@ import com.cunoraz.gifview.library.GifView;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.databinding.FragmentLoginBinding;
-import com.ngra.trafficcontroller.utility.StaticFunctions;
 import com.ngra.trafficcontroller.viewmodels.fragment.login.VM_FragmentLogin;
 import com.ngra.trafficcontroller.views.dialogs.DialogMessage;
 
@@ -94,6 +94,7 @@ public class FragmentLogin extends Fragment {
         SetTextWatcher();
         ObserverObservable();
         DismissLoading();
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }//_____________________________________________________________________________________________ End onStart
 
 

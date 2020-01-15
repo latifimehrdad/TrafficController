@@ -2,22 +2,17 @@ package com.ngra.trafficcontroller.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.models.ModelMessage;
 import com.ngra.trafficcontroller.models.ModelResponcePrimery;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Response;
 

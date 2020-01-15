@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.FragmentMapBinding;
 import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
@@ -36,6 +38,9 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
     @BindView(R.id.imgBack)
     ImageView imgBack;
+
+    @BindView(R.id.imgCenter)
+    ImageView imgCenter;
 
 
     public FragmentMap() {//________________________________________________________________________ Start FragmentMap
@@ -83,6 +88,25 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        imgCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MehrdadLatifiMap mehrdadLatifiMap = new MehrdadLatifiMap();
+                mehrdadLatifiMap.setGoogleMap(mMap);
+                LatLng negra = mMap.getCameraPosition().target;
+
+                boolean in = mehrdadLatifiMap.MlMap_isInside(negra,vm_fragmentMap.GetWorkingRange());
+                if(in) {
+                    Toast.makeText(context, "IN", Toast.LENGTH_SHORT).show();
+                    mehrdadLatifiMap.AddMarker(negra,"null","null",R.drawable.ic_location_on,0);
+                }
+                else {
+                    Toast.makeText(context, "OUT", Toast.LENGTH_SHORT).show();
+                    mehrdadLatifiMap.AddMarker(negra,"null","null",R.drawable.ic_location_off,0);
+                }
+            }
+        });
+
     }//_____________________________________________________________________________________________ End SetOnClick
 
 
@@ -118,6 +142,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         mehrdadLatifiMap.setML_Stroke_Color(getResources().getColor(R.color.ML_Button));
         mehrdadLatifiMap.setML_LatLongs(vm_fragmentMap.GetWorking());
         mehrdadLatifiMap.DrawPolyLinesWithArrow();
+
+
 
     }//_____________________________________________________________________________________________ End DrawPolygon
 

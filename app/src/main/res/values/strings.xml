@@ -35,6 +35,8 @@
     <string name="DonChangeTime">لطفا تاریخ و زمان گوشی را تغییر ندهید</string>
     <string name="ServiceRun">برنامه در حال اجرا میباشد</string>
     <string name="WorkingRange">محدوده \n فعالیت</string>
+    <string name="EnterToWorkingRange">ورود به محدوده کاری</string>
+    <string name="ExitToWorkingRange">خروج از محدوده کاری</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

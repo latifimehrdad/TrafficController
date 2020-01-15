@@ -25,7 +25,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -45,6 +44,7 @@ import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.utility.polyutil.ML_PolyUtil;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -219,6 +219,18 @@ public class MehrdadLatifiMap {
             }
         }
     }//_____________________________________________________________________________________________ End findAddress
+
+    public static Boolean MlMap_isInside(LatLng point, List<LatLng> latLngs) {//____________________ Start isInside
+        boolean in = ML_PolyUtil.containsLocation(point, latLngs, true);
+        if(in)
+            return true;
+        else {
+            return ML_PolyUtil.isLocationOnPath(point,latLngs,true, 15);
+        }
+        //containsLocation(point, latLngs, true);
+    }//_____________________________________________________________________________________________ End isInside
+
+
 
 
     public ArrayList<LatLng> getCirclePoint(LatLng centre, double radius) {//_______________________ Start getCirclePoint

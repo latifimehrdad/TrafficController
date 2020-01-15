@@ -77,10 +77,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.+'
     implementation 'com.google.android.gms:play-services-location:15.+'
 
+
     implementation 'com.android.support:multidex:1.0.3'
 
     def nav_version = "2.1.0"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
+
 
 }

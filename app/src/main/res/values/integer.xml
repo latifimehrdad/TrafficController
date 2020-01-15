@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="NotificationGPS">7126</integer>
-    <integer name="NotificationNet">6780</integer>
-    <integer name="NotificationDate">110</integer>
-    <integer name="NotificationRun">212</integer>
-
+    <integer name="NotificationGPS">101</integer>
+    <integer name="NotificationNet">102</integer>
+    <integer name="NotificationDate">103</integer>
+    <integer name="NotificationRun">104</integer>
+    <integer name="NotificationEnter">105</integer>
+    <integer name="NotificationExit">105</integer>
 
 </resources>

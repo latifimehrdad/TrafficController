@@ -1,4 +1,4 @@
-package com.ngra.trafficcontroller.utility.services;
+package com.ngra.trafficcontroller.backgroundservice.services;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
