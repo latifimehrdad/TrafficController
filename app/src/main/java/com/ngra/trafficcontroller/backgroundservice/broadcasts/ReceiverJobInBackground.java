@@ -56,9 +56,6 @@ import static com.ngra.trafficcontroller.views.application.TrafficController.Obs
 
 public class ReceiverJobInBackground extends BroadcastReceiver {
 
-    private static boolean InterWorkingRange = false;
-    private static int CountNotification = 0;
-
     private Context context;
     private RealmResults<DataBaseLocation> locations;
     private boolean GetGPS;
@@ -367,33 +364,29 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         latLngs.add(new LatLng(35.831420, 50.959401));
         LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
         boolean in = MehrdadLatifiMap.MlMap_isInside(latLng, latLngs);
+        SharedPreferences prefs = context.getSharedPreferences("trafficcontroller", 0);
+        boolean InterWorkingRange = false;
+        if (prefs != null)
+            InterWorkingRange = prefs.getBoolean("interworkingwange", false);
+
         if (in) {
-            if (ReceiverJobInBackground.InterWorkingRange) {
-                if (ReceiverJobInBackground.CountNotification != 1) {
-                    ShowNotification(true);
-                }
-            } else {
-                ReceiverJobInBackground.CountNotification = 0;
+            if (!InterWorkingRange)
                 ShowNotification(true);
-            }
         } else {
-            if (!ReceiverJobInBackground.InterWorkingRange) {
-                if (ReceiverJobInBackground.CountNotification != 1) {
-                    ShowNotification(false);
-                }
-            } else {
-                ReceiverJobInBackground.CountNotification = 0;
+            if (InterWorkingRange)
                 ShowNotification(false);
-            }
         }
 
     }//_____________________________________________________________________________________________ End CheckPointInWorkingRange()
 
 
-    private void ShowNotification(boolean inter) {
+    private void ShowNotification(boolean inter) {//________________________________________________ Start ShowNotification
+        SharedPreferences.Editor perf =
+                context.getSharedPreferences("trafficcontroller", 0).edit();
+        perf.putBoolean("interworkingwange", inter);
+        perf.apply();
+
         if (inter) {
-            ReceiverJobInBackground.InterWorkingRange = true;
-            ReceiverJobInBackground.CountNotification = ReceiverJobInBackground.CountNotification + 1;
             NotificationManagerClass managerClass =
                     new NotificationManagerClass(
                             context,
@@ -402,8 +395,6 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                             , 4
                     );
         } else {
-            ReceiverJobInBackground.InterWorkingRange = false;
-            ReceiverJobInBackground.CountNotification = ReceiverJobInBackground.CountNotification + 1;
             NotificationManagerClass managerClass =
                     new NotificationManagerClass(
                             context,
@@ -412,7 +403,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                             , 5
                     );
         }
-    }
+    }//_____________________________________________________________________________________________ End ShowNotification
 
 
 //    private void LogService(String test) {//________________________________________________________ Start SentLocatointoServer

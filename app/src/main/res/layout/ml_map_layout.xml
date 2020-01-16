@@ -20,6 +20,7 @@
         android:id="@+id/center"
         android:orientation="vertical"
         android:background="@color/ML_Black"
+        android:visibility="gone"
         />
 
     <ImageView
@@ -29,6 +30,7 @@
         android:src="@drawable/ic_location_on"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/center"
+        android:visibility="gone"
         />
 
 

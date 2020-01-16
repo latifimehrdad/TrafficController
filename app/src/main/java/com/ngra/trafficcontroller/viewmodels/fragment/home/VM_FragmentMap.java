@@ -3,9 +3,16 @@ package com.ngra.trafficcontroller.viewmodels.fragment.home;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.ngra.trafficcontroller.database.DataBaseLocation;
+import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class VM_FragmentMap {
 
@@ -30,16 +37,30 @@ public class VM_FragmentMap {
     }//_____________________________________________________________________________________________ End GetWorkingRange
 
 
-
-
     public List<LatLng> GetWorking() {//____________________________________________________________ Start GetWorkingRange
 
+        Realm realm = TrafficController
+                .getApplication(context)
+                .getRealmComponent()
+                .getRealm();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 00);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 01);
+
+        Calendar now = Calendar.getInstance();
+
+        RealmResults<DataBaseLocation> locations =
+                realm
+                        .where(DataBaseLocation.class)
+                        .between("SaveDate",calendar.getTime(),now.getTime())
+                        .findAll();
+
         List<LatLng> latLngs = new ArrayList<>();
-        latLngs.add(new LatLng(35.830815, 50.960178));
-        latLngs.add(new LatLng(35.830223, 50.960510));
-        latLngs.add(new LatLng(35.829771, 50.961669));
-        latLngs.add(new LatLng(35.829397, 50.961530));
-        latLngs.add(new LatLng(35.829119, 50.960725));
+        for (DataBaseLocation location : locations) {
+            latLngs.add(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
         return latLngs;
     }//_____________________________________________________________________________________________ End GetWorkingRange
 
