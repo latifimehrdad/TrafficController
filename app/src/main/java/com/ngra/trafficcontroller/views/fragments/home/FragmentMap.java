@@ -18,12 +18,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.databinding.FragmentMapBinding;
 import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
 import com.ngra.trafficcontroller.viewmodels.fragment.home.VM_FragmentMap;
+import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +41,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     private Context context;
     private VM_FragmentMap vm_fragmentMap;
     private GoogleMap mMap;
+//    private DisposableObserver<String> observer;
 
 
     @BindView(R.id.imgBack)
@@ -72,7 +80,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.fpraMap);
         mapFragment.getMapAsync(this);
-
+//        ObserverObservableGpsAndNetworkChange();
         SetOnClick();
     }//_____________________________________________________________________________________________ End onStart
 
@@ -148,4 +156,71 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     }//_____________________________________________________________________________________________ End DrawPolygon
 
 
+
+
+//    private void ObserverObservableGpsAndNetworkChange() {//________________________________________ Start ObserverObservableGpsAndNetworkChange
+//
+//        observer = new DisposableObserver<String>() {
+//            @Override
+//            public void onNext(String s) {
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mMap.clear();
+//                        switch (s) {
+//                            case "Getgps":
+//                                if(ReceiverJobInBackground.LastLocation != null){
+//                                    MehrdadLatifiMap mehrdadLatifiMap = new MehrdadLatifiMap();
+//                                    mehrdadLatifiMap.setGoogleMap(mMap);
+//                                    mehrdadLatifiMap.AddMarker(ReceiverJobInBackground.LastLocation,
+//                                            "null",
+//                                            "null",
+//                                            R.drawable.getgps,
+//                                            0);
+//
+//                                }
+//
+//                                break;
+//
+//                            case "Getnetwork":
+//                                if(ReceiverJobInBackground.LastLocation != null){
+//                                    MehrdadLatifiMap mehrdadLatifiMap = new MehrdadLatifiMap();
+//                                    mehrdadLatifiMap.setGoogleMap(mMap);
+//                                    mehrdadLatifiMap.AddMarker(ReceiverJobInBackground.LastLocation,
+//                                            "null",
+//                                            "null",
+//                                            R.drawable.getnetwork,
+//                                            0);
+//                                }
+//                                break;
+//                        }
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        };
+//
+//        if (ObservablesGpsAndNetworkChange != null) {
+//            ObservablesGpsAndNetworkChange
+//                    .observeOn(Schedulers.io())
+//                    .subscribeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(observer);
+//        }
+//    }//_____________________________________________________________________________________________ End ObserverObservableGpsAndNetworkChange
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        observer.dispose();
+    }
 }
