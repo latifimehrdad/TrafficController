@@ -141,9 +141,9 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     public class MyLocationListener implements LocationListener {//_________________________________ Start MyLocationListener
 
         public void onLocationChanged(final Location loc) {
-            Log.i("meri", "onLocationChanged");
-            if (isBetterLocation(loc, previousBestLocation)) {
 
+            if (isBetterLocation(loc, previousBestLocation)) {
+                Log.i("meri", "getTime : " + getStringCurrentDate(loc.getTime()));
                 try {
                     Integer ID = 1;
                     Number currentIdNum = realm.where(DataBaseBetterLocation.class).max("ID");
@@ -164,7 +164,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                                     loc.getLongitude(),
                                     loc.getAltitude(),
                                     loc.getSpeed(),
-                                    loc.getAccuracy()
+                                    loc.getAccuracy(),
+                                    loc.getTime()
                             );
                     realm.commitTransaction();
                 } catch (RealmException e) {
@@ -222,6 +223,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 }
             }
 
+            SaveLog("Get Location : " + isGPS + " -- " + getStringCurrentDate());
+
             if (isGPS) {
                 SaveToDataBase(
                         locations.get(i).getLatitude(),
@@ -229,7 +232,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                         locations.get(i).getAltitude(),
                         locations.get(i).getSpeed(),
                         true,
-                        locations.get(i).getAccuracy()
+                        locations.get(i).getAccuracy(),
+                        locations.get(i).getLocTime()
                 );
             } else {
                 SaveToDataBase(
@@ -238,11 +242,12 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                         locations.get(count).getAltitude(),
                         locations.get(count).getSpeed(),
                         false,
-                        locations.get(count).getAccuracy()
+                        locations.get(count).getAccuracy(),
+                        locations.get(count).getLocTime()
                 );
             }
             locations = null;
-            SaveLog("Getl Location : " + isGPS + " -- " + getStringCurrentDate());
+
         }
 
 
@@ -293,17 +298,17 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             double Altitude,
             float Speed,
             boolean isGPS,
-            float Accuracy) {//________________________________________________________________________ StartSaveToDataBase
+            float Accuracy,
+            long LocTime) {//________________________________________________________________________ StartSaveToDataBase
 
         Date last = realm.where(DataBaseLocation.class).maximumDate("SaveDate");
-        long bet = 2 * 60 * 1000 + 1;
+        long bet = 1 * 60 * 1000 + 1;
         Date date = new Date();
         if (last != null)
             bet = Math.abs(last.getTime() - date.getTime());
 
-        if (bet < 2 * 60 * 1000)
+        if (bet < 1 * 60 * 1000)
             return;
-
 
         try {
             Integer ID = 1;
@@ -314,7 +319,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 ID = currentIdNum.intValue() + 1;
             }
 
-            String time = getStringCurrentDate();
+            String time = getStringCurrentDate(LocTime);
             realm.beginTransaction();
             realm.createObject(DataBaseLocation.class, ID).InsertDataBaseLocation(
                     Latitude,
@@ -326,13 +331,15 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                     isGPS,
                     Accuracy);
             realm.commitTransaction();
+
             SharedPreferences.Editor perf =
                     context.getSharedPreferences("trafficcontroller", 0).edit();
             perf.putString("lastgps", time);
             perf.apply();
+            ObservablesGpsAndNetworkChange.onNext("LastGPS");
+
             CheckPointInWorkingRange(Latitude, Longitude);
             GetLocatointonFromDB();
-            ObservablesGpsAndNetworkChange.onNext("LastGPS");
 
         } catch (RealmException ex) {
             realm.cancelTransaction();
@@ -348,6 +355,13 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         return simpleDateFormat.format(new Date());
     }//_____________________________________________________________________________________________ End getStringCurrentDate
+
+
+    public String getStringCurrentDate(long time) {//_______________________________________________ Start getStringCurrentDate
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        return simpleDateFormat.format(time);
+    }//_____________________________________________________________________________________________ End getStringCurrentDate
+
 
 
     private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB

@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+
     }//_____________________________________________________________________________________________ End onBackPressed
 
 

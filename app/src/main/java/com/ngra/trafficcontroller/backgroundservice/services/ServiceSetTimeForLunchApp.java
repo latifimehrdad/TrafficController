@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,9 +36,10 @@ public class ServiceSetTimeForLunchApp extends Service {
 
     private static android.app.Notification alarmNotify = null;
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {//____________________________ Start onStartCommand
+
+        SaveLog("onStart Service : " + getStringCurrentDate());
 
         if (alarmNotify == null) {
             Integer id = getApplicationContext().getResources().getInteger(R.integer.NotificationRun);
@@ -52,7 +55,6 @@ public class ServiceSetTimeForLunchApp extends Service {
         }
 
 
-        SaveLog("onStart Service : " + getStringCurrentDate());
         Calendar now = Calendar.getInstance();
         Intent intent1 = new Intent(getApplicationContext(), ReceiverJobInBackground.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);

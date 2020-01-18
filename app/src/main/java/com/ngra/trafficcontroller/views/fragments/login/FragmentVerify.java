@@ -98,6 +98,9 @@ public class FragmentVerify extends Fragment {
         super.onStart();
         PhoneNumber = getArguments().getString("PhoneNumber");
         navController = Navigation.findNavController(view);
+        if(observer != null)
+            observer.dispose();
+        observer = null;
         ObserverObservable();
         VerifyCode1.requestFocus();
         progressBar.setProgress(0);
@@ -136,6 +139,9 @@ public class FragmentVerify extends Fragment {
                                 DismissProgress();
                                 switch (s) {
                                     case "LoginDone":
+                                        if(observer != null)
+                                            observer.dispose();
+                                        observer = null;
                                         navController.navigate(R.id.action_fragmentVerify_to_fragmentHome);
                                         break;
                                     case "VerifyDone":
@@ -379,7 +385,8 @@ public class FragmentVerify extends Fragment {
     @Override
     public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
-        if (observer != null)
+        if(observer != null)
             observer.dispose();
+        observer = null;
     }//_____________________________________________________________________________________________ End onDestroy
 }

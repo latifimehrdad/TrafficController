@@ -3,6 +3,7 @@ package com.ngra.trafficcontroller.views.fragments.login;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.cunoraz.gifview.library.GifView;
@@ -37,7 +39,7 @@ public class FragmentLogin extends Fragment {
 
     private Context context;
     private VM_FragmentLogin viewModel;
-    private View view;
+    private static View LoginView;
     private String PhoneNumber;
     private NavController navController;
     private DisposableObserver<String> observer;
@@ -75,9 +77,9 @@ public class FragmentLogin extends Fragment {
                 inflater, R.layout.fragment_login, container, false
         );
         binding.setLogin(viewModel);
-        view = binding.getRoot();
-        ButterKnife.bind(this, view);
-        return view;
+        LoginView = binding.getRoot();
+        ButterKnife.bind(this, LoginView);
+        return LoginView;
     }//_____________________________________________________________________________________________ Start onCreateView
 
 
@@ -89,14 +91,16 @@ public class FragmentLogin extends Fragment {
     @Override
     public void onStart() {//_______________________________________________________________________ Start onStart
         super.onStart();
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(LoginView);
         SetClick();
         SetTextWatcher();
+        if (observer != null)
+            observer.dispose();
+        observer = null;
         ObserverObservable();
         DismissLoading();
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }//_____________________________________________________________________________________________ End onStart
-
 
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick
@@ -105,10 +109,10 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(RetrofitModule.isCancel) {
+                if (RetrofitModule.isCancel) {
                     if (CheckEmpty()) {
                         ShowLoading();
-                        viewModel.SendNumber(PhoneNumber);
+                        viewModel.GetLoginToken(PhoneNumber);
                     }
                 } else {
                     RetrofitModule.isCancel = true;
@@ -133,12 +137,21 @@ public class FragmentLogin extends Fragment {
                                 DismissLoading();
                                 switch (s) {
                                     case "Successful":
+                                        if(observer != null)
+                                            observer.dispose();
+                                        observer = null;
                                         Bundle bundle = new Bundle();
                                         bundle.putString("PhoneNumber", PhoneNumber);
                                         navController.navigate(
                                                 R.id.action_fragmentLogin_to_fragmentVerify,
                                                 bundle
                                         );
+                                        break;
+                                    case "ConfigHandlerForHome":
+                                        if(observer != null)
+                                            observer.dispose();
+                                        observer = null;
+                                        navController.navigate(R.id.action_fragmentLogin_to_fragmentHome);
                                         break;
                                     case "Error":
                                         ShowMessage(
@@ -249,6 +262,7 @@ public class FragmentLogin extends Fragment {
         super.onDestroy();
         if(observer != null)
             observer.dispose();
+        observer = null;
     }//_____________________________________________________________________________________________ End onDestroy
 
 

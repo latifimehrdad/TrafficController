@@ -13,6 +13,7 @@ public class DataBaseBetterLocation extends RealmObject {
     private double Altitude;
     private float Speed;
     private float Accuracy;
+    private long LocTime;
 
 
     public void  InsertDB(
@@ -21,13 +22,15 @@ public class DataBaseBetterLocation extends RealmObject {
             double longitude,
             double altitude,
             float speed,
-            float accuracy) {//________________________________________________________________________ Start InsertDB
+            float accuracy,
+            long time) {//________________________________________________________________________ Start InsertDB
         IsGPS = isGPS;
         Latitude = latitude;
         Longitude = longitude;
         Altitude = altitude;
         Speed = speed;
         Accuracy = accuracy;
+        LocTime = time;
     }//_____________________________________________________________________________________________ End InsertDB
 
 
@@ -77,5 +80,13 @@ public class DataBaseBetterLocation extends RealmObject {
 
     public void setAccuracy(float accuracy) {
         Accuracy = accuracy;
+    }
+
+    public long getLocTime() {
+        return LocTime;
+    }
+
+    public void setLocTime(long locTime) {
+        LocTime = locTime;
     }
 }
