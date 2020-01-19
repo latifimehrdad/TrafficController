@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 
+
+
     <application
         android:name=".views.application.TrafficController"
         android:allowBackup="true"
@@ -26,7 +28,10 @@
         android:supportsRtl="false"
         tools:replace="android:supportsRtl"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         >
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <activity android:name=".views.activitys.MainActivity">
             <intent-filter>

@@ -74,7 +74,7 @@ public class DeviceTools {
     public String getIMEI() {
         if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
 
-            String deviceId="";
+            String deviceId = "358662080107183";
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 
