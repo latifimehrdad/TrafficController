@@ -18,19 +18,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.ngra.trafficcontroller.R;
-import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverJobInBackground;
 import com.ngra.trafficcontroller.databinding.FragmentMapBinding;
 import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
 import com.ngra.trafficcontroller.viewmodels.fragment.home.VM_FragmentMap;
-import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,15 +56,14 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             Bundle savedInstanceState) {//__________________________________________________________ Start onCreateView
         this.context = getContext();
         FragmentMapBinding binding = DataBindingUtil.inflate(
-                inflater,R.layout.fragment_map,container,false
+                inflater, R.layout.fragment_map, container, false
         );
         vm_fragmentMap = new VM_FragmentMap(context);
         binding.setMap(vm_fragmentMap);
         view = binding.getRoot();
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
     }//_____________________________________________________________________________________________ Start onCreateView
-
 
 
     @Override
@@ -83,8 +75,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 //        ObserverObservableGpsAndNetworkChange();
         SetOnClick();
     }//_____________________________________________________________________________________________ End onStart
-
-
 
 
     private void SetOnClick() {//___________________________________________________________________ Start SetOnClick
@@ -103,20 +93,18 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                 mehrdadLatifiMap.setGoogleMap(mMap);
                 LatLng negra = mMap.getCameraPosition().target;
 
-                boolean in = mehrdadLatifiMap.MlMap_isInside(negra,vm_fragmentMap.GetWorkingRange());
-                if(in) {
+                boolean in = mehrdadLatifiMap.MlMap_isInside(negra, vm_fragmentMap.GetWorkingRange());
+                if (in) {
                     Toast.makeText(context, "IN", Toast.LENGTH_SHORT).show();
-                    mehrdadLatifiMap.AddMarker(negra,"null","null",R.drawable.ic_location_on,0);
-                }
-                else {
+                    mehrdadLatifiMap.AddMarker(negra, "null", "null", R.drawable.ic_location_on, 0);
+                } else {
                     Toast.makeText(context, "OUT", Toast.LENGTH_SHORT).show();
-                    mehrdadLatifiMap.AddMarker(negra,"null","null",R.drawable.ic_location_off,0);
+                    mehrdadLatifiMap.AddMarker(negra, "null", "null", R.drawable.ic_location_off, 0);
                 }
             }
         });
 
     }//_____________________________________________________________________________________________ End SetOnClick
-
 
 
     @Override
@@ -131,8 +119,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         DrawPolygon();
 
     }//_____________________________________________________________________________________________ End Void onMapReady
-
-
 
 
     private void DrawPolygon() {//__________________________________________________________________ Start DrawPolygon
@@ -152,10 +138,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         mehrdadLatifiMap.DrawPolyLinesWithArrow();
 
 
-
     }//_____________________________________________________________________________________________ End DrawPolygon
-
-
 
 
 //    private void ObserverObservableGpsAndNetworkChange() {//________________________________________ Start ObserverObservableGpsAndNetworkChange
@@ -219,8 +202,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
 
     @Override
-    public void onDestroy() {
+    public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
 //        observer.dispose();
-    }
+    }//_____________________________________________________________________________________________ End onDestroy
 }

@@ -240,7 +240,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                         locations.get(i).getSpeed(),
                         true,
                         locations.get(i).getAccuracy(),
-                        locations.get(i).getLocTime()
+                        new Date().getTime()
                 );
             } else {
                 SaveToDataBase(
@@ -250,7 +250,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                         locations.get(count).getSpeed(),
                         false,
                         locations.get(count).getAccuracy(),
-                        locations.get(count).getLocTime()
+                        new Date().getTime()
                 );
             }
             locations = null;
@@ -276,7 +276,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     }//_____________________________________________________________________________________________ End GetCurrentLocation
 
 
-    private void GetLocationWhenDontGet() {
+    private void GetLocationWhenDontGet() {//_______________________________________________________ Start GetLocationWhenDontGet
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -284,7 +284,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             public void run() {
                 GetCurrentLocation(false);
             }
-        },5000);
+        }, 5000);
 
         LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -325,7 +325,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
                     }
                 });
-    }
+    }//_____________________________________________________________________________________________ End GetLocationWhenDontGet
 
 
     private void SaveToDataBase(
@@ -335,7 +335,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             float Speed,
             boolean isGPS,
             float Accuracy,
-            long LocTime) {//________________________________________________________________________ StartSaveToDataBase
+            long LocTime) {//_______________________________________________________________________ StartSaveToDataBase
 
         Date last = realm.where(DataBaseLocation.class).maximumDate("SaveDate");
         long bet = 1 * 60 * 1000 + 1;

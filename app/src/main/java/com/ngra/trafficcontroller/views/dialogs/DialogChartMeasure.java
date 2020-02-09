@@ -50,7 +50,6 @@ public class DialogChartMeasure extends DialogFragment {
     }//_____________________________________________________________________________________________ End DialogChartMeasure
 
 
-
     public Dialog onCreateDialog(Bundle savedInstanceState) {//_____________________________________ Start onCreateDialog
         View view = null;
         DialogChartMeasureBinding binding = DataBindingUtil
@@ -122,13 +121,11 @@ public class DialogChartMeasure extends DialogFragment {
     }//_____________________________________________________________________________________________ End ConfigChart
 
 
-
-
     private void setData() {//______________________________________________________________________ Start setData
 
         ArrayList<BarEntry> values = new ArrayList<>();
-        for(int i = 0; i< arrayList.size(); i ++){
-            values.add(new BarEntry(i,arrayList.get(i).getMeasure()));
+        for (int i = 0; i < arrayList.size(); i++) {
+            values.add(new BarEntry(i, arrayList.get(i).getMeasure()));
         }
 
         BarDataSet set1;
@@ -162,8 +159,6 @@ public class DialogChartMeasure extends DialogFragment {
             chart.setData(data);
         }
     }//_____________________________________________________________________________________________ End setData
-
-
 
 
 }

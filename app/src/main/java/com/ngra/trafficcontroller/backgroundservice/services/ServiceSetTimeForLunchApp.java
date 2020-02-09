@@ -64,18 +64,19 @@ public class ServiceSetTimeForLunchApp extends Service {
         return Service.START_STICKY;
     }//_____________________________________________________________________________________________ End onStartCommand
 
+
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent) {//________________________________________________________ Start onBind
         return null;
-    }
+    }//_____________________________________________________________________________________________ End onBind
 
 
     @Override
-    public void onDestroy() {
+    public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
         SaveLog("onDestroy : " + getStringCurrentDate());
-    }
+    }//_____________________________________________________________________________________________ End onDestroy
 
 
     private void SaveLog(String log) {//____________________________________________________________ Start SaveLog
@@ -91,7 +92,7 @@ public class ServiceSetTimeForLunchApp extends Service {
     }//_____________________________________________________________________________________________ End SaveLog
 
 
-    public String getStringCurrentDate() {//_______________________________________________________ Start getStringCurrentDate
+    public String getStringCurrentDate() {//________________________________________________________ Start getStringCurrentDate
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         return simpleDateFormat.format(new Date());
     }//_____________________________________________________________________________________________ End getStringCurrentDate

@@ -28,19 +28,21 @@ public class RetrofitModule {
     private Context context;
     public static boolean isCancel = false;
 
-    public RetrofitModule(Context context) {
+    public RetrofitModule(Context context) {//______________________________________________________ Start RetrofitModule
         this.context = context;
-    }
+    }//_____________________________________________________________________________________________ End RetrofitModule
+
 
     @Provides
     @DaggerScope
-    public RetrofitApiInterface getRetrofitApiInterface(retrofit2.Retrofit retrofit) {
+    public RetrofitApiInterface getRetrofitApiInterface(retrofit2.Retrofit retrofit) {//____________ Start RetrofitModule
         return retrofit.create(RetrofitApiInterface.class);
-    }
+    }//_____________________________________________________________________________________________ End RetrofitModule
+
 
     @Provides
     @DaggerScope
-    public retrofit2.Retrofit getRetrofit(OkHttpClient okHttpClient) {
+    public retrofit2.Retrofit getRetrofit(OkHttpClient okHttpClient) {//____________________________ Start getRetrofit
 
         Gson gson = new GsonBuilder()
                 .setLenient().create();
@@ -51,11 +53,15 @@ public class RetrofitModule {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
-    }
+    }//_____________________________________________________________________________________________ End getRetrofit
+
 
     @Provides
     @DaggerScope
-    public OkHttpClient getOkHttpClient(Cache cache, HttpLoggingInterceptor interceptor, JavaNetCookieJar javaNetCookieJar) {
+    public OkHttpClient getOkHttpClient(
+            Cache cache,
+            HttpLoggingInterceptor interceptor,
+            JavaNetCookieJar javaNetCookieJar) {//__________________________________________________ Start getOkHttpClient
         return new OkHttpClient.Builder()
                 .addNetworkInterceptor(interceptor)
                 .cookieJar(javaNetCookieJar)
@@ -64,39 +70,42 @@ public class RetrofitModule {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
-    }
+    }//_____________________________________________________________________________________________ End getOkHttpClient
 
 
     @Provides
     @DaggerScope
-    public JavaNetCookieJar getJavaNetCookieJar(CookieHandler cookieHandler) {
+    public JavaNetCookieJar getJavaNetCookieJar(CookieHandler cookieHandler) {//____________________ Start getJavaNetCookieJar
         return new JavaNetCookieJar(cookieHandler);
-    }
+    }//_____________________________________________________________________________________________ End getJavaNetCookieJar
 
 
     @Provides
     @DaggerScope
-    public CookieHandler getCookieHandler() {
+    public CookieHandler getCookieHandler() {//_____________________________________________________ Start getCookieHandler
         return new CookieManager();
-    }
+    }//_____________________________________________________________________________________________ End getCookieHandler
+
 
     @Provides
     @DaggerScope
-    public HttpLoggingInterceptor getHttpLoggingInterceptor() {
+    public HttpLoggingInterceptor getHttpLoggingInterceptor() {//___________________________________ Start getHttpLoggingInterceptor
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return interceptor;
-    }
+    }//_____________________________________________________________________________________________ End getHttpLoggingInterceptor
+
 
     @Provides
     @DaggerScope
-    public Cache getCache(File file) {
+    public Cache getCache(File file) {//____________________________________________________________ Start getCache
         return new Cache(file, 5 * 1000 * 1000);
-    }
+    }//_____________________________________________________________________________________________ End getCache
+
 
     @Provides
     @DaggerScope
-    public File getFile() {
+    public File getFile() {//_______________________________________________________________________ Start getFile
         return new File(context.getCacheDir(), "Okhttp_cache");
-    }
+    }//_____________________________________________________________________________________________ End getFile
 }

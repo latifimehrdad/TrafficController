@@ -23,6 +23,7 @@ public interface RetrofitApiInterface {
 
     String Version = "/api/v1";
 
+    //______________________________________________________________________________________________ getToken
     @FormUrlEncoded
     @POST("/token")
     Call<ModelToken> getToken
@@ -33,7 +34,7 @@ public interface RetrofitApiInterface {
             );
 
 
-
+    //______________________________________________________________________________________________ SendPhoneNumber
     @FormUrlEncoded
     @POST(Version + "/deviceaccount/demandverificationcode")
     Call<ModelResponcePrimery> SendPhoneNumber
@@ -45,6 +46,7 @@ public interface RetrofitApiInterface {
             );
 
 
+    //______________________________________________________________________________________________ SendVerifyCode
     @FormUrlEncoded
     @POST(Version + "/account/confirmmobile")
     Call<ModelResponcePrimery> SendVerifyCode
@@ -55,7 +57,7 @@ public interface RetrofitApiInterface {
             );
 
 
-
+    //______________________________________________________________________________________________ getLoginToken
     @FormUrlEncoded
     @POST("/token")
     Call<ModelToken> getLoginToken
@@ -70,6 +72,7 @@ public interface RetrofitApiInterface {
 
 
 
+    //______________________________________________________________________________________________ DeviceLogs
     @POST(Version + "/deviceattendance/report")
     Call<ModelResponcePrimery> DeviceLogs
             (

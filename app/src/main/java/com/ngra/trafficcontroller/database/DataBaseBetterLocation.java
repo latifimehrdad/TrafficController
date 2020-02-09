@@ -16,7 +16,7 @@ public class DataBaseBetterLocation extends RealmObject {
     private long LocTime;
 
 
-    public void  InsertDB(
+    public void InsertDB(
             boolean isGPS,
             double latitude,
             double longitude,

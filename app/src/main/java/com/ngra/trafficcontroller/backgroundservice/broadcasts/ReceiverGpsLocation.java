@@ -1,14 +1,14 @@
 package com.ngra.trafficcontroller.backgroundservice.broadcasts;
 
-        import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-        import com.ngra.trafficcontroller.R;
-        import com.ngra.trafficcontroller.utility.NotificationManagerClass;
-        import com.ngra.trafficcontroller.views.application.TrafficController;
+import com.ngra.trafficcontroller.R;
+import com.ngra.trafficcontroller.utility.NotificationManagerClass;
+import com.ngra.trafficcontroller.views.application.TrafficController;
 
-        import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
+import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
 
 public class ReceiverGpsLocation extends BroadcastReceiver {
 

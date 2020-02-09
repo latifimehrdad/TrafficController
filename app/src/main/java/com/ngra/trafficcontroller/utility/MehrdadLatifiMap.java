@@ -264,7 +264,7 @@ public class MehrdadLatifiMap {
     }//_____________________________________________________________________________________________ End AutoZoom
 
 
-    public void showCurrentPlace(Context context) {
+    public void showCurrentPlace(Context context) {//_______________________________________________ Start showCurrentPlace
 
 
         if (true) {
@@ -325,7 +325,8 @@ public class MehrdadLatifiMap {
                         }
                     });
         }
-    }
+    }//_____________________________________________________________________________________________ End showCurrentPlace
+
 
 
     private void DrawArrowHead(GoogleMap mMap, LatLng from, LatLng to) {//__________________________ Start DrawArrowHead

@@ -11,33 +11,26 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 
-
-public class GetCurrentLocation extends Service implements LocationListener
-{
+public class GetCurrentLocation extends Service implements LocationListener {
 
     private LocationManager locationManager;
     public static LSInterface lsInterface;
     public Context mcontext;
-    public  int count = 0;
+    public int count = 0;
 
 
-    public interface LSInterface
-    {//_____________________________________________________________________________________________ Start INTGetDataService
+    public interface LSInterface {//________________________________________________________________ Start INTGetDataService
 
         void GetLatLong(double lat, double lon);
+
         void ShowAlertLocation();
 
     }//_____________________________________________________________________________________________ End INTGetDataService
 
 
-
-
-
-
     @SuppressLint("MissingPermission")
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {//____________________________ Start onStartCommand
         count = 0;
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         int b = isLocationEnabled();
@@ -49,73 +42,68 @@ public class GetCurrentLocation extends Service implements LocationListener
         } else if (b == 2) {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, GetCurrentLocation.this);
-        }
-        else
-        {
+        } else {
             lsInterface.ShowAlertLocation();
         }
         return START_STICKY;
-    }
+    }//_____________________________________________________________________________________________ End onStartCommand
+
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent) {//________________________________________________________ Start onBind
 
         return null;
-    }
-
+    }//_____________________________________________________________________________________________ End onBind
 
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {//____________________________________________ Start onLocationChanged
 
         lsInterface.ShowAlertLocation();
         try {
-            if(count > 10) {
+            if (count > 10) {
                 lsInterface.GetLatLong(location.getLatitude(), location.getLongitude());
                 locationManager.removeUpdates(GetCurrentLocation.this);
                 locationManager = null;
                 this.stopSelf();
-            }
-            else {
+            } else {
                 count = count + 1;
                 lsInterface.ShowAlertLocation();
             }
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
 
         }
 
-    }
+    }//_____________________________________________________________________________________________ End onLocationChanged
+
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
+    public void onStatusChanged(String s, int i, Bundle bundle) {//_________________________________ Start onStatusChanged
 
-    }
+    }//_____________________________________________________________________________________________ End onStatusChanged
+
 
     @Override
-    public void onProviderEnabled(String s) {
+    public void onProviderEnabled(String s) {//_____________________________________________________ Start onProviderEnabled
 
-    }
+    }//_____________________________________________________________________________________________ End onProviderEnabled
+
 
     @Override
-    public void onProviderDisabled(String s) {
+    public void onProviderDisabled(String s) {//____________________________________________________ Start onProviderDisabled
 
-    }
+    }//_____________________________________________________________________________________________ End onProviderDisabled
 
 
+    private int isLocationEnabled() {//_____________________________________________________________ Start isLocationEnabled
 
-    private int isLocationEnabled()
-    {
-
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             return 1;
-        else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
             return 2;
         else
             return 0;
-    }
-
+    }//_____________________________________________________________________________________________ End isLocationEnabled
 
 
 }

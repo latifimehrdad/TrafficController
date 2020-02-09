@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.databinding.DialogProgressBinding;
 
@@ -21,7 +22,7 @@ public class DialogProgress extends DialogFragment {
 
     private Context context;
     private String Title;
-    public  boolean StaticFunctions;
+    public boolean StaticFunctions;
 
 
     @BindView(R.id.DialogProgressIgnor)

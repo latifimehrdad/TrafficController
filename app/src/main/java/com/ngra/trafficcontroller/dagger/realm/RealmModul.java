@@ -8,9 +8,10 @@ import io.realm.Realm;
 
 @Module
 public class RealmModul {
+
     @Provides
     @DaggerScope
-    public Realm getRealm() {
+    public Realm getRealm() {//_____________________________________________________________________ Start getRealm
         return Realm.getDefaultInstance();
-    }
+    }//_____________________________________________________________________________________________ End getRealm
 }

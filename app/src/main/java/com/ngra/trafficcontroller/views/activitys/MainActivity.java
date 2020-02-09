@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void checkLocationPermission() {//_____________________________________________________________________________________________ Start checkLocationPermission
+    public void checkLocationPermission() {//_______________________________________________________ Start checkLocationPermission
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {

@@ -98,7 +98,7 @@ public class FragmentVerify extends Fragment {
         super.onStart();
         PhoneNumber = getArguments().getString("PhoneNumber");
         navController = Navigation.findNavController(view);
-        if(observer != null)
+        if (observer != null)
             observer.dispose();
         observer = null;
         ObserverObservable();
@@ -139,7 +139,7 @@ public class FragmentVerify extends Fragment {
                                 DismissProgress();
                                 switch (s) {
                                     case "LoginDone":
-                                        if(observer != null)
+                                        if (observer != null)
                                             observer.dispose();
                                         observer = null;
                                         navController.navigate(R.id.action_fragmentVerify_to_fragmentHome);
@@ -205,12 +205,9 @@ public class FragmentVerify extends Fragment {
     }//_____________________________________________________________________________________________ End ObserverObservable
 
 
-
     private void GetLoginToken() {//________________________________________________________________ Start GetLoginToken
         vm_fragmentVerify.GetLoginToken(PhoneNumber);
     }//_____________________________________________________________________________________________ End GetLoginToken
-
-
 
 
     private void StartTimer(int Elapse) {//___________________________________________________________________ Start StartTimer
@@ -385,7 +382,7 @@ public class FragmentVerify extends Fragment {
     @Override
     public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
-        if(observer != null)
+        if (observer != null)
             observer.dispose();
         observer = null;
     }//_____________________________________________________________________________________________ End onDestroy

@@ -137,7 +137,7 @@ public class FragmentLogin extends Fragment {
                                 DismissLoading();
                                 switch (s) {
                                     case "Successful":
-                                        if(observer != null)
+                                        if (observer != null)
                                             observer.dispose();
                                         observer = null;
                                         Bundle bundle = new Bundle();
@@ -148,7 +148,7 @@ public class FragmentLogin extends Fragment {
                                         );
                                         break;
                                     case "ConfigHandlerForHome":
-                                        if(observer != null)
+                                        if (observer != null)
                                             observer.dispose();
                                         observer = null;
                                         navController.navigate(R.id.action_fragmentLogin_to_fragmentHome);
@@ -260,7 +260,7 @@ public class FragmentLogin extends Fragment {
     @Override
     public void onDestroy() {//_____________________________________________________________________ Start onDestroy
         super.onDestroy();
-        if(observer != null)
+        if (observer != null)
             observer.dispose();
         observer = null;
     }//_____________________________________________________________________________________________ End onDestroy

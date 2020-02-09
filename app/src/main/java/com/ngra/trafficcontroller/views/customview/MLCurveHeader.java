@@ -28,12 +28,14 @@ public class MLCurveHeader extends View {
     private int shadowColor;
     private int shadow;
 
-    public MLCurveHeader(Context context) {
+    public MLCurveHeader(Context context) {//_______________________________________________________ Start MLCurveHeader
         super(context);
         init();
-    }
+    }//_____________________________________________________________________________________________ Start MLCurveHeader
 
-    public MLCurveHeader(Context context, AttributeSet attrs) {
+
+
+    public MLCurveHeader(Context context, AttributeSet attrs) {//___________________________________ Start MLCurveHeader
         super(context, attrs);
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.MLCurveHeader);
 
@@ -43,10 +45,12 @@ public class MLCurveHeader extends View {
         PitOpenings = ta.getInt(R.styleable.MLCurveHeader_PitOpenings, 10);
 
         init();
-    }
+    }//_____________________________________________________________________________________________ Start MLCurveHeader
 
 
-    private void init() {
+
+
+    private void init() {//_________________________________________________________________________ Start init
         mPath = new Path();
         pathShadow = new Path();
         DrawPaint = new Paint();
@@ -54,14 +58,11 @@ public class MLCurveHeader extends View {
 
         DrawPaint2 = new Paint();
         //DrawPaint2.setColor(shadowColor);
-
-
-
         setBackgroundColor(0);
-    }
+    }//_____________________________________________________________________________________________ Start init
 
 
-    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {//_________________________________ Start onSizeChanged
         super.onSizeChanged(w, h, oldw, oldh);
 
         width = getWidth();
@@ -142,14 +143,13 @@ public class MLCurveHeader extends View {
         pathShadow.close();
 
 
-    }
+    }//_____________________________________________________________________________________________ Start onSizeChanged
 
-    public void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {//___________________________________________________________ Start onDraw
         super.onDraw(canvas);
         //canvas.drawPath(pathShadow,DrawPaint2);
         canvas.drawPath(mPath, DrawPaint);
-
-    }
+    }//_____________________________________________________________________________________________ Start onDraw
 
 
 

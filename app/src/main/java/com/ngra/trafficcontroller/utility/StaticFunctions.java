@@ -31,7 +31,7 @@ public class StaticFunctions {
     }//_____________________________________________________________________________________________ End GetAuthorization
 
 
-    public static TextWatcher TextChangeForChangeBack(EditText editText) {//______________________________ Satart TextChangeForChangeBack
+    public static TextWatcher TextChangeForChangeBack(EditText editText) {//________________________ Satart TextChangeForChangeBack
 
         return new TextWatcher() {
             @Override
@@ -85,10 +85,10 @@ public class StaticFunctions {
                             response.errorBody().string(),
                             ModelResponcePrimery.class);
 
-                    if(messages.getMessages().size() == 0)
-                       Messages = "No Message";
+                    if (messages.getMessages().size() == 0)
+                        Messages = "No Message";
                     else {
-                        for(ModelMessage message: messages.getMessages()) {
+                        for (ModelMessage message : messages.getMessages()) {
                             Messages = Messages + message.getMessage();
                         }
                     }

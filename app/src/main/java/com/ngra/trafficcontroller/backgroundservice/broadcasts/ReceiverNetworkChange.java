@@ -24,24 +24,24 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
 
         ObservablesGpsAndNetworkChange.onNext("changeNetwork");
 
-        if(!CheckTimeChange(context))
+        if (!CheckTimeChange(context))
             return;
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!TrafficController.getApplication(context).isInternetConnected()){
+                if (!TrafficController.getApplication(context).isInternetConnected()) {
                     NotificationManagerClass managerClass =
                             new NotificationManagerClass(
                                     context,
                                     context.getResources().getString(R.string.DisconnectNet)
-                                    ,false
-                                    ,0
+                                    , false
+                                    , 0
                             );
                 }
             }
-        },10 * 1000);
+        }, 10 * 1000);
 
 
     }//_____________________________________________________________________________________________ End onReceive
@@ -53,7 +53,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
         if (prefs != null) {
             boolean isNetwork = prefs.getBoolean("isnetwork", false);
             if (isNetwork) {
-                if (!TrafficController.getApplication(context).isInternetConnected()){
+                if (!TrafficController.getApplication(context).isInternetConnected()) {
                     SharedPreferences.Editor perf =
                             context.getSharedPreferences("trafficcontroller", 0).edit();
                     perf.putBoolean("isnetwork", false);
@@ -62,7 +62,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
                 } else return false;
 
             } else {
-                if (TrafficController.getApplication(context).isInternetConnected()){
+                if (TrafficController.getApplication(context).isInternetConnected()) {
                     SharedPreferences.Editor perf =
                             context.getSharedPreferences("trafficcontroller", 0).edit();
                     perf.putBoolean("isnetwork", true);
@@ -73,7 +73,7 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
         } else {
             SharedPreferences.Editor perf =
                     context.getSharedPreferences("trafficcontroller", 0).edit();
-            if (!TrafficController.getApplication(context).isInternetConnected()){
+            if (!TrafficController.getApplication(context).isInternetConnected()) {
                 perf.putBoolean("isnetwork", false);
                 perf.apply();
                 return true;
@@ -85,7 +85,6 @@ public class ReceiverNetworkChange extends BroadcastReceiver {
 
         }
     }//_____________________________________________________________________________________________ End getStringCurrentDate
-
 
 
 }

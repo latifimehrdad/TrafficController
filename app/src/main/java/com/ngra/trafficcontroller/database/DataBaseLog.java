@@ -6,7 +6,7 @@ public class DataBaseLog extends RealmObject {
 
     String LogString;
 
-    public void insert(String log){
+    public void insert(String log) {
         LogString = log;
     }
 

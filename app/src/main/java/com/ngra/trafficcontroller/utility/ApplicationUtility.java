@@ -293,7 +293,7 @@ public class ApplicationUtility {
     }//_____________________________________________________________________________________________ End calcSolarCalendar
 
 
-    public void CustomToastShow(Context context, String message) {
+    public void CustomToastShow(Context context, String message) {//________________________________ Start CustomToastShow
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         View view = toast.getView();
         view.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
@@ -304,10 +304,10 @@ public class ApplicationUtility {
         text.setGravity(17);
         toast.setGravity(17, 0, 0);
         toast.show();
-    }
+    }//_____________________________________________________________________________________________ End CustomToastShow
 
 
-    public TextWatcher SetTextWatcherSplitting(final EditText editText) {
+    public TextWatcher SetTextWatcherSplitting(final EditText editText) {//_________________________ Start SetTextWatcherSplitting
         return new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -320,9 +320,9 @@ public class ApplicationUtility {
             public void afterTextChanged(Editable editable) {
                 NumberFormat formatter = new DecimalFormat("#,###");
                 String m = editText.getText().toString();
-                m = m.replaceAll(",","");
-                m = m.replaceAll("٬","");
-                if(!m.equalsIgnoreCase("")){
+                m = m.replaceAll(",", "");
+                m = m.replaceAll("٬", "");
+                if (!m.equalsIgnoreCase("")) {
                     editText.removeTextChangedListener(this);
                     editText.setText(formatter.format(Integer.valueOf(m)));
                     editText.addTextChangedListener(this);
@@ -331,10 +331,11 @@ public class ApplicationUtility {
 
             }
         };
-    }
+    }//_____________________________________________________________________________________________ End SetTextWatcherSplitting
 
 
-    public Integer JalaliDatBetween(String Date1, String Date2, Integer intDate1, Integer intDate2) {
+    public Integer JalaliDatBetween(
+            String Date1, String Date2, Integer intDate1, Integer intDate2) {//_____________________ Start JalaliDatBetween
         Integer DateStart;
         Integer DateEnd;
         int c1;
@@ -385,10 +386,10 @@ public class ApplicationUtility {
             d++;
         }
         return Integer.valueOf((B + c1) - c2);
-    }
+    }//_____________________________________________________________________________________________ End JalaliDatBetween
 
 
-    public String JalaliAddDay(String Date1, Integer intDate1, int day) {
+    public String JalaliAddDay(String Date1, Integer intDate1, int day) {//_________________________ Start JalaliAddDay
         Integer DateStart;
         if (intDate1 != null) {
             DateStart = intDate1;
@@ -433,10 +434,10 @@ public class ApplicationUtility {
         sb.append("/");
         sb.append(String.format(str2, new Object[]{Integer.valueOf(c1)}));
         return sb.toString();
-    }
+    }//_____________________________________________________________________________________________ End JalaliAddDay
 
 
-    public String JalaliReduceDay(String Date1, Integer intDate1, int day) {
+    public String JalaliReduceDay(String Date1, Integer intDate1, int day) {//_________________________ Start JalaliReduceDay
         Integer DateStart;
         if (intDate1 != null) {
             DateStart = intDate1;
@@ -470,10 +471,10 @@ public class ApplicationUtility {
         else
             sb.append("01");
         return sb.toString();
-    }
+    }//_____________________________________________________________________________________________ End JalaliReduceDay
 
 
-    private int Switch(int d, int year) {
+    private int Switch(int d, int year) {//_________________________________________________________ Start Switch
         switch (d) {
             case 1:
             case 2:
@@ -496,16 +497,16 @@ public class ApplicationUtility {
             default:
                 return 0;
         }
-    }
+    }//_____________________________________________________________________________________________ End Switch
 
 
-    private Boolean Kabise(int year) {
+    private Boolean Kabise(int year) {//____________________________________________________________ Start Kabise
         int temp = year % 33;
         if (temp == 1 || temp == 5 || temp == 9 || temp == 13 || temp == 17 || temp == 22 || temp == 26 || temp == 30) {
             return Boolean.valueOf(true);
         }
         return Boolean.valueOf(false);
-    }
+    }//_____________________________________________________________________________________________ End Kabise
 
 
 }
