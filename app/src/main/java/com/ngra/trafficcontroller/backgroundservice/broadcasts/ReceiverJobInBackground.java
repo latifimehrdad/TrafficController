@@ -49,9 +49,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
+import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,7 +86,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .getRealmComponent()
                 .getRealm();
 
-        SaveLog("onReceive : " + getStringCurrentDate());
+        SaveLog("onReceive : " + "  **/** " + getStringCurrentDate());
 
         SharedPreferences.Editor perf =
                 context.getSharedPreferences("trafficcontroller", 0).edit();
@@ -117,7 +120,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             @Override
             public void run() {
                 locationManager.removeUpdates(listener);
-                GetCurrentLocation();
+                GetCurrentLocation(true);
             }
         }, 30 * 1000);
 
@@ -142,6 +145,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         public void onLocationChanged(final Location loc) {
 
+            SaveLog("onLocationChanged : " + loc.getLatitude() + "," + loc.getLongitude() + "  **/** " + getStringCurrentDate());
             if (isBetterLocation(loc, previousBestLocation)) {
                 Log.i("meri", "getTime : " + getStringCurrentDate(loc.getTime()));
                 try {
@@ -176,16 +180,16 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
+            SaveLog("onStatusChanged : status = " + status + "  **/** " + getStringCurrentDate());
         }
 
         public void onProviderDisabled(String provider) {
-
+            SaveLog("onProviderDisabled : provider = " + provider + "  **/** " + getStringCurrentDate());
         }
 
 
         public void onProviderEnabled(String provider) {
-
+            SaveLog("onProviderEnabled : provider = " + provider + "  **/** " + getStringCurrentDate());
         }
     }//_____________________________________________________________________________________________ End MyLocationListener
 
@@ -203,7 +207,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     }//_____________________________________________________________________________________________ End SaveLog
 
 
-    private void GetCurrentLocation() {//___________________________________________________________ Start GetCurrentLocation
+    private void GetCurrentLocation(boolean first) {//______________________________________________ Start GetCurrentLocation
 
         RealmResults<DataBaseBetterLocation> locations = realm
                 .where(DataBaseBetterLocation.class)
@@ -211,7 +215,10 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .findAll();
 
         if (locations.size() == 0)
-            GetLocatointonFromDB();
+            if (first)
+                GetLocationWhenDontGet();
+            else
+                GetLocatointonFromDB();
         else {
             boolean isGPS = false;
             int i;
@@ -223,7 +230,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 }
             }
 
-            SaveLog("Get Location : " + isGPS + " -- " + getStringCurrentDate());
+            SaveLog("Get Location : isGPS = " + isGPS + "  **/** " + getStringCurrentDate());
 
             if (isGPS) {
                 SaveToDataBase(
@@ -265,31 +272,60 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
 
 //        final int[] count = {0};
 //
-//        LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
-//                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-//                .setNumUpdates(1)
-//                .setInterval(1000);
-//
-//        ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
-//        Disposable subscription = locationProvider.getUpdatedLocation(request)
-//                .subscribe(new Consumer<Location>() {
-//                    @Override
-//                    public void accept(Location location) throws Exception {
-////                        count[0] = count[0] + 1;
-//                        //                       if(count[0] == 5) {
-//                        GetGPS = true;
-//                        SaveLog("Get GPS RX : " + location.getLatitude() + "," + location.getLongitude() + " - " + getStringCurrentDate());
-//                        SaveToDataBase(
-//                                location.getLatitude(),
-//                                location.getLongitude(),
-//                                location.getAltitude(),
-//                                location.getSpeed()
-//                        );
-////                        }
-//                        CheckPointInWorkingRange(location);
-//                    }
-//                });
+
     }//_____________________________________________________________________________________________ End GetCurrentLocation
+
+
+    private void GetLocationWhenDontGet() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GetCurrentLocation(false);
+            }
+        },5000);
+
+        LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setNumUpdates(1)
+                .setInterval(1000);
+
+        ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
+        Disposable subscription = locationProvider.getUpdatedLocation(request)
+                .subscribe(new Consumer<Location>() {
+                    @Override
+                    public void accept(Location location) throws Exception {
+
+                        SaveLog("Get Location : RX = " + location.getLatitude() + "," + location.getLongitude() + "  **/** " + getStringCurrentDate());
+
+                        try {
+                            Integer ID = 1;
+                            Number currentIdNum = realm.where(DataBaseBetterLocation.class).max("ID");
+                            if (currentIdNum == null) {
+                                ID = 1;
+                            } else {
+                                ID = currentIdNum.intValue() + 1;
+                            }
+                            realm.beginTransaction();
+                            realm.createObject(DataBaseBetterLocation.class, ID)
+                                    .InsertDB(
+                                            false,
+                                            location.getLatitude(),
+                                            location.getLongitude(),
+                                            location.getAltitude(),
+                                            location.getSpeed(),
+                                            location.getAccuracy(),
+                                            location.getTime()
+                                    );
+                            realm.commitTransaction();
+                        } catch (RealmException e) {
+                            realm.cancelTransaction();
+                        }
+
+                    }
+                });
+    }
 
 
     private void SaveToDataBase(
@@ -363,11 +399,10 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     }//_____________________________________________________________________________________________ End getStringCurrentDate
 
 
-
     private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB
         try {
             locations = realm.where(DataBaseLocation.class).equalTo("Send", false).findAll();
-            SaveLog("Get DB : " + locations.size() + "-- " + getStringCurrentDate());
+            SaveLog("Get Get DB : Count = " + locations.size() + "  **/** " + getStringCurrentDate());
             if (locations.size() > 0)
                 SendLocatoinToServer();
         } catch (RealmException e) {
@@ -429,14 +464,14 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                             perf.putString("lastnet", time);
                             perf.apply();
                             ObservablesGpsAndNetworkChange.onNext("LastNet");
-                            SaveLog("Response Done : " + getStringCurrentDate());
+                            SaveLog("Response : Done " + " **/** " + getStringCurrentDate());
                             DeleteOldLocationFromDataBase();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ModelResponcePrimery> call, Throwable t) {
-                        SaveLog("Response Failure : " + getStringCurrentDate());
+                        SaveLog("Response : Failure " + " **/** " + getStringCurrentDate());
                     }
                 });
 

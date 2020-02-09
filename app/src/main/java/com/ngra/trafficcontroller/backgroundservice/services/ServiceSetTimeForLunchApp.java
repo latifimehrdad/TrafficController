@@ -61,7 +61,6 @@ public class ServiceSetTimeForLunchApp extends Service {
         AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 120 * 1000, pendingIntent);
 
-
         return Service.START_STICKY;
     }//_____________________________________________________________________________________________ End onStartCommand
 
