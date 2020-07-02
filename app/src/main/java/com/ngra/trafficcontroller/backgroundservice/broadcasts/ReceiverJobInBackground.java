@@ -22,7 +22,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 import com.ngra.trafficcontroller.R;
 import com.ngra.trafficcontroller.backgroundservice.services.ServiceSetTimeForLunchApp;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitApis;
 import com.ngra.trafficcontroller.database.DataBaseBetterLocation;
+import com.ngra.trafficcontroller.models.ModelToken;
 import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
 import com.ngra.trafficcontroller.utility.NotificationManagerClass;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
@@ -74,6 +76,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     public MyLocationListener listener;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private Realm realm;
+    private String MessageResponcse = null;
+    private ModelToken modelToken;
 
 
     @Override
@@ -122,7 +126,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 locationManager.removeUpdates(listener);
                 GetCurrentLocation(true);
             }
-        }, 30 * 1000);
+        }, 25 * 1000);
 
 
 //
@@ -230,7 +234,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 }
             }
 
-            SaveLog("Get Location : isGPS = " + isGPS + "  **/** " + getStringCurrentDate());
+            SaveLog("Save : isGPS = " + isGPS + "  **/** " + getStringCurrentDate());
 
             if (isGPS) {
                 SaveToDataBase(
@@ -338,12 +342,12 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
             long LocTime) {//_______________________________________________________________________ StartSaveToDataBase
 
         Date last = realm.where(DataBaseLocation.class).maximumDate("SaveDate");
-        long bet = 1 * 60 * 1000 + 1;
+        long bet = 1 * 25 * 1000 + 1;
         Date date = new Date();
         if (last != null)
             bet = Math.abs(last.getTime() - date.getTime());
 
-        if (bet < 1 * 60 * 1000)
+        if (bet < 1 * 25 * 1000)
             return;
 
         try {
@@ -402,7 +406,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
     private void GetLocatointonFromDB() {//_________________________________________________________ Start GetLocatointonFromDB
         try {
             locations = realm.where(DataBaseLocation.class).equalTo("Send", false).findAll();
-            SaveLog("Get Get DB : Count = " + locations.size() + "  **/** " + getStringCurrentDate());
+            SaveLog("Get DB : Count = " + locations.size() + "  **/** " + getStringCurrentDate());
             if (locations.size() > 0)
                 SendLocatoinToServer();
         } catch (RealmException e) {
@@ -466,6 +470,8 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                             ObservablesGpsAndNetworkChange.onNext("LastNet");
                             SaveLog("Response : Done " + " **/** " + getStringCurrentDate());
                             DeleteOldLocationFromDataBase();
+                        } else {
+                            RefreshToken();
                         }
                     }
 
@@ -476,6 +482,51 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 });
 
     }//_____________________________________________________________________________________________ End SendLocatoinToServer
+
+
+
+
+    private void RefreshToken() {//_________________________________________________________________ Start RefreshToken
+
+        RetrofitModule.isCancel = false;
+        RetrofitComponent retrofitComponent =
+                TrafficController
+                        .getApplication(context)
+                        .getRetrofitComponent();
+
+        DeviceTools deviceTools = new DeviceTools(context);
+        String imei = deviceTools.getIMEI();
+        String phonenumber = "";
+
+        SharedPreferences prefs = context.getSharedPreferences("trafficcontrollertoken", 0);
+        if (prefs != null)  {
+            phonenumber = prefs.getString("phonenumber", null);
+            if (phonenumber == null) {
+                return;
+            }
+        }
+
+    }//_____________________________________________________________________________________________ End RefreshToken
+
+
+
+
+//    private void SaveToken(String PhoneNumber) {//__________________________________________________ Start SaveToken
+//
+//        SharedPreferences.Editor token =
+//                context.getSharedPreferences("trafficcontrollertoken", 0).edit();
+//        token.putString("accesstoken", modelToken.getAccess_token());
+//        token.putString("tokentype", modelToken.getToken_type());
+//        token.putInt("expiresin", modelToken.getExpires_in());
+//        token.putString("clientid", modelToken.getClient_id());
+//        token.putString("issued", modelToken.getIssued());
+//        token.putString("expires", modelToken.getExpires());
+//        token.apply();
+//        SendNumber(PhoneNumber);
+//
+//    }//_____________________________________________________________________________________________ End SaveToken
+
+
 
 
     private void DeleteOldLocationFromDataBase() {//________________________________________________ Start DeleteOldLocationFromDataBase

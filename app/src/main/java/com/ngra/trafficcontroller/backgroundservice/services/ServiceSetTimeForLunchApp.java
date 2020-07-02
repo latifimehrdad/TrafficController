@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,6 +40,11 @@ public class ServiceSetTimeForLunchApp extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {//____________________________ Start onStartCommand
 
+//        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+//        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+//                "MyApp::MyWakelockTag");
+//        wakeLock.acquire();
+
         SaveLog("onStart Service : " + getStringCurrentDate());
 
         if (alarmNotify == null) {
@@ -51,6 +57,7 @@ public class ServiceSetTimeForLunchApp extends Service {
                             , 3
                     );
             alarmNotify = managerClass.getNotification();
+
             startForeground(id, alarmNotify);
         }
 
@@ -59,7 +66,7 @@ public class ServiceSetTimeForLunchApp extends Service {
         Intent intent1 = new Intent(getApplicationContext(), ReceiverJobInBackground.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 120 * 1000, pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 45 * 1000, pendingIntent);
 
         return Service.START_STICKY;
     }//_____________________________________________________________________________________________ End onStartCommand

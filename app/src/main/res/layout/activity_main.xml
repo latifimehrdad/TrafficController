@@ -172,8 +172,6 @@
             app:navGraph="@navigation/nav_main" />
 
 
-
-
     </RelativeLayout>
 
 

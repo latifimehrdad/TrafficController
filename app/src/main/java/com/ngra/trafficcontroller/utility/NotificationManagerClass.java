@@ -155,6 +155,19 @@ public class NotificationManagerClass {
     }//_____________________________________________________________________________________________ End CreateChannelsEvent
 
 
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public void CreateChannelsShow() {//___________________________________________________________ Start CreateChannelsEvent
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_SERVICE_ID,
+                CHANNEL_SERVICE_NAME, notifManager.IMPORTANCE_HIGH);
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(context.getResources().getColor(R.color.colorPrimary));
+        notificationChannel.setShowBadge(true);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        getManager().createNotificationChannel(notificationChannel);
+    }//_____________________________________________________________________________________________ End CreateChannelsEvent
+
+
 //    @TargetApi(Build.VERSION_CODES.O)
 //    public void CreateChannelsRun() {//_____________________________________________________________ Start CreateChannelsRun
 //        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_SERVICE_ID,
