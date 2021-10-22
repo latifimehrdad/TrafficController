@@ -23,51 +23,27 @@ public interface RetrofitApiInterface {
 
     String Version = "/api/v1";
 
-    //______________________________________________________________________________________________ getToken
-    @FormUrlEncoded
-    @POST("/token")
-    Call<ModelToken> getToken
-            (
-                    @Field("client_id") String client_id,
-                    @Field("client_secret") String client_secret,
-                    @Field("grant_type") String grant_type
-            );
-
 
     //______________________________________________________________________________________________ SendPhoneNumber
     @FormUrlEncoded
-    @POST(Version + "/deviceaccount/demandverificationcode")
+    @POST(Version + "/Account/AuthenticationCodeRequest")
     Call<ModelResponcePrimery> SendPhoneNumber
             (
-                    @Field("DeviceNumber") String DeviceNumber,
-                    @Field("Type") Integer Type,
-                    @Field("DeviceSpecification") String DeviceSpecification,
-                    @Header("Authorization") String Authorization
+                    @Field("PhoneNumber") String PhoneNumber
             );
 
 
     //______________________________________________________________________________________________ SendVerifyCode
     @FormUrlEncoded
-    @POST(Version + "/account/confirmmobile")
-    Call<ModelResponcePrimery> SendVerifyCode
-            (
-                    @Field("Mobile") String PhoneNumber,
-                    @Field("Code") String Password,
-                    @Header("Authorization") String Authorization
-            );
-
-
-    //______________________________________________________________________________________________ getLoginToken
-    @FormUrlEncoded
     @POST("/token")
-    Call<ModelToken> getLoginToken
+    Call<ModelToken> SendVerifyCode
             (
                     @Field("client_id") String client_id,
                     @Field("client_secret") String client_secret,
                     @Field("grant_type") String grant_type,
-                    @Field("DeviceSpecification") String DeviceSpecification,
-                    @Field("DeviceNumber") String DeviceNumber,
-                    @Field("DeviceType") Integer DeviceType
+                    @Field("phonenumber") String PhoneNumber,
+                    @Field("code") String Password,
+                    @Header("app_token") String app_token
             );
 
 

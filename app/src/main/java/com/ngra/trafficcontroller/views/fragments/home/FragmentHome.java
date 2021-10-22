@@ -344,24 +344,21 @@ public class FragmentHome extends Fragment {
         });
 
 
-        CircleMenuCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
-                    LayoutNetSetting
-                            .startAnimation(AnimationUtils
-                                    .loadAnimation(context, R.anim.slide_out_bottom));
-                    LayoutNetSetting.setVisibility(View.INVISIBLE);
-                }
-
-                if (CircleMenu.getVisibility() == View.INVISIBLE) {
-                    CircleMenu.setVisibility(View.VISIBLE);
-                    ImgCircleMenu.setImageResource(R.drawable.ic_center_focus);
-                } else {
-                    CircleMenu.setVisibility(View.INVISIBLE);
-                    ImgCircleMenu.setImageResource(R.drawable.ic_apps);
-                }
+        CircleMenuCenter.setOnClickListener(v -> {
+/*            if (LayoutNetSetting.getVisibility() == View.VISIBLE) {
+                LayoutNetSetting
+                        .startAnimation(AnimationUtils
+                                .loadAnimation(context, R.anim.slide_out_bottom));
+                LayoutNetSetting.setVisibility(View.INVISIBLE);
             }
+
+            if (CircleMenu.getVisibility() == View.INVISIBLE) {
+                CircleMenu.setVisibility(View.VISIBLE);
+                ImgCircleMenu.setImageResource(R.drawable.ic_center_focus);
+            } else {
+                CircleMenu.setVisibility(View.INVISIBLE);
+                ImgCircleMenu.setImageResource(R.drawable.ic_apps);
+            }*/
         });
 
 

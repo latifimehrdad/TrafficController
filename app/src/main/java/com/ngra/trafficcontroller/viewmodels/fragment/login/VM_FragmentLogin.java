@@ -32,61 +32,8 @@ public class VM_FragmentLogin {
     }//_____________________________________________________________________________________________ End VM_FragmentLogin
 
 
-
-
-    public void GetTokenBeforeLoginFromServer(String PhoneNumber) {//_______________________________ Start GetTokenBeforeLoginFromServer
-
-        RetrofitComponent retrofitComponent =
-                TrafficController
-                        .getApplication(context)
-                        .getRetrofitComponent();
-
-        retrofitComponent
-                .getRetrofitApiInterface()
-                .getToken(
-                        RetrofitApis.client_id_value,
-                        RetrofitApis.client_secret_value,
-                        RetrofitApis.grant_type_value)
-                .enqueue(new Callback<ModelToken>() {
-                    @Override
-                    public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
-                        MessageResponcse = CheckResponse(response, true);
-                        if (MessageResponcse == null) {
-                            modelToken = response.body();
-                            SaveToken(PhoneNumber);
-                        } else
-                            Observables.onNext("Error");
-                    }
-
-                    @Override
-                    public void onFailure(Call<ModelToken> call, Throwable t) {
-                        Observables.onNext("Failure");
-                    }
-                });
-
-
-    }//_____________________________________________________________________________________________ End GetTokenBeforeLoginFromServer
-
-
-
-    private void SaveToken(String PhoneNumber) {//__________________________________________________ Start SaveToken
-
-        SharedPreferences.Editor token =
-                context.getSharedPreferences("trafficcontrollertoken", 0).edit();
-        token.putString("accesstoken", modelToken.getAccess_token());
-        token.putString("tokentype", modelToken.getToken_type());
-        token.putInt("expiresin", modelToken.getExpires_in());
-        token.putString("clientid", modelToken.getClient_id());
-        token.putString("issued", modelToken.getIssued());
-        token.putString("expires", modelToken.getExpires());
-        token.apply();
-        SendNumber(PhoneNumber);
-
-    }//_____________________________________________________________________________________________ End SaveToken
-
-
-
     public void SendNumber(String PhoneNumber) {//__________________________________________________ Start SendNumber
+
 
         RetrofitModule.isCancel = false;
         RetrofitComponent retrofitComponent =
@@ -94,18 +41,9 @@ public class VM_FragmentLogin {
                         .getApplication(context)
                         .getRetrofitComponent();
 
-        DeviceTools deviceTools = new DeviceTools(context);
-        String Authorization = GetAuthorization(context);
-        String imei = deviceTools.getIMEI();
-
         retrofitComponent
                 .getRetrofitApiInterface()
-                .SendPhoneNumber(
-                        PhoneNumber,
-                        1,
-                        imei,
-                        Authorization
-                )
+                .SendPhoneNumber(PhoneNumber)
                 .enqueue(new Callback<ModelResponcePrimery>() {
                     @Override
                     public void onResponse(Call<ModelResponcePrimery> call, Response<ModelResponcePrimery> response) {
@@ -127,53 +65,6 @@ public class VM_FragmentLogin {
 
     }//_____________________________________________________________________________________________ End SendNumber
 
-
-
-
-    public void GetLoginToken(String PhoneNumber) {//_______________________________________________ Start GetLoginToken
-
-        RetrofitModule.isCancel = false;
-        RetrofitComponent retrofitComponent =
-                TrafficController
-                        .getApplication(context)
-                        .getRetrofitComponent();
-
-        DeviceTools deviceTools = new DeviceTools(context);
-        String imei = deviceTools.getIMEI();
-
-        retrofitComponent
-                .getRetrofitApiInterface()
-                .getLoginToken(
-                        RetrofitApis.client_id_value,
-                        RetrofitApis.client_secret_value,
-                        RetrofitApis.grant_type_device,
-                        imei,
-                        PhoneNumber,
-                        1)
-                .enqueue(new Callback<ModelToken>() {
-                    @Override
-                    public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
-                        if (RetrofitModule.isCancel)
-                            return;
-                        MessageResponcse = CheckResponse(response, true);
-                        if (MessageResponcse == null) {
-                            modelToken = response.body();
-                            SaveLoginToken(PhoneNumber);
-                            Observables.onNext("ConfigHandlerForHome");
-                        } else {
-                            //Observables.onNext("Error");
-                            GetTokenBeforeLoginFromServer(PhoneNumber);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ModelToken> call, Throwable t) {
-                        GetTokenBeforeLoginFromServer(PhoneNumber);
-                    }
-                });
-
-
-    }//_____________________________________________________________________________________________ End GetLoginToken
 
 
 

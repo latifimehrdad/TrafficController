@@ -115,12 +115,9 @@ public class FragmentVerify extends Fragment {
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick
 
-        message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ReTryGetSMSClick) {
-                    vm_fragmentVerify.SendNumber(PhoneNumber);
-                }
+        message.setOnClickListener(v -> {
+            if (ReTryGetSMSClick) {
+                vm_fragmentVerify.SendNumber(PhoneNumber);
             }
         });
 
@@ -143,9 +140,6 @@ public class FragmentVerify extends Fragment {
                                             observer.dispose();
                                         observer = null;
                                         navController.navigate(R.id.action_fragmentVerify_to_fragmentHome);
-                                        break;
-                                    case "VerifyDone":
-                                        GetLoginToken();
                                         break;
                                     case "SuccessfulToken":
                                         StartTimer(60);
@@ -204,10 +198,6 @@ public class FragmentVerify extends Fragment {
 
     }//_____________________________________________________________________________________________ End ObserverObservable
 
-
-    private void GetLoginToken() {//________________________________________________________________ Start GetLoginToken
-        vm_fragmentVerify.GetLoginToken(PhoneNumber);
-    }//_____________________________________________________________________________________________ End GetLoginToken
 
 
     private void StartTimer(int Elapse) {//___________________________________________________________________ Start StartTimer

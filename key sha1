@@ -1,0 +1,1 @@
+keytool -list -v -keystore "G:\Projects\WMS\keystore.jks" -alias ican -storepass meri7126 -keypass meri7126

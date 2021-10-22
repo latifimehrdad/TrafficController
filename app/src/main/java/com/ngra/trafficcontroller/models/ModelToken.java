@@ -1,5 +1,6 @@
 package com.ngra.trafficcontroller.models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ModelToken {
@@ -18,6 +19,10 @@ public class ModelToken {
     private String expires;
     @SerializedName("userName")
     private String PhoneNumber;
+
+    @Expose
+    @SerializedName("error_description")
+    private String error_description;
 
     public String getAccess_token() {
         return access_token;
@@ -73,5 +78,9 @@ public class ModelToken {
 
     public void setPhoneNumber(String phoneNumber) {
         PhoneNumber = phoneNumber;
+    }
+
+    public String getError_description() {
+        return error_description;
     }
 }

@@ -40,18 +40,9 @@ public class VM_FragmentVerify {
                         .getApplication(context)
                         .getRetrofitComponent();
 
-        DeviceTools deviceTools = new DeviceTools(context);
-        String Authorization = GetAuthorization(context);
-        String imei = deviceTools.getIMEI();
-
         retrofitComponent
                 .getRetrofitApiInterface()
-                .SendPhoneNumber(
-                        PhoneNumber,
-                        1,
-                        imei,
-                        Authorization
-                )
+                .SendPhoneNumber(PhoneNumber)
                 .enqueue(new Callback<ModelResponcePrimery>() {
                     @Override
                     public void onResponse(Call<ModelResponcePrimery> call, Response<ModelResponcePrimery> response) {
@@ -82,78 +73,39 @@ public class VM_FragmentVerify {
                         .getApplication(context)
                         .getRetrofitComponent();
 
-        String Authorization = GetAuthorization(context);
 
         retrofitComponent
                 .getRetrofitApiInterface()
                 .SendVerifyCode(
-                        PhoneNumber, verify, Authorization
-                )
-                .enqueue(new Callback<ModelResponcePrimery>() {
-                    @Override
-                    public void onResponse(Call<ModelResponcePrimery> call, Response<ModelResponcePrimery> response) {
-                        if (!RetrofitModule.isCancel) {
-                            MessageResponcse = CheckResponse(response, true);
-                            if (MessageResponcse == null)
-                                Observables.onNext("VerifyDone");
-                            else
-                                Observables.onNext("Error");
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ModelResponcePrimery> call, Throwable t) {
-                        if (!RetrofitModule.isCancel)
-                            Observables.onNext("Failure");
-                    }
-                });
-
-
-    }//_____________________________________________________________________________________________ End VerifyNumber
-
-
-    public void GetLoginToken(String PhoneNumber) {//_______________________________________________ Start GetLoginToken
-
-        RetrofitModule.isCancel = false;
-        RetrofitComponent retrofitComponent =
-                TrafficController
-                        .getApplication(context)
-                        .getRetrofitComponent();
-
-        DeviceTools deviceTools = new DeviceTools(context);
-        String imei = deviceTools.getIMEI();
-
-        retrofitComponent
-                .getRetrofitApiInterface()
-                .getLoginToken(
                         RetrofitApis.client_id_value,
                         RetrofitApis.client_secret_value,
-                        RetrofitApis.grant_type_device,
-                        imei,
-                        PhoneNumber,
-                        1)
+                        RetrofitApis.grant_type_value,
+                        PhoneNumber, verify,
+                        RetrofitApis.app_token
+                )
                 .enqueue(new Callback<ModelToken>() {
                     @Override
                     public void onResponse(Call<ModelToken> call, Response<ModelToken> response) {
                         if (RetrofitModule.isCancel)
                             return;
-                        MessageResponcse = CheckResponse(response, true);
-                        if (MessageResponcse == null) {
+                        if (response == null || response.body() == null) {
+                            MessageResponcse = "کد وارد شده اشتباه است";
+                            Observables.onNext("Error");
+                        } else {
                             modelToken = response.body();
                             SaveToken();
-                        } else
-                            Observables.onNext("Error");
+                        }
+
                     }
 
                     @Override
                     public void onFailure(Call<ModelToken> call, Throwable t) {
-                        Observables.onNext("Failure");
+                        Observables.onNext(t.toString());
                     }
                 });
 
 
-    }//_____________________________________________________________________________________________ End GetLoginToken
+    }//_____________________________________________________________________________________________ End VerifyNumber
 
 
     private void SaveToken() {//____________________________________________________________________ Start SaveToken

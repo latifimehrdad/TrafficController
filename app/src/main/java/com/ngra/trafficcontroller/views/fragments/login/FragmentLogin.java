@@ -105,19 +105,16 @@ public class FragmentLogin extends Fragment {
 
     private void SetClick() {//_____________________________________________________________________ Start SetClick
 
-        BtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        BtnLogin.setOnClickListener(v -> {
 
-                if (RetrofitModule.isCancel) {
-                    if (CheckEmpty()) {
-                        ShowLoading();
-                        viewModel.GetLoginToken(PhoneNumber);
-                    }
-                } else {
-                    RetrofitModule.isCancel = true;
-                    DismissLoading();
+            if (RetrofitModule.isCancel) {
+                if (CheckEmpty()) {
+                    ShowLoading();
+                    viewModel.SendNumber(PhoneNumber);
                 }
+            } else {
+                RetrofitModule.isCancel = true;
+                DismissLoading();
             }
         });
 
@@ -146,12 +143,6 @@ public class FragmentLogin extends Fragment {
                                                 R.id.action_fragmentLogin_to_fragmentVerify,
                                                 bundle
                                         );
-                                        break;
-                                    case "ConfigHandlerForHome":
-                                        if (observer != null)
-                                            observer.dispose();
-                                        observer = null;
-                                        navController.navigate(R.id.action_fragmentLogin_to_fragmentHome);
                                         break;
                                     case "Error":
                                         ShowMessage(
