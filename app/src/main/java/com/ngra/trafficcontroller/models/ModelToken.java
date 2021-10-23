@@ -19,6 +19,8 @@ public class ModelToken {
     private String expires;
     @SerializedName("userName")
     private String PhoneNumber;
+    @SerializedName("aToken")
+    private String aToken;
 
     @Expose
     @SerializedName("error_description")
@@ -82,5 +84,13 @@ public class ModelToken {
 
     public String getError_description() {
         return error_description;
+    }
+
+    public String getaToken() {
+        return aToken;
+    }
+
+    public void setaToken(String aToken) {
+        this.aToken = aToken;
     }
 }

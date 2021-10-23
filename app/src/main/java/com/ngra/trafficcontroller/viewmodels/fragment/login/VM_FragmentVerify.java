@@ -118,6 +118,7 @@ public class VM_FragmentVerify {
         token.putString("clientid", modelToken.getClient_id());
         token.putString("issued", modelToken.getIssued());
         token.putString("expires", modelToken.getExpires());
+        token.putString("aToken", modelToken.getaToken());
         token.putBoolean("login", true);
         token.apply();
         Observables.onNext("LoginDone");

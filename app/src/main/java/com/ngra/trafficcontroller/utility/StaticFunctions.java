@@ -31,6 +31,18 @@ public class StaticFunctions {
     }//_____________________________________________________________________________________________ End GetAuthorization
 
 
+
+    public static String Get_aToken(Context context) {//______________________________________ Start GetAuthorization
+        String aToken = "";
+        SharedPreferences prefs = context.getSharedPreferences("trafficcontrollertoken", 0);
+        if (prefs != null) {
+            aToken = prefs.getString("aToken", null);
+        }
+        return aToken;
+    }//_____________________________________________________________________________________________ End GetAuthorization
+
+
+
     public static TextWatcher TextChangeForChangeBack(EditText editText) {//________________________ Satart TextChangeForChangeBack
 
         return new TextWatcher() {

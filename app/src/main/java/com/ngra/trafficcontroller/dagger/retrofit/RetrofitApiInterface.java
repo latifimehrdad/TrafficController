@@ -54,6 +54,7 @@ public interface RetrofitApiInterface {
             (
                     @Header("DeviceSpecification") String DeviceSpecification,
                     @Header("Authorization") String Authorization,
+                    @Header("aToken") String aToken,
                     @Body ModelLocations locations
             );
 

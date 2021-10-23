@@ -1,7 +1,7 @@
 <resources>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyB4uEndQFm4CX7GOP5nTWO6u8Le6tKD3Ic</string>
-    <string name="app_name">کنترل تردد نگرا</string>
-    <string name="app_name_header">نرم افزار کنترل تردد نگرا</string>
+    <string name="app_name">سامانه هوشمند رصد</string>
+    <string name="app_name_header">سامانه هوشمند رصد</string>
     <string name="version">نسخه 1.1</string>
 
     <string name="PhoneNumber">شماره موبایل</string>

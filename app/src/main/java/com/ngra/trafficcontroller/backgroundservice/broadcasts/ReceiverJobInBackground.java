@@ -36,6 +36,7 @@ import com.ngra.trafficcontroller.models.ModelLocations;
 import com.ngra.trafficcontroller.models.ModelResponcePrimery;
 import com.ngra.trafficcontroller.utility.DeviceTools;
 
+import com.ngra.trafficcontroller.utility.StaticFunctions;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import java.io.BufferedReader;
@@ -446,6 +447,7 @@ public class ReceiverJobInBackground extends BroadcastReceiver {
                 .DeviceLogs(
                         imei,
                         Authorization,
+                        StaticFunctions.Get_aToken(context),
                         lo
                 )
                 .enqueue(new Callback<ModelResponcePrimery>() {
