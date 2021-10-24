@@ -221,22 +221,18 @@ public class FragmentHome extends Fragment {
         LayoutSend.setVisibility(View.GONE);
         navController = Navigation.findNavController(view);
 
-        switch (status) {
-            case 0:
-                imgSend.setImageResource(R.drawable.enter_locatoin);
-                textViewSend.setText("ثبت ورود");
-                LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_bg));
-                break;
-            case 1:
-                imgSend.setImageResource(R.drawable.exit_location);
-                textViewSend.setText("ثبت خروج");
-                LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_red));
-                break;
-            case 2:
-                imgSend.setImageResource(R.drawable.enter_locatoin);
-                textViewSend.setText("ثبت ورود");
-                LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_bg));
-                break;
+        if (status == 0) {
+            imgSend.setImageResource(R.drawable.enter_locatoin);
+            textViewSend.setText("ثبت ورود");
+            LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_bg));
+        } else if (status == 1) {
+            imgSend.setImageResource(R.drawable.exit_location);
+            textViewSend.setText("ثبت خروج");
+            LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_red));
+        } else {
+            imgSend.setImageResource(R.drawable.enter_locatoin);
+            textViewSend.setText("ثبت ورود");
+            LayoutSend.setBackground(getContext().getResources().getDrawable(R.drawable.button_bg));
         }
 
         if (TrafficController.getApplication(context).isLocationEnabled())
