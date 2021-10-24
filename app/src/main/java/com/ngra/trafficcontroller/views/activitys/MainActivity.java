@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }//_____________________________________________________________________________________________ End checkLocationPermission
 
 
+/*
     public void checkReadPhonestate() {//___________________________________________________________ Start checkReadPhonestate
         int permissionCheck = ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_PHONE_STATE);
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }//_____________________________________________________________________________________________ End WhiteList
+*/
 
 
     @Override
@@ -126,23 +128,24 @@ public class MainActivity extends AppCompatActivity {
             int requestCode,
             String permissions[],
             int[] grantResults) {//_________________________________________________________________ Start onRequestPermissionsResult
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    checkReadPhonestate();
+//
+//                    checkReadPhonestate();
 
                 }
                 return;
             }
             case 2: {
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    WhiteList();
+//                    WhiteList();
                 }
             }
-            case 3:{
-                if (requestCode == 3) {
+            case 3: {
+/*                if (requestCode == 3) {
                     PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
                     boolean isIgnoringBatteryOptimizations = false;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     }else{
                         // Not ignoring battery optimization
                     }
-                }
+                }*/
             }
 
         }

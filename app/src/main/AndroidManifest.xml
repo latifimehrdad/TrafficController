@@ -5,19 +5,10 @@
 
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-
-
 
 
     <application
@@ -41,65 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".backgroundservice.broadcasts.ReceiverGpsLocation"
-            android:enabled="true"
-            android:process="com.ngra.trafficcontroller"
-            >
-            <intent-filter>
-                <action android:name="android.location.PROVIDERS_CHANGED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".backgroundservice.broadcasts.ReceiverNetworkChange"
-            android:enabled="true"
-            android:process="com.ngra.trafficcontroller"
-            >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-
-        <receiver android:name=".backgroundservice.broadcasts.ReceiverLunchAppInBackground"
-            android:enabled="true"
-            android:process="com.ngra.trafficcontroller"
-            >
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="ir.ngra.Lunch" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".backgroundservice.services.ServiceSetTimeForLunchApp"
-            android:stopWithTask="false"
-            />
-
-        <receiver android:name=".backgroundservice.broadcasts.ReceiverJobInBackground"
-            android:enabled="true"
-            android:process="com.ngra.trafficcontroller"
-            >
-            <intent-filter>
-                <action android:name="accept"/>
-                <action android:name="disapprove"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".backgroundservice.broadcasts.ReceiverDateTimeChange"
-            android:enabled="true"
-            android:process="com.ngra.trafficcontroller"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_TICK"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
-                <action android:name="android.intent.action.ACTION_TIME_CHANGED"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".backgroundservice.services.GetCurrentLocation">
-        </service>
 
 
         <meta-data

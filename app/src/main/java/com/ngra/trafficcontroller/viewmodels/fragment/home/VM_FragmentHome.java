@@ -1,14 +1,21 @@
 package com.ngra.trafficcontroller.viewmodels.fragment.home;
 
+import static com.ngra.trafficcontroller.utility.StaticFunctions.CheckResponse;
+import static com.ngra.trafficcontroller.utility.StaticFunctions.GetAuthorization;
+import static com.ngra.trafficcontroller.views.application.TrafficController.ObservablesGpsAndNetworkChange;
+
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.location.Location;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.ngra.trafficcontroller.database.DataBaseLocation;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
+import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
 import com.ngra.trafficcontroller.models.ModelChartMeasureDistance;
+import com.ngra.trafficcontroller.models.ModelLocation;
+import com.ngra.trafficcontroller.models.ModelLocations;
+import com.ngra.trafficcontroller.models.ModelResponcePrimery;
 import com.ngra.trafficcontroller.utility.ApplicationUtility;
-
-import com.ngra.trafficcontroller.utility.MehrdadLatifiMap;
+import com.ngra.trafficcontroller.utility.DeviceTools;
+import com.ngra.trafficcontroller.utility.StaticFunctions;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import java.text.ParseException;
@@ -17,13 +24,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class VM_FragmentHome {
 
     private Context context;
+    private String MessageResponcse;
 
     public VM_FragmentHome(Context context) {//_____________________________________________________ Start VM_FragmentHome
         this.context = context;
@@ -48,138 +58,85 @@ public class VM_FragmentHome {
         calendarEnd.set(Calendar.MINUTE, 00);
         calendarEnd.set(Calendar.SECOND, 00);
 
-
-        Realm realm = TrafficController
-                .getApplication(context)
-                .getRealmComponent()
-                .getRealm();
-
-        for (int i = 0; i < 10; i++) {
-            RealmResults<DataBaseLocation> locations =
-                    realm.where(DataBaseLocation.class)
-                            //.lessThanOrEqualTo("SaveDate", calendarEnd.getTime())
-                            //.and()
-                            //.greaterThanOrEqualTo("SaveDate", calendarStart.getTime())
-                            .between("SaveDate", calendarStart.getTime(), calendarEnd.getTime())
-                            .sort("ID")
-                            .findAll();
-            float data = CalculatorMeasuredistance(locations);
-            data = data / 1000;
-            result.add(new ModelChartMeasureDistance(
-                    utility.MiladiToJalali(calendarStart.getTime(), "FullJalaliNumber"),
-                    data
-            ));
-
-            calendarStart.add(Calendar.DATE, 1);
-            calendarEnd.add(Calendar.DATE, 1);
-        }
-
         return result;
 
     }//_____________________________________________________________________________________________ End getModelChartMeasureDistances
 
 
-    public Integer getLocationsForMeasureDistance() {//_____________________________________________ Start getLocationsForMeasureDistance
+    public void sendLocationToServer(Location location) {//_________________________________________________________ Start SendLocatoinToServer
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 01);
+        ArrayList<ModelLocation> list = new ArrayList<>();
+        list.add(new ModelLocation(
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getAltitude(),
+                location.getSpeed(),
+                getDate(getStringCurrentDate()),
+                location.getAccuracy(),
+                true));
 
-        Realm realm = TrafficController
-                .getApplication(context)
-                .getRealmComponent()
-                .getRealm();
+        ModelLocations lo = new ModelLocations(list);
 
-        RealmResults<DataBaseLocation> locations = realm
-                .where(DataBaseLocation.class)
-                .greaterThanOrEqualTo("SaveDate", calendar.getTime())
-                .sort("ID")
-                .findAll();
+        RetrofitModule.isCancel = false;
+        RetrofitComponent retrofitComponent =
+                TrafficController
+                        .getApplication(context)
+                        .getRetrofitComponent();
 
-        Integer MD = CalculatorMeasuredistance(locations);
+        DeviceTools deviceTools = new DeviceTools(context);
+        String imei = deviceTools.getIMEI();
+        String Authorization = GetAuthorization(context);
 
-        return MD;
-    }//_____________________________________________________________________________________________ End getLocationsForMeasureDistance
+        retrofitComponent
+                .getRetrofitApiInterface()
+                .DeviceLogs(
+                        imei,
+                        Authorization,
+                        StaticFunctions.Get_aToken(context),
+                        lo
+                )
+                .enqueue(new Callback<ModelResponcePrimery>() {
+                    @Override
+                    public void onResponse(Call<ModelResponcePrimery> call, Response<ModelResponcePrimery> response) {
+                        MessageResponcse = CheckResponse(response, true);
+                        if (MessageResponcse == null) {
+                            if (response.body().getMessages().size() > 0)
+                                MessageResponcse = response.body().getMessages().get(0).getMessage();
+                            else
+                                MessageResponcse = "موقعیت شما ارسال شد، میتوانید از برنامه خارج شوید";
+                            ObservablesGpsAndNetworkChange.onNext("send");
+                        } else
+                            ObservablesGpsAndNetworkChange.onNext("error");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelResponcePrimery> call, Throwable t) {
+                        ObservablesGpsAndNetworkChange.onNext("Failure");
+                    }
+                });
+
+    }//_____________________________________________________________________________________________ End SendLocatoinToServer
+
+    public String getStringCurrentDate() {//_______________________________________________________ Start getStringCurrentDate
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        return simpleDateFormat.format(new Date());
+    }//_____________________________________________________________________________________________ End getStringCurrentDate
 
 
-    private Integer CalculatorMeasuredistance(RealmResults<DataBaseLocation> locations) {//_________ Start CalculatorMeasuredistance
-
-        if (locations.size() < 2) {
-            return 0;
+    public Date getDate(String sdate) {
+        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format.setTimeZone(TimeZone.getDefault());
+        try {
+            date = format.parse(sdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        float MeasuteDistance = 0;
-        MehrdadLatifiMap latifiMap = new MehrdadLatifiMap();
+        return date;
+    }
 
-        for (int i = 0; i < locations.size() - 1; i++) {
-            LatLng old = new LatLng(
-                    locations.get(i).getLatitude(),
-                    locations.get(i).getLongitude());
-
-            LatLng New = new LatLng(
-                    locations.get(i + 1).getLatitude(),
-                    locations.get(i + 1).getLongitude());
-
-            float[] results = latifiMap.MeasureDistance(old, New);
-
-            if (results[0] > 0)
-                MeasuteDistance = MeasuteDistance + results[0];
-        }
-
-        Integer MD = Math.round(MeasuteDistance);
-
-        return MD;
-    }//_____________________________________________________________________________________________ End CalculatorMeasuredistance
-
-
-    public String GetLastGPS() {//__________________________________________________________________ Start GetLastGPS
-        String ret = "0000/00/00 - 00:00";
-        SharedPreferences prefs = context.getSharedPreferences("trafficcontroller", 0);
-        if (prefs != null) {
-            String GPS = prefs.getString("lastgps", "null");
-            if (!GPS.equalsIgnoreCase("null")) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-                try {
-                    Date date = simpleDateFormat.parse(GPS);
-                    ApplicationUtility applicationUtility = new ApplicationUtility();
-                    ret = applicationUtility.MiladiToJalali(date, "FullJalaliNumber");
-                    simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.US);
-                    ret = ret + " - " + simpleDateFormat.format(date);
-                    return ret;
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return ret;
-                }
-            }
-            return ret;
-        }
-        return ret;
-    }//_____________________________________________________________________________________________ End GetLastGPS
-
-
-    public String GetLastNet() {//__________________________________________________________________ Start GetLastNet
-        String ret = "0000/00/00 - 00:00";
-        SharedPreferences prefs = context.getSharedPreferences("trafficcontroller", 0);
-        if (prefs != null) {
-            String GPS = prefs.getString("lastnet", "null");
-            if (!GPS.equalsIgnoreCase("null")) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-                try {
-                    Date date = simpleDateFormat.parse(GPS);
-                    ApplicationUtility applicationUtility = new ApplicationUtility();
-                    ret = applicationUtility.MiladiToJalali(date, "FullJalaliNumber");
-                    simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.US);
-                    ret = ret + " - " + simpleDateFormat.format(date);
-                    return ret;
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return ret;
-                }
-            }
-            return ret;
-        }
-        return ret;
-    }//_____________________________________________________________________________________________ End GetLastNet
-
+    public String getMessageResponcse() {
+        return MessageResponcse;
+    }
 
 }

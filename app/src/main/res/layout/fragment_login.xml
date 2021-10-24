@@ -97,7 +97,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/_5sdp"
-                    android:src="@drawable/ic_lock_open"/>
+                    android:src="@drawable/ic_lock_open" />
 
 
                 <TextView

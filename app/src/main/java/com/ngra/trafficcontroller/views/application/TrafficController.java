@@ -15,29 +15,19 @@ import android.text.TextUtils;
 import androidx.multidex.MultiDexApplication;
 
 import com.ngra.trafficcontroller.R;
-import com.ngra.trafficcontroller.dagger.realm.DaggerRealmComponent;
-import com.ngra.trafficcontroller.dagger.realm.RealmComponent;
-import com.ngra.trafficcontroller.dagger.realm.RealmModul;
 import com.ngra.trafficcontroller.dagger.retrofit.DaggerRetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitComponent;
 import com.ngra.trafficcontroller.dagger.retrofit.RetrofitModule;
-import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverDateTimeChange;
-import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverGpsLocation;
-import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverLunchAppInBackground;
-import com.ngra.trafficcontroller.backgroundservice.broadcasts.ReceiverNetworkChange;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.reactivex.subjects.PublishSubject;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class TrafficController extends MultiDexApplication {
 
     private Context context;
     private RetrofitComponent retrofitComponent;
-    private RealmComponent realmComponent;
     public static PublishSubject<String> ObservablesGpsAndNetworkChange = PublishSubject.create();
     private IntentFilter s_intentFilter;
 
@@ -46,11 +36,9 @@ public class TrafficController extends MultiDexApplication {
     public void onCreate() {//______________________________________________________________________ Start onCreate
         super.onCreate();
         this.context = getApplicationContext();
-        setComponentEnabledSetting();
-        registerBroadcast();
+//        setComponentEnabledSetting();
         ConfigurationCalligraphy();
         ConfigrationRetrofitComponent();
-        ConfigrationRealmComponent();
     }//_____________________________________________________________________________________________ End onCreate
 
 
@@ -60,16 +48,6 @@ public class TrafficController extends MultiDexApplication {
                 .retrofitModule(new RetrofitModule(context))
                 .build();
     }//_____________________________________________________________________________________________ End ConfigrationRetrofitComponent
-
-
-    private void ConfigrationRealmComponent() {//___________________________________________________ Start ConfigrationRealmComponent
-        Realm.init(this);
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder().name("TrafficControllerRealm").schemaVersion(1).build());
-        realmComponent = DaggerRealmComponent
-                .builder()
-                .realmModul(new RealmModul())
-                .build();
-    }//_____________________________________________________________________________________________ End ConfigrationRealmComponent
 
 
     private void ConfigurationCalligraphy() {//_____________________________________________________ Start ConfigurationCalligraphy
@@ -126,37 +104,6 @@ public class TrafficController extends MultiDexApplication {
         return isConnected;
     }//_____________________________________________________________________________________________ End isInternetConnected
 
-
-    private void registerBroadcast() {//____________________________________________________________ Start registerBroadcast
-        BroadcastReceiver gpsChange = new ReceiverGpsLocation();
-        getApplicationContext().registerReceiver(gpsChange, new IntentFilter("android.location.PROVIDERS_CHANGED"));
-        BroadcastReceiver netChange = new ReceiverNetworkChange();
-        getApplicationContext().registerReceiver(netChange, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        s_intentFilter = new IntentFilter();
-        s_intentFilter.addAction(Intent.ACTION_TIME_TICK);
-        s_intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        s_intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-
-        ReceiverDateTimeChange timeChange = new ReceiverDateTimeChange();
-        getApplicationContext().registerReceiver(timeChange, s_intentFilter);
-
-    }//_____________________________________________________________________________________________ End registerBroadcast
-
-
-    public RealmComponent getRealmComponent() {//___________________________________________________ Start getRealmComponent
-        return realmComponent;
-    }//_____________________________________________________________________________________________ End getRealmComponent
-
-
-    private void setComponentEnabledSetting() {//___________________________________________________ Start setComponentEnabledSetting
-        ComponentName receiver = new ComponentName(this, ReceiverLunchAppInBackground.class);
-        PackageManager pm = this.getPackageManager();
-
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);
-    }//_____________________________________________________________________________________________ End setComponentEnabledSetting
 
 
 }

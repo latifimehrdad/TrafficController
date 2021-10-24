@@ -116,26 +116,26 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        DrawPolygon();
+//        DrawPolygon();
 
     }//_____________________________________________________________________________________________ End Void onMapReady
 
 
     private void DrawPolygon() {//__________________________________________________________________ Start DrawPolygon
 
-        MehrdadLatifiMap mehrdadLatifiMap = new MehrdadLatifiMap();
-        mehrdadLatifiMap.setGoogleMap(mMap);
-        mehrdadLatifiMap.setML_Stroke_Width(1.0f);
-        mehrdadLatifiMap.setML_Stroke_Color(getResources().getColor(R.color.colorPrimary));
-        mehrdadLatifiMap.setML_Fill_Color(getResources().getColor(R.color.ML_MapPolyGon));
-        mehrdadLatifiMap.setML_LatLongs(vm_fragmentMap.GetWorkingRange());
-        mehrdadLatifiMap.DrawPolygon(false);
-        mehrdadLatifiMap.AutoZoom();
-
-        mehrdadLatifiMap.setML_Stroke_Width(2.0f);
-        mehrdadLatifiMap.setML_Stroke_Color(getResources().getColor(R.color.ML_Button));
-        mehrdadLatifiMap.setML_LatLongs(vm_fragmentMap.GetWorking());
-        mehrdadLatifiMap.DrawPolyLinesWithArrow();
+//        MehrdadLatifiMap mehrdadLatifiMap = new MehrdadLatifiMap();
+//        mehrdadLatifiMap.setGoogleMap(mMap);
+//        mehrdadLatifiMap.setML_Stroke_Width(1.0f);
+//        mehrdadLatifiMap.setML_Stroke_Color(getResources().getColor(R.color.colorPrimary));
+//        mehrdadLatifiMap.setML_Fill_Color(getResources().getColor(R.color.ML_MapPolyGon));
+//        mehrdadLatifiMap.setML_LatLongs(vm_fragmentMap.GetWorkingRange());
+//        mehrdadLatifiMap.DrawPolygon(false);
+//        mehrdadLatifiMap.AutoZoom();
+//
+//        mehrdadLatifiMap.setML_Stroke_Width(2.0f);
+//        mehrdadLatifiMap.setML_Stroke_Color(getResources().getColor(R.color.ML_Button));
+//        mehrdadLatifiMap.setML_LatLongs(vm_fragmentMap.GetWorking());
+//        mehrdadLatifiMap.DrawPolyLinesWithArrow();
 
 
     }//_____________________________________________________________________________________________ End DrawPolygon

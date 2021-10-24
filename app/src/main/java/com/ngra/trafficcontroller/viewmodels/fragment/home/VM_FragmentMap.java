@@ -3,16 +3,12 @@ package com.ngra.trafficcontroller.viewmodels.fragment.home;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.ngra.trafficcontroller.database.DataBaseLocation;
 import com.ngra.trafficcontroller.views.application.TrafficController;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class VM_FragmentMap {
 
@@ -37,6 +33,7 @@ public class VM_FragmentMap {
     }//_____________________________________________________________________________________________ End GetWorkingRange
 
 
+/*
     public List<LatLng> GetWorking() {//____________________________________________________________ Start GetWorkingRange
 
         Realm realm = TrafficController
@@ -63,5 +60,6 @@ public class VM_FragmentMap {
         }
         return latLngs;
     }//_____________________________________________________________________________________________ End GetWorkingRange
+*/
 
 }

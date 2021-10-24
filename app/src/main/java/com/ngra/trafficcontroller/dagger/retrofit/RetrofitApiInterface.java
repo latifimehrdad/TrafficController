@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.ngra.trafficcontroller.models.ModelLocation;
 import com.ngra.trafficcontroller.models.ModelLocations;
 import com.ngra.trafficcontroller.models.ModelResponcePrimery;
+import com.ngra.trafficcontroller.models.ModelResponsePersonnelStatus;
 import com.ngra.trafficcontroller.models.ModelToken;
 import com.ngra.trafficcontroller.models.Model_Result;
 
@@ -15,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -58,6 +60,15 @@ public interface RetrofitApiInterface {
                     @Body ModelLocations locations
             );
 
+
+
+    //______________________________________________________________________________________________ DeviceLogs
+    @GET(Version + "/deviceattendance/PersonnelStatus")
+    Call<ModelResponsePersonnelStatus> PersonnelStatus
+    (
+            @Header("Authorization") String Authorization,
+            @Header("aToken") String aToken
+    );
 
 //    @FormUrlEncoded
 //    @POST("Api.aspx?action=register")

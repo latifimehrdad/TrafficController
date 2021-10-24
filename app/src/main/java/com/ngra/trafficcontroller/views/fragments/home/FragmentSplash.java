@@ -140,7 +140,9 @@ public class FragmentSplash extends Fragment {
                 if (observer != null)
                     observer.dispose();
                 observer = null;
-                navController.navigate(R.id.action_fragmentSplash_to_fragmentHome);
+                Bundle bundle = new Bundle();
+                bundle.putInt("status", vm_fragmentSplash.getModelStatus().getStatus());
+                navController.navigate(R.id.action_fragmentSplash_to_fragmentHome, bundle);
             }
         }, 2000);
 

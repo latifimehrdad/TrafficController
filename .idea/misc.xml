@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/android/project/TrafficController/app/src/main/res/drawable/ic_warning_red.xml" value="0.246875" />
+        <entry key="..\:/android/project/TrafficController/app/src/main/res/layout/activity_main.xml" value="0.23072916666666668" />
         <entry key="..\:/android/project/TrafficController/app/src/main/res/layout/fragment_home.xml" value="0.24010416666666667" />
         <entry key="..\:/android/project/TrafficController/app/src/main/res/layout/fragment_login.xml" value="0.24010416666666667" />
         <entry key="..\:/android/project/TrafficController/app/src/main/res/layout/fragment_verify.xml" value="0.24010416666666667" />
+        <entry key="..\:/android/project/TrafficController/app/src/main/res/layout/layout_circle_menu.xml" value="0.23072916666666668" />
       </map>
     </option>
   </component>
